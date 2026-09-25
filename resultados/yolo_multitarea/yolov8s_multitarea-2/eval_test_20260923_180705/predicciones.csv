@@ -1,0 +1,113 @@
+archivo,madurez_real,madurez_pred,confianza_madurez,ratio_real,ratio_pred,ocde_real,ocde_pred,latencia_ms
+T10_d02_275_a_1_jpg.rf.wWksDXX3C4hOPp493IwD.jpg,1,1,0.939,0.23525,0.10184,Rechazado,Categoria II,39.7
+T10_d02_392_a_1_jpg.rf.WT9U0IIvLbGnQGxyJYs3.jpg,1,1,0.8907,0.0264,0.02396,Categoria I,Categoria I,29.28
+T10_d04_392_a_1_jpg.rf.geQ8XEzHwQmefNdYTksw.jpg,1,1,0.7658,0.11728,0.06163,Categoria II,Categoria I,24.15
+T10_d05_015_a_1_jpg.rf.H9jzY1ul6Si2lvp66j1L.jpg,1,1,0.7116,0.35842,0.0,Rechazado,Categoria I,25.12
+T10_d05_331_a_1_jpg.rf.b1FGOKCfExfaWFCMww9V.jpg,1,1,0.8562,0.0,0.0,Categoria I,Categoria I,25.34
+T10_d07_092_b_1_jpg.rf.IBrTGWCH8aeLo5d7YC8n.jpg,1,1,0.6844,0.47797,0.0,Rechazado,Categoria I,26.43
+T10_d07_162_a_1_jpg.rf.bbhRE5HNb7la08x8NujH.jpg,1,1,0.7739,0.99629,0.0825,Rechazado,Categoria I,27.86
+T10_d07_395_a_1_jpg.rf.zUv5iN86livDBX2qE7M5.jpg,1,2,0.8586,0.25567,0.0,Rechazado,Categoria I,27.26
+T10_d08_395_b_2_jpg.rf.DJUWEHr1NsOu1G55MsI0.jpg,2,2,0.868,0.01436,0.0,Categoria I,Categoria I,25.72
+T10_d08_471_b_1_jpg.rf.pRWuPkTutq50iAoyAg3C.jpg,1,1,0.7859,0.08686,0.07427,Categoria I,Categoria I,25.9
+T10_d09_015_b_2_jpg.rf.2Ge0th0cVSofMHjbISCE.jpg,2,2,0.9039,0.02114,0.0099,Categoria I,Categoria I,26.0
+T10_d09_092_b_2_jpg.rf.DWQDYA92dLhnGvpbJtrW.jpg,2,2,0.8854,0.26051,0.0,Rechazado,Categoria I,26.14
+T10_d09_100_b_2_jpg.rf.85zCsiVRvzfxbqMaBLNP.jpg,2,1,0.5143,0.21995,0.0,Rechazado,Categoria I,25.57
+T10_d09_162_b_2_jpg.rf.35WkU4ly6qoGaBbWkKFZ.jpg,2,2,0.9009,0.15462,0.0,Rechazado,Categoria I,26.54
+T10_d09_219_b_2_jpg.rf.tH8lBZtIlsRhVmmgSrxC.jpg,2,2,0.8999,0.34707,0.04492,Rechazado,Categoria I,26.75
+T10_d10_275_b_2_jpg.rf.siGmwB5nnYXByUnGOoAu.jpg,2,2,0.882,0.61654,0.1379,Rechazado,Categoria II,26.91
+T10_d11_015_a_3_jpg.rf.RRhl6YOx18ej2gH6aZl8.jpg,3,2,0.6088,0.05318,0.05272,Categoria I,Categoria I,27.04
+T10_d11_092_b_3_jpg.rf.L5iG9L5DjQdsXCyOPymX.jpg,3,2,0.7049,0.03957,0.0,Categoria I,Categoria I,26.76
+T10_d11_219_a_3_jpg.rf.xhIN3sD2Hv7fbVVjuOrj.jpg,3,3,0.6775,0.24285,0.0,Rechazado,Categoria I,27.33
+T10_d11_275_a_3_jpg.rf.0GpPj4Gg58KboiDWv09Y.jpg,3,2,0.7848,0.0,0.0,Categoria I,Categoria I,28.29
+T10_d11_392_a_4_jpg.rf.a2R0RLBxOjvWLus9vcXs.jpg,4,3,0.8415,0.09109,0.058,Categoria I,Categoria I,32.17
+T10_d12_275_a_3_jpg.rf.joYY4Q9109yJUufFoaTk.jpg,3,3,0.5394,0.0,0.0,Categoria I,Categoria I,32.1
+T10_d12_471_b_2_jpg.rf.0oxDsckZowNWvf6WM7rs.jpg,2,3,0.7002,0.06767,0.05311,Categoria I,Categoria I,33.71
+T10_d13_395_b_3_jpg.rf.K2359XhUAbfgrv0Q6Q5L.jpg,3,3,0.8002,0.0,0.0,Categoria I,Categoria I,32.92
+T10_d13_471_a_3_jpg.rf.8407AQuYtv59mq5hszTs.jpg,3,3,0.6346,0.0,0.0,Categoria I,Categoria I,21.57
+T10_d14_219_b_3_jpg.rf.3GS5ouDQBgMy3rQkHBM4.jpg,3,3,0.8743,0.13905,0.0334,Categoria II,Categoria I,24.89
+T10_d15_395_b_3_jpg.rf.dkZB2Qaupj87W1gtUDYj.jpg,3,4,0.5412,0.0,0.013,Categoria I,Categoria I,20.78
+T10_d16_275_b_3_jpg.rf.sRI7OyCHk4g9XMESfqfm.jpg,3,3,0.4879,0.33458,0.27531,Rechazado,Rechazado,20.52
+T10_d16_392_b_4_jpg.rf.J4DWVf3WMNrgJ8UI9fRK.jpg,4,4,0.5909,0.04573,0.02372,Categoria I,Categoria I,20.27
+T10_d17_392_a_4_jpg.rf.us9u1l4LlmCxXzhUCRA9.jpg,4,4,0.5145,0.03784,0.0445,Categoria I,Categoria I,18.56
+T10_d17_392_b_4_jpg.rf.mkhehSr7hvqljE5531tU.jpg,4,4,0.5977,0.06744,0.05,Categoria I,Categoria I,18.85
+T10_d20_219_a_4_jpg.rf.OxGghTlPxx79eAjwHxRA.jpg,4,5,0.5447,0.45409,0.0,Rechazado,Categoria I,18.5
+T10_d20_471_b_4_jpg.rf.kxkyqrtQOONf2ISSJ11L.jpg,4,5,0.7144,0.15898,0.0,Rechazado,Categoria I,18.48
+T10_d22_275_b_4_jpg.rf.SXymwt3ipubsASL01FiP.jpg,4,4,0.5706,0.29834,0.1875,Rechazado,Rechazado,18.44
+T10_d23_395_b_5_jpg.rf.sxGqTOTMFMTMw7Uls1zx.jpg,5,5,0.5688,0.02359,0.0163,Categoria I,Categoria I,18.45
+T10_d24_471_a_5_jpg.rf.uJDnYlSlUmyZY7MFmpQD.jpg,5,4,0.5821,0.0,0.0,Categoria I,Categoria I,17.7
+T10_d25_015_a_5_jpg.rf.kPhH0N5pFP3RErVxwWkJ.jpg,5,5,0.8097,0.04286,0.04115,Categoria I,Categoria I,17.6
+T10_d25_092_a_5_jpg.rf.bhpQcDCXaDIIsqRXwJAx.jpg,5,5,0.7535,0.03501,0.01982,Categoria I,Categoria I,18.4
+T10_d25_395_a_5_jpg.rf.9zZIOSamXAFS5tbdbW2I.jpg,5,4,0.5901,0.0,0.0,Categoria I,Categoria I,17.75
+T10_d26_015_b_5_jpg.rf.BdG8Rwze2KYxByGqcOND.jpg,5,5,0.5938,0.01579,0.01634,Categoria I,Categoria I,18.73
+T20_d01_161_a_1_jpg.rf.r36Ieig41ncbpcomQiyi.jpg,1,1,0.947,0.0,0.0,Categoria I,Categoria I,17.43
+T20_d01_313_a_1_jpg.rf.1klAiHbibnWDHQcDhzkc.jpg,1,1,0.9123,0.07884,0.01462,Categoria I,Categoria I,19.07
+T20_d01_360_a_1_jpg.rf.k4KIbkrqdPoPmcnMaYMl.jpg,1,1,0.7313,0.01693,0.01413,Categoria I,Categoria I,17.33
+T20_d02_279_a_1_jpg.rf.qiGpQSYpRNf8vnLAgM6j.jpg,1,2,0.8395,0.07718,0.0,Categoria I,Categoria I,18.72
+T20_d02_360_a_1_jpg.rf.sHflsZQXMh4OX0oDyZl6.jpg,1,1,0.5477,0.01205,0.0,Categoria I,Categoria I,20.87
+T20_d03_020_a_1_jpg.rf.yuX7H7Fa7HkhL822iZ3u.jpg,1,1,0.9212,0.06398,0.0,Categoria I,Categoria I,20.97
+T20_d03_020_b_1_jpg.rf.pk8FUXbNi1qWQ2QTocW6.jpg,1,1,0.9461,0.10541,0.02211,Categoria II,Categoria I,19.84
+T20_d03_190_b_2_jpg.rf.bIiegaqHUbV0Of9UiR7B.jpg,2,3,0.6826,0.09766,0.05234,Categoria II,Categoria I,18.46
+T20_d03_360_b_2_jpg.rf.Vt9TJ05XjELgN6oqImnc.jpg,2,1,0.611,0.04413,0.02095,Categoria I,Categoria I,18.11
+T20_d03_468_a_2_jpg.rf.Gc5gIYPsXJMpRuqXTQdN.jpg,2,2,0.7007,0.0,0.0,Categoria I,Categoria I,17.79
+T20_d04_360_b_2_jpg.rf.U1m2sXU9UTl3NDHMkQd6.jpg,2,2,0.7104,0.0,0.0,Categoria I,Categoria I,17.9
+T20_d04_462_b_2_jpg.rf.jcCYsIqV0Libi90gZaqp.jpg,2,2,0.8096,0.0,0.0,Categoria I,Categoria I,17.18
+T20_d05_085_a_3_jpg.rf.aDcNRK9J5A15JzuN6rPI.jpg,3,2,0.5429,0.10346,0.03873,Categoria II,Categoria I,16.4
+T20_d05_161_b_4_jpg.rf.1WFA0Po9FBZt8Y8797n1.jpg,4,4,0.4745,0.1901,0.0,Rechazado,Categoria I,16.01
+T20_d05_190_a_4_jpg.rf.iucbBsKpsHK6JFRLQXyn.jpg,4,5,0.5657,0.08006,0.0509,Categoria I,Categoria I,16.69
+T20_d06_240_a_4_jpg.rf.KwWZzzaCtlssc769Xd8J.jpg,4,5,0.6873,0.08986,0.05704,Categoria I,Categoria I,15.57
+T20_d06_279_b_4_jpg.rf.4fOQNBpvL3WZm2i2Wcwz.jpg,4,4,0.5412,0.08768,0.08281,Categoria I,Categoria I,18.71
+T20_d06_468_b_4_jpg.rf.3DlkzW3TP3BuedOvgeBX.jpg,4,4,0.5439,0.0,0.0,Categoria I,Categoria I,16.19
+T20_d07_085_a_3_jpg.rf.x1agl7J8ixjIs4TpqCUe.jpg,3,3,0.4663,0.08851,0.04203,Categoria I,Categoria I,18.51
+T20_d07_141_a_3_jpg.rf.ib1ZLAe44RC9mV9uZzMs.jpg,3,3,0.7984,0.0,0.01633,Categoria I,Categoria I,16.56
+T20_d07_462_a_3_jpg.rf.pqwWcyTAt53EjMw5h7hI.jpg,3,3,0.8298,0.03724,0.01541,Categoria I,Categoria I,16.8
+T20_d08_190_b_4_jpg.rf.DHRNp4YfB6uODQBnmGAv.jpg,4,5,0.6162,0.12824,0.04719,Categoria II,Categoria I,19.6
+T20_d08_313_b_3_jpg.rf.dgOH6zDJDLFpTMJj6ZwZ.jpg,3,4,0.5864,0.18482,0.04158,Rechazado,Categoria I,15.65
+T20_d09_462_a_4_jpg.rf.hB6vaxDBxjwu8ym0MwFe.jpg,4,3,0.7962,0.00996,0.01583,Categoria I,Categoria I,15.51
+T20_d09_468_a_5_jpg.rf.GNpNYXPcvt82w7gw7jnZ.jpg,5,5,0.537,0.0,0.0,Categoria I,Categoria I,15.43
+T20_d10_141_a_5_jpg.rf.JUEnBXWzfdyHOe9oNnDw.jpg,5,4,0.5895,0.0,0.0,Categoria I,Categoria I,15.31
+T20_d10_228_b_5_jpg.rf.mEhkX7C8pULfTZQLzeF4.jpg,5,4,0.5109,0.0,0.0,Categoria I,Categoria I,15.72
+T20_d10_240_b_5_jpg.rf.n8IkHxopAsAy7yUMOw3b.jpg,5,5,0.6901,0.38942,0.12889,Rechazado,Categoria II,15.52
+T20_d10_289_b_5_jpg.rf.K8RBFZojRJREE6qX8MoK.jpg,5,5,0.8608,0.0,0.0,Categoria I,Categoria I,15.3
+T20_d11_161_a_5_jpg.rf.ILeG9LxLvBD5PPa07thg.jpg,5,5,0.6959,0.0517,0.01895,Categoria I,Categoria I,14.67
+T20_d11_190_a_5_jpg.rf.9E8qGyQdIdJSSldlzjHX.jpg,5,5,0.8734,0.11167,0.05908,Categoria II,Categoria I,18.23
+Tam_d01_078_a_1_jpg.rf.t02YWo5Y7Fpzg39RQCni.jpg,1,1,0.9566,0.2225,0.03692,Rechazado,Categoria I,16.49
+Tam_d01_396_b_1_jpg.rf.CVY7iu6OQBObWD54JFje.jpg,1,1,0.9799,0.32255,0.0,Rechazado,Categoria I,16.01
+Tam_d01_416_b_1_jpg.rf.MeE9PK8AOVtk658MfBgD.jpg,1,1,0.9408,0.12933,0.0,Categoria II,Categoria I,15.38
+Tam_d02_164_a_1_jpg.rf.TzOYMGAjlKtabJTYlQ5S.jpg,1,1,0.9267,0.0,0.0,Categoria I,Categoria I,14.54
+Tam_d02_209_a_1_jpg.rf.0jsPfTxG2RLdzsX9EOXs.jpg,1,1,0.9199,0.00889,0.01516,Categoria I,Categoria I,16.15
+Tam_d02_396_b_1_jpg.rf.jG9HU5TBKKAsJXehUBZH.jpg,1,1,0.9498,0.11612,0.0,Categoria II,Categoria I,14.82
+Tam_d03_281_a_2_jpg.rf.tfsU5t1yPrvrzJfMRBpa.jpg,2,1,0.863,0.08774,0.05935,Categoria I,Categoria I,14.61
+Tam_d03_339_b_2_jpg.rf.7bQRsPaiRmGMYKUMSICQ.jpg,2,1,0.8326,0.28433,0.0,Rechazado,Categoria I,14.45
+Tam_d03_362_b_1_jpg.rf.fPnQcliq999xJrOVRVpo.jpg,1,1,0.9185,0.06525,0.05193,Categoria I,Categoria I,15.11
+Tam_d04_140_a_3_jpg.rf.zxkg4IO8ukNdMnLiUe6i.jpg,3,2,0.7164,0.27529,0.04754,Rechazado,Categoria I,14.63
+Tam_d04_209_a_2_jpg.rf.RdFlPkURPfi3cVImtvwZ.jpg,2,2,0.6787,0.0367,0.0,Categoria I,Categoria I,15.1
+Tam_d04_231_b_3_jpg.rf.mcF79La0E4t2cTjXKXVF.jpg,3,4,0.5562,0.05005,0.01798,Categoria I,Categoria I,17.41
+Tam_d04_238_a_3_jpg.rf.qV1xH6Nd4fLGquvRgi5e.jpg,3,2,0.7626,0.0,0.0,Categoria I,Categoria I,14.68
+Tam_d04_396_a_2_jpg.rf.J2mnBMCs8jGNhm8H7zkL.jpg,2,1,0.93,0.09168,0.01307,Categoria I,Categoria I,16.34
+Tam_d04_396_b_2_jpg.rf.83eCyPbUQJIMTooU7TTa.jpg,2,1,0.929,0.33047,0.0,Rechazado,Categoria I,14.53
+Tam_d04_416_a_2_jpg.rf.ekIt23x3cigYF28DkA9B.jpg,2,2,0.7412,0.07705,0.04507,Categoria I,Categoria I,14.68
+Tam_d05_281_b_2_jpg.rf.miWTJH1m1Bx1qEyORgqz.jpg,2,2,0.5476,0.02346,0.15803,Categoria I,Rechazado,14.66
+Tam_d05_344_a_4_jpg.rf.2BnPgUSLqiTwoszTEllY.jpg,4,4,0.4925,0.14206,0.08967,Rechazado,Categoria I,14.66
+Tam_d05_396_b_2_jpg.rf.tMPGrf5GMEcpKnjO4xBY.jpg,2,2,0.8742,0.15989,0.0348,Rechazado,Categoria I,14.95
+Tam_d05_416_a_2_jpg.rf.4uf07Yj6VO7KewfxWiwU.jpg,2,2,0.8092,0.07163,0.04276,Categoria I,Categoria I,14.94
+Tam_d05_416_b_2_jpg.rf.O24JnLvBYEnCAWbZp5o5.jpg,2,2,0.9021,0.0,0.0,Categoria I,Categoria I,15.05
+Tam_d06_078_b_4_jpg.rf.qIyVHGyTdNpKmlWFSPCS.jpg,4,4,0.463,0.2295,0.11807,Rechazado,Categoria II,14.44
+Tam_d06_140_a_3_jpg.rf.9OU5IFVN0rbnHwRCLwiZ.jpg,3,4,0.4901,0.10434,0.10518,Categoria II,Categoria II,15.59
+Tam_d06_238_a_3_jpg.rf.zoWpBGQK0aVvPetUOTeA.jpg,3,3,0.7165,0.0,0.0,Categoria I,Categoria I,14.98
+Tam_d07_078_b_4_jpg.rf.w691jRXKD2f840dmClhN.jpg,4,4,0.5569,0.0,0.0,Categoria I,Categoria I,15.02
+Tam_d07_135_a_4_jpg.rf.tVLowr9As5RXWpuz8XPi.jpg,4,5,0.8617,0.36609,0.35953,Rechazado,Rechazado,14.55
+Tam_d07_140_b_4_jpg.rf.pFQqxHDvr1ZHiefEvelt.jpg,4,4,0.5045,0.09365,0.41059,Categoria I,Rechazado,14.28
+Tam_d07_374_a_3_jpg.rf.8oq9xBGTWRW2s2jUkBdN.jpg,3,3,0.523,0.07539,0.04838,Categoria I,Categoria I,14.74
+Tam_d07_396_b_3_jpg.rf.x8Mc94YBI7GO4aAA2Ez0.jpg,3,4,0.4141,0.32163,0.07302,Rechazado,Categoria I,14.77
+Tam_d07_416_b_4_jpg.rf.CZfqPNOs80Y84V6mm2eA.jpg,4,3,0.8606,0.0,0.0,Categoria I,Categoria I,15.45
+Tam_d08_164_b_4_jpg.rf.NQUH5DUPbegQgPpX44PN.jpg,4,4,0.553,0.3039,0.12769,Rechazado,Categoria II,14.5
+Tam_d08_238_a_4_jpg.rf.PcNTFreIJPtr7gjWHWqd.jpg,4,4,0.5683,0.0,0.0,Categoria I,Categoria I,14.45
+Tam_d08_472_b_4_jpg.rf.m0AdiOTeMDJ3itta2Hm8.jpg,4,4,0.5635,0.03335,0.02657,Categoria I,Categoria I,15.02
+Tam_d09_209_a_4_jpg.rf.FpDVttdxZIydToL7HBj8.jpg,4,4,0.5701,0.0,0.0,Categoria I,Categoria I,18.58
+Tam_d09_281_b_5_jpg.rf.PyhR59CJkDCW2AD6SWeZ.jpg,5,4,0.6018,0.01611,0.02027,Categoria I,Categoria I,21.04
+Tam_d10_344_b_5_jpg.rf.WOx5zpR8YLdJ9fipCTVI.jpg,5,5,0.7307,0.20287,0.04135,Rechazado,Categoria I,14.52
+Tam_d10_472_b_5_jpg.rf.lshvWNhPdW1FSkDtVQHu.jpg,5,5,0.6301,0.03023,0.0,Categoria I,Categoria I,16.37
+Tam_d11_126_b_5_jpg.rf.hQSahW2braVEsExz42vP.jpg,5,5,0.5221,0.0,0.0,Categoria I,Categoria I,14.6
+Tam_d11_231_b_5_jpg.rf.iKM5rX2dyC2HnM1JHvsY.jpg,5,5,0.8606,3.00385,0.022,Rechazado,Categoria I,14.57
+Tam_d11_339_b_5_jpg.rf.4qy5Nd7mVarCaRj9DAHL.jpg,5,5,0.5705,0.0,0.0,Categoria I,Categoria I,14.47
+Tam_d11_362_a_5_jpg.rf.YnbDeToTzULD4EaHeylm.jpg,5,5,0.5727,0.03191,0.0,Categoria I,Categoria I,14.58

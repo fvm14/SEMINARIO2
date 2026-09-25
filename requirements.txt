@@ -1,0 +1,16 @@
+# 1) Primero torch/torchvision con CUDA 12.6 (RTX A5000), aparte:
+#      pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+# 2) Luego el resto:
+#      pip install -r requirements.txt
+#
+# ultralytics queda fijado en 8.4.160 porque yolo_multitarea.py extiende clases
+# internas (SegmentationModel, SegmentationTrainer, SegmentationValidator) que
+# pueden cambiar entre versiones. No actualizar sin volver a probar.
+ultralytics==8.4.160
+opencv-python>=4.9
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.4
+matplotlib>=3.8
+tqdm>=4.66
+# albumentations>=2.0  (opcional, solo scripts/alternativa_resnet34; en Windows puede requerir Visual C++ Build Tools)

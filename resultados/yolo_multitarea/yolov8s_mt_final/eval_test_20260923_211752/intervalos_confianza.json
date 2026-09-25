@@ -1,0 +1,56 @@
+{
+  "n_imagenes": 108,
+  "n_frutos": 39,
+  "n_bootstrap": 2000,
+  "metricas": {
+    "madurez_accuracy": {
+      "valor": 0.6389,
+      "ic95": [
+        0.541,
+        0.7353
+      ]
+    },
+    "madurez_f1_macro": {
+      "valor": 0.6327,
+      "ic95": [
+        0.5344,
+        0.7248
+      ]
+    },
+    "madurez_accuracy_pm1": {
+      "valor": 1.0,
+      "ic95": [
+        1.0,
+        1.0
+      ]
+    },
+    "ocde_accuracy": {
+      "valor": 0.7778,
+      "ic95": [
+        0.6789,
+        0.8584
+      ]
+    },
+    "ocde_f1_macro": {
+      "valor": 0.6775,
+      "ic95": [
+        0.5359,
+        0.7736
+      ]
+    },
+    "recall_rechazado": {
+      "valor": 0.6429,
+      "ic95": [
+        0.4,
+        0.8387
+      ]
+    },
+    "mae_ratio": {
+      "valor": 0.0724,
+      "ic95": [
+        0.0456,
+        0.104
+      ]
+    }
+  }
+}

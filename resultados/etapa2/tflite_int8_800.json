@@ -1,0 +1,19 @@
+{
+  "modelo": "/tmp/tfl800s/palta_multitarea_800_integer_quant.tflite",
+  "tamano_mb": 12.34,
+  "imgsz": 800,
+  "n": 108,
+  "conf_defecto": 0.05,
+  "iou_palta": 0.9835,
+  "iou_defecto": 0.4017,
+  "precision_defecto": 0.6504,
+  "recall_defecto": 0.5124,
+  "madurez_acc": 0.6574,
+  "madurez_f1": 0.6537,
+  "ocde_acc": 0.7593,
+  "recall_rechazado": 0.3929,
+  "mae_ratio": 0.0726,
+  "latencia_ms_media": 125.4,
+  "latencia_ms_p95": 132.6,
+  "hilos_cpu": 4
+}

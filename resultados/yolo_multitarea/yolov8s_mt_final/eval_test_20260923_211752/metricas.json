@@ -1,0 +1,193 @@
+{
+  "weights": "resultados\\yolo_multitarea\\yolov8s_mt_final\\weights\\best.pt",
+  "split": "test",
+  "n_imagenes": 108,
+  "imgsz": 800,
+  "conf_palta": 0.35,
+  "conf_defecto": 0.15,
+  "kernel_roi": 20,
+  "ultralytics": {
+    "global": {
+      "metrics/precision(B)": 0.8656,
+      "metrics/recall(B)": 0.7664,
+      "metrics/mAP50(B)": 0.822,
+      "metrics/mAP50-95(B)": 0.6557,
+      "metrics/precision(M)": 0.8285,
+      "metrics/recall(M)": 0.7337,
+      "metrics/mAP50(M)": 0.7827,
+      "metrics/mAP50-95(M)": 0.4877,
+      "fitness": 0.5749,
+      "metrics/madurez_acc": 0.6389,
+      "metrics/madurez_f1": 0.6327,
+      "metrics/F1(B)": 0.813,
+      "metrics/F1(M)": 0.7782
+    },
+    "por_clase": {
+      "palta": {
+        "box": {
+          "P": 1.0,
+          "R": 1.0,
+          "mAP50": 0.995,
+          "mAP50-95": 0.9949999999999999
+        },
+        "mask": {
+          "P": 0.9814814814814815,
+          "R": 0.9814814814814815,
+          "mAP50": 0.9767508417508415,
+          "mAP50-95": 0.6973406194195668
+        }
+      },
+      "defecto": {
+        "box": {
+          "P": 0.7311778272009305,
+          "R": 0.5327102803738317,
+          "mAP50": 0.6490799634285809,
+          "mAP50-95": 0.3163203496110545
+        },
+        "mask": {
+          "P": 0.6755126577106748,
+          "R": 0.48598130841121495,
+          "mAP50": 0.5887174414757075,
+          "mAP50-95": 0.27803297898794727
+        }
+      }
+    }
+  },
+  "pixel_sin_roi": {
+    "iou_palta": 0.9956,
+    "dice_palta": 0.9978,
+    "precision_palta": 0.9973,
+    "recall_palta": 0.9983,
+    "iou_defecto": 0.4198,
+    "dice_defecto": 0.5914,
+    "precision_defecto": 0.603,
+    "recall_defecto": 0.5802
+  },
+  "pixel_con_roi": {
+    "iou_palta": 0.9956,
+    "dice_palta": 0.9978,
+    "precision_palta": 0.9973,
+    "recall_palta": 0.9983,
+    "iou_defecto": 0.4198,
+    "dice_defecto": 0.5914,
+    "precision_defecto": 0.603,
+    "recall_defecto": 0.5802
+  },
+  "madurez": {
+    "accuracy": 0.6389,
+    "f1_macro": 0.6327,
+    "matriz_confusion": [
+      [
+        19,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        4,
+        15,
+        4,
+        0,
+        0
+      ],
+      [
+        0,
+        5,
+        7,
+        9,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        14,
+        8
+      ],
+      [
+        0,
+        0,
+        0,
+        5,
+        14
+      ]
+    ],
+    "por_clase": {
+      "1": {
+        "precision": 0.8260869565217391,
+        "recall": 0.9047619047619048,
+        "f1-score": 0.8636363636363636,
+        "support": 21.0
+      },
+      "2": {
+        "precision": 0.6818181818181818,
+        "recall": 0.6521739130434783,
+        "f1-score": 0.6666666666666666,
+        "support": 23.0
+      },
+      "3": {
+        "precision": 0.5384615384615384,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.4117647058823529,
+        "support": 21.0
+      },
+      "4": {
+        "precision": 0.5,
+        "recall": 0.5833333333333334,
+        "f1-score": 0.5384615384615384,
+        "support": 24.0
+      },
+      "5": {
+        "precision": 0.6363636363636364,
+        "recall": 0.7368421052631579,
+        "f1-score": 0.6829268292682927,
+        "support": 19.0
+      },
+      "accuracy": 0.6388888888888888,
+      "macro avg": {
+        "precision": 0.636546062633019,
+        "recall": 0.6420889179470415,
+        "f1-score": 0.6326912207830429,
+        "support": 108.0
+      },
+      "weighted avg": {
+        "precision": 0.6335948672905195,
+        "recall": 0.6388888888888888,
+        "f1-score": 0.6297726154851934,
+        "support": 108.0
+      }
+    }
+  },
+  "ocde": {
+    "accuracy": 0.7778,
+    "mae_ratio": 0.07241,
+    "matriz_confusion": [
+      [
+        61,
+        6,
+        4
+      ],
+      [
+        1,
+        5,
+        3
+      ],
+      [
+        10,
+        0,
+        18
+      ]
+    ],
+    "etiquetas": [
+      "Categoria I",
+      "Categoria II",
+      "Rechazado"
+    ]
+  },
+  "latencia_ms": {
+    "media": 33.22,
+    "p95": 39.76,
+    "dispositivo": "cuda:0"
+  }
+}

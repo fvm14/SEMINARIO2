@@ -1,0 +1,117 @@
+{
+  "n_imagenes": 111,
+  "n_frutos": 39,
+  "n_bootstrap": 2000,
+  "metricas": {
+    "madurez_accuracy": {
+      "valor": 0.6126,
+      "ic95": [
+        0.5196,
+        0.7091
+      ]
+    },
+    "madurez_f1_macro": {
+      "valor": 0.6065,
+      "ic95": [
+        0.5049,
+        0.6964
+      ]
+    },
+    "madurez_accuracy_pm1": {
+      "valor": 0.982,
+      "ic95": [
+        0.9524,
+        1.0
+      ]
+    },
+    "ocde_accuracy": {
+      "valor": 0.7297,
+      "ic95": [
+        0.6277,
+        0.8205
+      ]
+    },
+    "ocde_f1_macro": {
+      "valor": 0.5947,
+      "ic95": [
+        0.4562,
+        0.7173
+      ]
+    },
+    "recall_rechazado": {
+      "valor": 0.5,
+      "ic95": [
+        0.2856,
+        0.7144
+      ]
+    },
+    "mae_ratio": {
+      "valor": 0.0715,
+      "ic95": [
+        0.0495,
+        0.0973
+      ]
+    }
+  },
+  "comparacion": {
+    "contra": "resultados/yolo_multitarea/yolov8s_mt_limpio/eval_test_20260923_185720",
+    "diferencias": {
+      "madurez_accuracy": {
+        "diferencia": 0.009,
+        "ic95": [
+          -0.0709,
+          0.0848
+        ],
+        "significativa": false
+      },
+      "madurez_f1_macro": {
+        "diferencia": 0.0086,
+        "ic95": [
+          -0.0699,
+          0.0852
+        ],
+        "significativa": false
+      },
+      "madurez_accuracy_pm1": {
+        "diferencia": -0.018,
+        "ic95": [
+          -0.0476,
+          0.0
+        ],
+        "significativa": false
+      },
+      "ocde_accuracy": {
+        "diferencia": -0.009,
+        "ic95": [
+          -0.129,
+          0.1207
+        ],
+        "significativa": false
+      },
+      "ocde_f1_macro": {
+        "diferencia": -0.0307,
+        "ic95": [
+          -0.184,
+          0.1466
+        ],
+        "significativa": false
+      },
+      "recall_rechazado": {
+        "diferencia": -0.1333,
+        "ic95": [
+          -0.3659,
+          0.1251
+        ],
+        "significativa": false
+      },
+      "mae_ratio": {
+        "diferencia": 0.0056,
+        "ic95": [
+          -0.0072,
+          0.0184
+        ],
+        "significativa": false
+      }
+    }
+  }
+}

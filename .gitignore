@@ -1,0 +1,34 @@
+# Entornos virtuales
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Datos pesados (se regeneran con los scripts; el dataset se descarga aparte)
+data/raw/
+data/splits/train/
+data/splits/val/
+data/splits/test/
+data/yolo/
+data/yolo_ampliado/
+data/pseudo/revision/
+data/pseudo/labels/
+data/pseudo/revision.html
+*.zip
+
+# Pesos y modelos (se publican en GitHub Releases, no en el repo)
+*.pt
+*.pth
+*.onnx
+*.tflite
+weights/
+models/
+
+# Imagenes generadas en las evaluaciones
+resultados/test_overlays/
+resultados/**/*.jpg
+resultados/**/visor.html
+
+# Frontend
+node_modules/

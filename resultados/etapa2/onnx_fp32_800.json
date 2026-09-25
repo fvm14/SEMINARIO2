@@ -1,0 +1,19 @@
+{
+  "modelo": "/tmp/mov/palta_multitarea_800.onnx",
+  "tamano_mb": 48.02,
+  "imgsz": 800,
+  "n": 108,
+  "conf_defecto": 0.05,
+  "iou_palta": 0.9905,
+  "iou_defecto": 0.3968,
+  "precision_defecto": 0.5698,
+  "recall_defecto": 0.5665,
+  "madurez_acc": 0.7407,
+  "madurez_f1": 0.7372,
+  "ocde_acc": 0.7778,
+  "recall_rechazado": 0.6071,
+  "mae_ratio": 0.0755,
+  "latencia_ms_media": 636.8,
+  "latencia_ms_p95": 710.4,
+  "hilos_cpu": 4
+}
