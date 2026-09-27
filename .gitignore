@@ -6,7 +6,8 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Datos pesados (se regeneran con los scripts; el dataset se descarga aparte)
-data/raw/
+data/raw/*
+!data/raw/labels_seg/
 data/splits/train/
 data/splits/val/
 data/splits/test/
