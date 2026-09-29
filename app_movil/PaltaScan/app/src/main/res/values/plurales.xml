@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="n_lotes">
+        <item quantity="one">%1$d lote</item>
+        <item quantity="other">%1$d lotes</item>
+    </plurals>
+    <plurals name="n_paltas">
+        <item quantity="one">%1$d palta</item>
+        <item quantity="other">%1$d paltas</item>
+    </plurals>
+    <plurals name="n_paltas_analizadas">
+        <item quantity="one">%1$d palta analizada</item>
+        <item quantity="other">%1$d paltas analizadas</item>
+    </plurals>
+</resources>

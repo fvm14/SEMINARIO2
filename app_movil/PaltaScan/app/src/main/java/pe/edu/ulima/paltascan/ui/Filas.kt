@@ -110,7 +110,7 @@ fun VistaResumenBinding.mostrar(r: Resumen) {
             text = "${r.porcentaje(c)} %"; setTextColor(color); textSize = 24f; paint.isFakeBoldText = true
         })
         columna.addView(TextView(ctx).apply {
-            text = ctx.getString(R.string.n_paltas, r.porCategoria[c]); setTextColor(color); textSize = 12f
+            text = ctx.resources.getQuantityString(R.plurals.n_paltas, r.porCategoria[c], r.porCategoria[c]); setTextColor(color); textSize = 12f
         })
         tarjeta.addView(columna)
         tarjetasCategoria.addView(tarjeta)

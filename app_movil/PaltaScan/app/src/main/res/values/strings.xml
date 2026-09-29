@@ -19,7 +19,7 @@
     <string name="ultimos_analisis">Últimos análisis</string>
     <string name="ver_todo">Ver todo</string>
     <string name="n_analisis">%1$d análisis</string>
-    <string name="n_lotes">%1$d lotes</string>
+
     <string name="modo_continuo">Modo\ncontinuo</string>
     <string name="modo_continuo_pronto">El modo continuo llegará en la siguiente versión.</string>
     <string name="desde_galeria">Desde\ngalería</string>
@@ -115,8 +115,8 @@
     <string name="fecha_valor">Fecha: %1$s</string>
     <string name="guardar_lote">Guardar lote</string>
     <string name="falta_nombre">Escribe un nombre para el lote.</string>
-    <string name="n_paltas">%1$d paltas</string>
-    <string name="n_paltas_analizadas">%1$d paltas analizadas</string>
+
+
     <string name="analisis_del_lote">Análisis del lote</string>
     <string name="exportar">Exportar</string>
     <string name="exportar_lote">Exportar lote</string>

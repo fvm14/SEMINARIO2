@@ -48,7 +48,7 @@ class InicioFragment : Fragment() {
         b.textoSinAnalisis.visibility = if (recientes.isEmpty()) View.VISIBLE else View.GONE
         b.botonVerTodo.visibility = if (recientes.isEmpty()) View.GONE else View.VISIBLE
         b.textoNumAnalisis.text = getString(R.string.n_analisis, bd.contarInspecciones())
-        b.textoNumLotes.text = getString(R.string.n_lotes, bd.contarLotes())
+        b.textoNumLotes.text = bd.contarLotes().let { resources.getQuantityString(R.plurals.n_lotes, it, it) }
     }
 
     override fun onDestroyView() {

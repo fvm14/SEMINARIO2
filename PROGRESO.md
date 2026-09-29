@@ -236,9 +236,15 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
   - Los umbrales se calibraron con las 108 fotos de test: el mínimo real es 184 de luminancia y 117 de nitidez, así que ninguna foto válida queda marcada.
 - **Base de datos v2:** tabla `lotes` y `inspecciones.lote_id` anulable. Cada análisis va al historial y se asigna a un lote si se desea. La migración desde v1 convierte los lotes de texto en filas.
 - 20 pruebas unitarias pasan: las 13 anteriores y 7 de validación de la captura. La inferencia no cambió.
+- **Probada en el celular (2026-09-29):**
+  - La v0.2.0 se instaló encima de la 0.1.0.
+  - `ConcordanciaTest` da resultados idénticos a la v0.1.0: 108/108 en madurez y en categoría, con 708 ms de inferencia.
+  - Se recorrieron todas las pantallas con 7 fotos de prueba copiadas a la galería: una por categoría, dos paltas, palta cortada, foto oscura y sin palta.
+  - Los tres casos bloqueantes muestran su motivo. La foto oscura también se bloquea como "sin palta", porque el modelo no la detecta con tan poca luz.
+  - La exportación a CSV y PDF funciona.
+  - Se corrigieron los plurales ("1 lote", "1 palta").
+  - La foto "Cat. II" (ratio de 9,4 % en Python) salió Cat. I con 9,1 % en la app: es la foto límite que ya difería en la concordancia.
 - Falta:
-  - instalar la v0.2.0 en el celular, recorrer las pantallas y guardar capturas;
-  - volver a correr `ConcordanciaTest`;
   - cámara en vivo y modo continuo (fase 2);
   - reducir la latencia (delegado GPU / hilos).
 
@@ -292,3 +298,4 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - 2026-09-28: app probada en el celular (Xiaomi 11 Lite 5G NE, Android 14): se cambió TFLite 2.16.1 por LiteRT 1.4.2 porque no cargaba el modelo; concordancia con Python de 108/108 en madurez y 107/108 en OCDE; latencia de ~0.9 s por foto en CPU.
 - 2026-09-29: rediseño de la app (Fase 1, v0.2.0) según el PDF de pantallas: navegación inferior, resultado nuevo, historial por día con filtros, lotes con productor y exportación CSV, guía rápida, ajustes y validación de la captura (sin palta, varias, cortada, oscura, borrosa y baja confianza); base de datos v2 con migración; 20 pruebas unitarias.
 - 2026-09-29: exportación del lote a PDF (fase 1b) con `PdfDocument`, sin librerías nuevas.
+- 2026-09-29: v0.2.0 probada en el celular: concordancia idéntica (108/108), recorrido completo de pantallas y casos de error, exportación CSV/PDF verificada; plurales corregidos.

@@ -71,7 +71,7 @@ class LoteActivity : AppCompatActivity() {
     private fun llenarCabecera(c: CabeceraLoteBinding) {
         val origen = listOf(lote.productor, Textos.fecha(lote.fechaMs)).filter { it.isNotBlank() }
         c.textoOrigen.text = origen.joinToString(" · ")
-        c.textoTotal.text = getString(R.string.n_paltas_analizadas, inspecciones.size)
+        c.textoTotal.text = resources.getQuantityString(R.plurals.n_paltas_analizadas, inspecciones.size, inspecciones.size)
         c.resumen.mostrar(Resumen(inspecciones))
         c.textoNotas.text = lote.notas
         c.textoNotas.visibility = if (lote.notas.isBlank()) View.GONE else View.VISIBLE
@@ -82,7 +82,7 @@ class LoteActivity : AppCompatActivity() {
     private fun mostrarExportar() {
         val hoja = BottomSheetDialog(this)
         val h = HojaExportarBinding.inflate(layoutInflater)
-        h.textoLote.text = lote.nombre + " · " + getString(R.string.n_paltas, inspecciones.size)
+        h.textoLote.text = lote.nombre + " · " + resources.getQuantityString(R.plurals.n_paltas, inspecciones.size, inspecciones.size)
         h.opcionCsv.setOnClickListener { hoja.dismiss(); exportarCsv() }
         h.opcionPdf.setOnClickListener { hoja.dismiss(); exportarPdf() }
         hoja.setContentView(h.root)

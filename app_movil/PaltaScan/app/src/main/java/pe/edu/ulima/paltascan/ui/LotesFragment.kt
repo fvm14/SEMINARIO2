@@ -74,7 +74,7 @@ class LotesFragment : Fragment() {
             val (lote, r) = lotes[pos]
             val ctx = h.itemView.context
             h.v.textoNombre.text = lote.nombre
-            h.v.textoDetalle.text = Textos.fecha(lote.fechaMs) + " · " + ctx.getString(R.string.n_paltas, r.total)
+            h.v.textoDetalle.text = Textos.fecha(lote.fechaMs) + " · " + ctx.resources.getQuantityString(R.plurals.n_paltas, r.total, r.total)
             h.v.barra.mostrar(r.porCategoria)
             h.v.textoPorcentajes.text = (0 until 3).joinToString(" · ") { "${r.porcentaje(it)} %" }
             h.v.root.setOnClickListener { LoteActivity.abrir(ctx, lote.id) }
