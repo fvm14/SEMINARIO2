@@ -228,7 +228,7 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
   - Inicio con saludo, últimos 3 análisis y accesos;
   - Historial agrupado por día con filtros (categoría y madurez) y estado vacío;
   - Resultado con selector original / con marcas, tarjeta OCDE, barra de % de defecto con los límites 9,4 % y 14,1 %, escala de madurez 1–5 con nombres y confianza, aviso de resultado poco confiable y botones Guardar en lote / Compartir / Nuevo análisis; el mismo layout sirve de detalle (Mover a lote / Eliminar con confirmación);
-  - Lotes como entidad (nombre, productor, notas y fecha) con barra apilada por categoría, detalle con resumen e histograma de madurez, y exportación a **CSV** (el PDF va en la fase 1b);
+  - Lotes como entidad (nombre, productor, notas y fecha) con barra apilada por categoría, detalle con resumen e histograma de madurez, y exportación a **CSV** y **PDF** (informe A4 con resumen por categoría, histograma de madurez y una fila por análisis con miniatura, generado en el celular con `PdfDocument`);
   - vista previa de galería, pantalla "No pudimos analizar la foto" y Ajustes / Cómo funciona.
 - **Validación de la captura** (`ml/ValidacionCaptura.kt`), con lo que el modelo ya entrega:
   - Bloquean el análisis, que no se guarda: sin palta, más de una palta (componentes con área ≥ 20% de la mayor) y palta cortada en el borde.
@@ -239,7 +239,6 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - Falta:
   - instalar la v0.2.0 en el celular, recorrer las pantallas y guardar capturas;
   - volver a correr `ConcordanciaTest`;
-  - exportar a PDF (fase 1b);
   - cámara en vivo y modo continuo (fase 2);
   - reducir la latencia (delegado GPU / hilos).
 
@@ -292,3 +291,4 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - 2026-09-28: `probar_modelo_gui.py` v2: selector de modelos, anotación real, métricas por foto y acumuladas de defectos y madurez; verificado contra las métricas de test reportadas.
 - 2026-09-28: app probada en el celular (Xiaomi 11 Lite 5G NE, Android 14): se cambió TFLite 2.16.1 por LiteRT 1.4.2 porque no cargaba el modelo; concordancia con Python de 108/108 en madurez y 107/108 en OCDE; latencia de ~0.9 s por foto en CPU.
 - 2026-09-29: rediseño de la app (Fase 1, v0.2.0) según el PDF de pantallas: navegación inferior, resultado nuevo, historial por día con filtros, lotes con productor y exportación CSV, guía rápida, ajustes y validación de la captura (sin palta, varias, cortada, oscura, borrosa y baja confianza); base de datos v2 con migración; 20 pruebas unitarias.
+- 2026-09-29: exportación del lote a PDF (fase 1b) con `PdfDocument`, sin librerías nuevas.

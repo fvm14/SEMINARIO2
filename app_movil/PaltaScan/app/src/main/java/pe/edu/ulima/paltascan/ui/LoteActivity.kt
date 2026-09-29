@@ -7,6 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -16,6 +20,7 @@ import pe.edu.ulima.paltascan.databinding.ActivityLoteBinding
 import pe.edu.ulima.paltascan.databinding.CabeceraLoteBinding
 import pe.edu.ulima.paltascan.databinding.HojaExportarBinding
 import pe.edu.ulima.paltascan.datos.ExportadorCsv
+import pe.edu.ulima.paltascan.datos.ExportadorPdf
 import pe.edu.ulima.paltascan.datos.Inspeccion
 import pe.edu.ulima.paltascan.datos.Lote
 import pe.edu.ulima.paltascan.datos.Resumen
@@ -79,10 +84,17 @@ class LoteActivity : AppCompatActivity() {
         val h = HojaExportarBinding.inflate(layoutInflater)
         h.textoLote.text = lote.nombre + " · " + getString(R.string.n_paltas, inspecciones.size)
         h.opcionCsv.setOnClickListener { hoja.dismiss(); exportarCsv() }
-        // El informe PDF llega en la fase 1b.
-        h.opcionPdf.visibility = View.GONE
+        h.opcionPdf.setOnClickListener { hoja.dismiss(); exportarPdf() }
         hoja.setContentView(h.root)
         hoja.show()
+    }
+
+    private fun exportarPdf() {
+        lifecycleScope.launch {
+            val archivo = Acciones.archivoExporte(this@LoteActivity, ExportadorCsv.nombreArchivo(lote, "pdf"))
+            withContext(Dispatchers.IO) { ExportadorPdf.generar(lote, inspecciones, archivo) }
+            Acciones.compartirArchivo(this@LoteActivity, archivo, "application/pdf")
+        }
     }
 
     private fun exportarCsv() {
