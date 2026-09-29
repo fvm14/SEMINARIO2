@@ -27,9 +27,12 @@ class ResultadoAnalisis(
     val fruto: BooleanArray,
     val defecto: BooleanArray,
     val tiempos: Tiempos,
+    val problemas: List<ValidacionCaptura.Problema> = emptyList(),
 ) {
     val nombreCategoria: String get() = Ocde.CATEGORIAS[categoria]
     val frutoDetectado: Boolean get() = fruto.any { it }
+    val bloqueante: ValidacionCaptura.Problema? get() = problemas.firstOrNull { it.bloqueante }
+    val avisos: List<ValidacionCaptura.Problema> get() = problemas.filter { !it.bloqueante }
 }
 
 /** Pipeline completo de inferencia_movil.analizar() sobre un Bitmap. */
@@ -71,12 +74,18 @@ class Analizador private constructor(private val interprete: Interpreter) {
         val salida = LectorSalidas.leer(tensores, lienzo)
         val instancias = Postproceso.seleccionar(salida)
         val m = Postproceso.mascaras(salida, instancias, lb)
+        val union = BooleanArray(m.palta.size) { m.palta[it] || m.defecto[it] }
+        val nFrutos = ValidacionCaptura.contarFrutos(union, m.ancho, m.alto)
         val fruto = Ocde.frutoCompleto(m.palta, m.defecto, m.ancho, m.alto)
         val defecto = Ocde.filtrarDefectoPorRoi(fruto, m.defecto, m.ancho, m.alto, lb.kernelRoi(Configuracion.KERNEL_ROI_PX))
         val ratio = Ocde.calcularRatio(fruto, defecto)
         var mejor = 0
         for (i in salida.madurez.indices) if (salida.madurez[i] > salida.madurez[mejor]) mejor = i
         val t3 = System.nanoTime()
+        val (luminancia, nitidez) = calidadImagen(foto)
+        val problemas = ValidacionCaptura.revisar(
+            fruto, m.ancho, m.alto, nFrutos, luminancia, nitidez, salida.madurez[mejor]
+        )
 
         return ResultadoAnalisis(
             categoria = Ocde.clasificar(ratio),
@@ -88,7 +97,24 @@ class Analizador private constructor(private val interprete: Interpreter) {
             fruto = fruto,
             defecto = defecto,
             tiempos = Tiempos((t1 - t0) / 1e6, (t2 - t1) / 1e6, (t3 - t2) / 1e6),
+            problemas = problemas,
         )
+    }
+
+    /** Brillo y nitidez sobre la foto reducida a 256 px (fuera del tiempo medido). */
+    private fun calidadImagen(foto: Bitmap): Pair<Double, Double> {
+        val escala = ValidacionCaptura.LADO_CALIDAD.toFloat() / maxOf(foto.width, foto.height)
+        val w = maxOf(3, (foto.width * escala).toInt())
+        val h = maxOf(3, (foto.height * escala).toInt())
+        val chica = Bitmap.createScaledBitmap(foto, w, h, true)
+        val px = IntArray(w * h)
+        chica.getPixels(px, 0, w, 0, 0, w, h)
+        if (chica !== foto) chica.recycle()
+        val gris = IntArray(px.size) { i ->
+            val p = px[i]
+            ((0.299 * Color.red(p)) + (0.587 * Color.green(p)) + (0.114 * Color.blue(p))).toInt()
+        }
+        return ValidacionCaptura.luminancia(gris) to ValidacionCaptura.nitidez(gris, w, h)
     }
 
     private fun prepararEntrada(foto: Bitmap, lb: Letterbox): ByteBuffer {
