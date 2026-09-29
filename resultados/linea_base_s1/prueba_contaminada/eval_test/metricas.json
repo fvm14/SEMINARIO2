@@ -1,0 +1,67 @@
+{
+  "weights": "weights/s1_defectos_best.pt",
+  "split": "test",
+  "n_imagenes": 108,
+  "imgsz": 800,
+  "conf_palta": 0.35,
+  "conf_defecto": 0.2,
+  "ultralytics": {
+    "global": {
+      "metrics/precision(B)": 0.8861,
+      "metrics/recall(B)": 0.88,
+      "metrics/mAP50(B)": 0.9013,
+      "metrics/mAP50-95(B)": 0.7469,
+      "metrics/precision(M)": 0.8725,
+      "metrics/recall(M)": 0.8645,
+      "metrics/mAP50(M)": 0.8891,
+      "metrics/mAP50-95(M)": 0.6576,
+      "fitness": 1.4045,
+      "metrics/F1(B)": 0.883,
+      "metrics/F1(M)": 0.8685
+    },
+    "por_clase_mascaras": {
+      "Palta": {
+        "P": 0.9835,
+        "R": 0.9907,
+        "mAP50": 0.9932,
+        "mAP50-95": 0.8657
+      },
+      "Defecto": {
+        "P": 0.7616,
+        "R": 0.7383,
+        "mAP50": 0.785,
+        "mAP50-95": 0.4496
+      }
+    }
+  },
+  "pixel_sin_roi": {
+    "iou_palta": 0.991,
+    "dice_palta": 0.9955,
+    "precision_palta": 0.9973,
+    "recall_palta": 0.9936,
+    "iou_defecto": 0.5477,
+    "dice_defecto": 0.7077,
+    "precision_defecto": 0.7778,
+    "recall_defecto": 0.6492
+  },
+  "pixel_con_roi": {
+    "iou_palta": 0.991,
+    "dice_palta": 0.9955,
+    "precision_palta": 0.9973,
+    "recall_palta": 0.9936,
+    "iou_defecto": 0.5478,
+    "dice_defecto": 0.7078,
+    "precision_defecto": 0.778,
+    "recall_defecto": 0.6492
+  },
+  "ocde": {
+    "accuracy": 0.8704,
+    "recall_rechazado": 0.75,
+    "mae_ratio": 0.04901
+  },
+  "latencia_ms": {
+    "media": 40.47,
+    "dispositivo": "cuda:0"
+  },
+  "nota": "madurez_pred en predicciones.csv es la del nombre del archivo; el modelo no predice madurez."
+}
