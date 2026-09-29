@@ -114,6 +114,10 @@ En el bootstrap pareado, la mejora en F1 de madurez es de +0.105, con IC [+0.005
 
 **Conclusión de la Etapa 1.** Ampliar el dataset mejora claramente la madurez, porque cada foto aporta su etiqueta real de madurez aunque sus defectos estén incompletos. La segmentación de defectos no mejora porque las pseudoetiquetas tienen recall bajo. El informe completo está en `resultados/Informe_Etapa1_Seminario2.pdf`.
 
+**Línea base de tarea única (modelo de Seminario I), en curso.** Se descargó el `best.pt` de defectos de Seminario I (Drive `SEMINARIO 1/MODELOS/Modelos/YOLOv8s/.../weights`, ahora `weights/s1_defectos_best.pt`) para compararlo con Ronda 1 en la actividad 1.3. Hallazgo: **no se puede evaluar directamente sobre nuestro val/test**, porque se entrenó con el split aleatorio de Roboflow sobre las mismas fotos. De nuestro test, 77 de 108 fotos y 37 de 39 frutos estuvieron en su entrenamiento; de val, 168 de 232 fotos y 72 de 79 frutos. Por eso en val da una IoU de defecto de 0.62 (umbral 0.20) frente a 0.47 de Ronda 1: la cifra está inflada. La lista de fotos de su train está en `resultados/linea_base_s1/s1_train_stems.txt`; el script de evaluación es `scripts/eval_linea_base_s1.py`. Evaluado igual sobre ese test contaminado, da mAP50 0.889, mAP50-95 0.658, IoU de defecto 0.548 y recall de Rechazado 75% (`resultados/linea_base_s1/prueba_contaminada/`, solo como evidencia de la fuga, no reportable).
+
+Solución preparada para correr en Colab (o en la RTX A5000 del compañero): `notebooks/linea_base_s1_colab.ipynb` con `scripts/train_linea_base_s1.py`. Reentrena YOLOv8s-seg de tarea única sobre nuestro train de 852 imágenes en dos configuraciones: `replica_s1` (hiperparámetros exactos de Seminario I) y `ablacion` (los de `yolov8s_mt_final`, para aislar el efecto del cabezal de madurez). Luego calibra el umbral en val, evalúa en test y hace bootstrap pareado contra `mt_final` y `mt_ronda1`. Guarda todo en Drive (`SEMINARIO 1/SEMI2/linea_base_s1`) y se reanuda si Colab se corta. Requiere hacer push antes, porque Colab clona el repo.
+
 ## 7. Etapa 2: exportación y cuantización para móvil
 
 **Exportación a ONNX** (`scripts/exportar_movil.py`). Se fusionan convolución y BatchNorm y se envuelve el modelo para que entregue cinco salidas separadas:
@@ -195,10 +199,80 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - Posible Ronda 2.
 - Revisión opcional de la muestra de control para reportar la tasa de error de las pseudoetiquetas.
 
-**Etapa 4: app**
-- Portar el post-proceso de `inferencia_movil.py` a Kotlin.
-- Integrar LiteRT y CameraX.
-- Medir la latencia real en celular, que es la cifra que va a la tesis.
+**Etapa 4: app** (ver sección 11)
+- ~~Portar el post-proceso de `inferencia_movil.py` a Kotlin.~~ Hecho: `app_movil/PaltaScan/`, con 13 pruebas unitarias.
+- ~~Integrar LiteRT.~~ Hecho con TensorFlow Lite 2.16. En lugar de CameraX se usa la cámara del sistema, porque el análisis es foto por foto.
+- Medir la latencia real en celular y correr la prueba de concordancia app vs. Python (`ConcordanciaTest`).
 
 **Paper**
 - Redacción con las tablas y los intervalos de confianza de este documento.
+
+## 11. Etapas 3 a 5 (Dylann)
+
+**Etapa 3: prototipo (app Android `app_movil/PaltaScan/`).**
+- Decisión: app Android nativa en Kotlin, con inferencia en el celular (TFLite dynamic range) y sin nube obligatoria.
+- Hecho: port a Kotlin de `inferencia_movil.py` y `ocde.py` (letterbox, lectura de las 5 salidas, NMS por clase, máscaras, fruto completo, ROI, ratio, categoría OCDE) y tres pantallas:
+  - **Inicio:** lote, cámara o galería.
+  - **Resultado:** original vs. máscara, OCDE, madurez y ms por etapa.
+  - **Historial por lote:** con exportación a CSV y guardado en SQLite.
+- Pasan 13 pruebas unitarias y el APK compila. El modelo dynamic range ya está en los assets.
+- Validado en Python (`scripts/referencia_app.py`) sobre las 108 fotos de prueba: 73.15% de madurez, igual que en `resultados/etapa2`. Resultado en `resultados/app/referencia_python_test.json`.
+- Nuevo `scripts/probar_modelo_gui.py`: ventana tkinter para probar el modelo con fotos. Versión 2: lista desplegable con los modelos que encuentra (TFLite/ONNX, `.pt` multitarea y `.pt` de solo defectos, incluidas las líneas base cuando existan), cada uno con su umbral calibrado; paneles original / anotación real / modelo; por foto, OCDE y % de defecto frente al real, IoU, precisión y recall de defecto, madurez frente a la real y barras de probabilidad por nivel; métricas acumuladas y botón "Evaluar carpeta completa". Verificada sobre las 108 fotos de test: reproduce las cifras reportadas (PyTorch 74.1% madurez, IoU 0.397, OCDE 77.8%, Rechazado 60.7%; TFLite 73.1%).
+- **Prueba en celular real (2026-09-28): Xiaomi 11 Lite 5G NE (Snapdragon 778G, Android 14).**
+  - Error encontrado: TFLite 2.16.1 no podía cargar el modelo (`FULLY_CONNECTED` versión 12, generado por un conversor más nuevo). Se cambió la dependencia a LiteRT 1.4.2 (`com.google.ai.edge.litert:litert`, mismo API `org.tensorflow.lite`). LiteRT 2.x exige Kotlin 2, así que se descartó por ahora.
+  - `ConcordanciaTest` en las 108 fotos de test, contra la referencia en Python (`resultados/app/resultados_app_xiaomi11lite.json` vs `referencia_python_test.json`): madurez idéntica en 108/108 (diferencia máxima de probabilidad 0.0045), máscara del fruto idéntica, categoría OCDE igual en 107/108 y ratio de defecto con mediana de diferencia 0. En 6% de las fotos el ratio difiere, con un máximo de +17 puntos: son defectos con confianza en el límite del umbral 0.05 que se activan por diferencias numéricas mínimas.
+  - Latencia en el celular (CPU, LiteRT): preproceso 104 ms, inferencia 715 ms y postproceso 80 ms, unos **0.9 s por foto**. Es 4 veces más lenta que en la PC (175 ms). Se puede reducir probando el delegado GPU (con el modelo FP16) o más hilos.
+  - En MIUI la instalación por USB exige aceptar un aviso por cada APK, y adb no puede leer `Android/data`; la prueba ahora guarda también una copia en el almacenamiento interno (`run-as ... cat files/resultados_app.json`).
+- Falta:
+  - reducir la latencia (delegado GPU / hilos);
+  - probar la app a mano con fotos de la cámara;
+  - contrastar el diseño con `frontend/PaltaScan — Pantallas.pdf`.
+
+**Etapa 4: integración.** El análisis completo corre en el celular; la validación funcional está pendiente de la prueba en el celular.
+
+**Etapa 5: validación.** Planificada, aún no iniciada:
+- latencia por etapa en 2 celulares;
+- prueba de estrés de 100 análisis;
+- tres escenarios de iluminación;
+- SUS con operarios;
+- comparación con un inspector manual.
+
+## 12. Pendientes transversales
+
+- **Umbrales OCDE:** falta confirmar la fuente del área de referencia de 42.4 cm² (unos 7.3 cm de diámetro). Si cambia, hay que recalcular las métricas OCDE.
+
+- **Anotaciones de SAM2 a auditar:** en test hay fotos con todo el fruto marcado como defecto (la caja amplia confunde a SAM2). Plan: regla automática contra las cajas originales, revisión visual del test y val y confirmación humana (ver conversación del 2026-09-28).
+- **Criterio de cuantización:** falta medir la pérdida de mAP50 de las variantes TFLite.
+
+## 13. Historial de actualizaciones
+
+- 2026-09-26: primera version de este archivo. Inventario del estado real:
+  Etapa 1 con ronda 1 de reentrenamiento hecha, Etapa 2 con benchmark de
+  cuantizacion completo, Etapas 3-5 sin empezar.
+- 2026-09-26: se incorpora el contexto de Seminario I.
+  Se registra que la multitarea real ya esta resuelta y se agregan los
+  pendientes: umbral OCDE sin fuente, criterio Δ mAP@50 < 3% sin medir,
+  dispositivo edge y tecnologia del prototipo sin decidir.
+- 2026-09-26: primera version de la app Android `app_movil/PaltaScan/`
+  (ver `app_movil/README.md`) y de `scripts/referencia_app.py` para
+  compararla con Python. Se decide la app nativa con inferencia on-device.
+- 2026-09-28: los modelos estaban en el release de GitHub
+  `fvm14/SEMINARIO2` `v0.2-etapa2` (ronda1_best.pt, limpio_best.pt, ONNX y 3
+  TFLite, imagenes_anotadas.zip, pseudoetiquetas.zip). Se descargaron
+  `ronda1_best.pt` (`weights/`) y el TFLite dynamic-range (`modelos_movil/`),
+  con el SHA-256 verificado, y se extrajeron las 108 fotos de prueba en
+  `data/prueba_test/` (todo en `.gitignore`). Se crea `.venv` con el runtime
+  de TFLite (ai-edge-litert).
+- 2026-09-28: verificado el TFLite dynamic-range con `referencia_app.py`
+  sobre las 108 fotos de prueba: 73.15% de exactitud de madurez, identica a
+  la de `resultados/etapa2` (resultado en
+  `resultados/app/referencia_python_test.json`). El modelo ya esta en los
+  assets de la app y hay una prueba instrumentada (`ConcordanciaTest`)
+  pendiente de correr en un celular real; se descarta el emulador por
+  lento. Nuevo `scripts/probar_modelo_gui.py`: ventana tkinter para probar el
+  modelo con fotos (original vs. mascara, OCDE, madurez, ms).
+- 2026-09-28: se une el `PROGRESO.md` del equipo (secciones 1 a 10) con la bitácora de Dylann (secciones 11 a 13) en un solo archivo, y se marcan como hechos los pendientes de la app.
+- 2026-09-28: línea base de Seminario I: modelo descargado, torch 2.14 (CUDA 12.6) y ultralytics 8.4.160 instalados en `.venv`, dataset YOLO regenerado (852/232/108) y umbral calibrado en val. Se detectó que el modelo de Seminario I vio 77 de 108 fotos de test (37 de 39 frutos), así que la comparación directa no es válida; se propone reentrenarlo en el split por fruto (sección 6).
+- 2026-09-28: listo el notebook de Colab `notebooks/linea_base_s1_colab.ipynb` y `scripts/train_linea_base_s1.py` (configuraciones `replica_s1` y `ablacion`) para reentrenar la línea base; `eval_linea_base_s1.py` probado localmente.
+- 2026-09-28: `probar_modelo_gui.py` v2: selector de modelos, anotación real, métricas por foto y acumuladas de defectos y madurez; verificado contra las métricas de test reportadas.
+- 2026-09-28: app probada en el celular (Xiaomi 11 Lite 5G NE, Android 14): se cambió TFLite 2.16.1 por LiteRT 1.4.2 porque no cargaba el modelo; concordancia con Python de 108/108 en madurez y 107/108 en OCDE; latencia de ~0.9 s por foto en CPU.

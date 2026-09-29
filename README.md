@@ -1,7 +1,10 @@
 # palta-multitarea
 
-Reconstruccion en Python (sin Roboflow) del pipeline de Seminario I, con un
-modelo YOLOv8s-seg multitarea que en una sola pasada:
+En Seminario I el pipeline (Roboflow + YOLOv8s-seg, ~1,244 imagenes
+anotadas) solo segmentaba paltas y defectos; la madurez se leia del nombre
+del archivo, no la predecia la red. Este
+repositorio lo reconstruye en Python puro (sin Roboflow) y lo reemplaza por
+un modelo YOLOv8s-seg **multitarea** que en una sola pasada:
 
 1. Segmenta por instancia la palta y sus defectos (igual que en Seminario I).
 2. Clasifica el nivel de madurez 1 a 5 con un cabezal nuevo conectado al
@@ -104,8 +107,9 @@ completo se guardara como `yolov8s_multitarea2` (Ultralytics no sobrescribe).
   queda con huecos donde hay defectos, mientras el poligono anotado cubre el fruto completo.
 - Umbral por clase: el defecto usa un umbral mas bajo que la palta, elegido en validacion.
 
-## Pendiente para Seminario II
+## Seminario II
 
-La exportacion a movil (ONNX/TFLite) necesita un envoltorio que devuelva
-tambien los logits de madurez, porque el exportador estandar de Ultralytics
-solo exporta la salida de deteccion/segmentacion.
+Este README documenta el modelo y el pipeline de datos de la reconstruccion
+de Seminario I (arriba). El objetivo, las 5 etapas y el avance real de
+Seminario II (ampliacion del dataset por pseudo-etiquetado, cuantizacion,
+prototipo movil, integracion y validacion) estan en [`PROGRESO.md`](PROGRESO.md).
