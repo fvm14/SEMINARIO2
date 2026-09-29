@@ -1,12 +1,70 @@
 <resources>
     <color name="verde_palta">#2E7D32</color>
     <color name="verde_oscuro">#1B5E20</color>
+    <color name="verde_claro">#E8F2E3</color>
+    <color name="fondo">#F6F7F2</color>
+    <color name="superficie">#FFFFFF</color>
+    <color name="borde">#E1E4DA</color>
+    <color name="texto">#1C2419</color>
+    <color name="texto_suave">#5E6B58</color>
     <color name="cat_i">#2E7D32</color>
     <color name="cat_ii">#B26A00</color>
     <color name="rechazo">#C62828</color>
+    <color name="cat_i_fondo">#E3F1E1</color>
+    <color name="cat_ii_fondo">#FBEFD9</color>
+    <color name="rechazo_fondo">#FBE3E1</color>
+    <color name="aviso_fondo">#FFF4D6</color>
+    <color name="aviso_texto">#7A5200</color>
 
-    <style name="Theme.PaltaScan" parent="Theme.Material3.DayNight">
+    <style name="Theme.PaltaScan" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/verde_palta</item>
-        <item name="colorPrimaryContainer">@color/verde_oscuro</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">@color/verde_claro</item>
+        <item name="colorOnPrimaryContainer">@color/verde_oscuro</item>
+        <item name="colorSecondaryContainer">@color/verde_claro</item>
+        <item name="android:colorBackground">@color/fondo</item>
+        <item name="colorSurface">@color/fondo</item>
+        <item name="colorOnSurface">@color/texto</item>
+        <item name="colorOnSurfaceVariant">@color/texto_suave</item>
+        <item name="colorOutline">@color/borde</item>
+        <item name="android:statusBarColor">@color/fondo</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/superficie</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="materialCardViewStyle">@style/Tarjeta</item>
+    </style>
+
+    <style name="Tarjeta" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/superficie</item>
+        <item name="strokeColor">@color/borde</item>
+        <item name="cardCornerRadius">16dp</item>
+    </style>
+
+    <style name="Titulo" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">@color/texto</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Subtitulo" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/texto</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Etiqueta" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">@color/texto_suave</item>
+    </style>
+
+    <style name="Cuerpo" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/texto</item>
+    </style>
+
+    <style name="BotonPrincipal" parent="Widget.Material3.Button">
+        <item name="android:minHeight">56dp</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <style name="BotonSecundario" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">52dp</item>
+        <item name="cornerRadius">16dp</item>
     </style>
 </resources>
