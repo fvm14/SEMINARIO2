@@ -1,142 +1,321 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/barra"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:subtitleTextAppearance="@style/Etiqueta"
+        app:title="@string/resultado" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/tarjetaCategoria"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/etiquetaCategoria"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/categoria_ocde"
-                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:textColor="@android:color/white" />
-
-                <TextView
-                    android:id="@+id/textoCategoria"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="16dp">
 
+            <!-- Aviso de resultado poco confiable (p. 13) -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/panelAviso"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/original"
-                    android:textAppearance="?attr/textAppearanceLabelSmall" />
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/fondo_ilustracion"
+                android:backgroundTint="@color/aviso_fondo"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:visibility="gone">
 
                 <ImageView
-                    android:id="@+id/imagenOriginal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/original" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_aviso"
+                    app:tint="@color/aviso_texto" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textoAviso"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/analisis"
-                    android:textAppearance="?attr/textAppearanceLabelSmall" />
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/aviso_texto" />
+            </LinearLayout>
+
+            <!-- Foto original / con marcas -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/imagenAnalisis"
+                    android:id="@+id/imagen"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:background="@drawable/fondo_ilustracion"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter" />
+
+                <LinearLayout
+                    android:id="@+id/leyenda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/fondo_chip"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp">
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/fondo_chip"
+                        android:backgroundTint="#2EA043" />
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/leyenda_palta" />
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/fondo_chip"
+                        android:backgroundTint="#DC2626" />
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/leyenda_defecto" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/selectorVista"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:checkedButton="@id/botonMarcas"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <Button
+                    android:id="@+id/botonOriginal"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/original" />
+
+                <Button
+                    android:id="@+id/botonMarcas"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/con_marcas" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Categoria OCDE -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tarjetaCategoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/analisis" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/textoCategoria"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/calidad_ocde" />
+
+                    <TextView
+                        android:id="@+id/textoSinDefectos"
+                        style="@style/Cuerpo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/sin_defectos"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Area con defecto -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/Subtitulo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/area_defecto" />
+
+                        <TextView
+                            android:id="@+id/textoRatio"
+                            style="@style/Subtitulo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <pe.edu.ulima.paltascan.ui.BarraDefectoView
+                        android:id="@+id/barraDefecto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Madurez -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/Subtitulo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/madurez" />
+
+                        <TextView
+                            android:id="@+id/textoMadurez"
+                            style="@style/Cuerpo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:gravity="end" />
+                    </LinearLayout>
+
+                    <pe.edu.ulima.paltascan.ui.EscalaMadurezView
+                        android:id="@+id/escalaMadurez"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp" />
+
+                    <TextView
+                        android:id="@+id/textoConfianza"
+                        style="@style/Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" />
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/barraConfianza"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        app:trackCornerRadius="4dp"
+                        app:trackThickness="6dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/textoTiempo"
+                style="@style/Etiqueta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Acciones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/superficie"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonSecundario1"
+                style="@style/BotonSecundario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_carpeta" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonSecundario2"
+                style="@style/BotonSecundario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_compartir" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/madurez"
-            android:textAppearance="?attr/textAppearanceLabelMedium" />
-
-        <TextView
-            android:id="@+id/textoMadurez"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/ratio_defecto"
-            android:textAppearance="?attr/textAppearanceLabelMedium" />
-
-        <TextView
-            android:id="@+id/textoRatio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/tiempos"
-            android:textAppearance="?attr/textAppearanceLabelMedium" />
-
-        <TextView
-            android:id="@+id/textoTiempos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBodyMedium" />
-
-        <Button
-            android:id="@+id/botonOtra"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/analizar_otra" />
-
-        <Button
-            android:id="@+id/botonHistorial"
-            style="?attr/borderlessButtonStyle"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonPrincipal"
+            style="@style/BotonPrincipal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ver_historial" />
+            android:layout_marginTop="8dp"
+            android:text="@string/nuevo_analisis"
+            app:icon="@drawable/ic_camara"
+            app:iconGravity="textStart" />
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

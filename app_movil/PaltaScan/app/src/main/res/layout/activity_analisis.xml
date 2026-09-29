@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <FrameLayout
+        android:layout_width="220dp"
+        android:layout_height="220dp">
+
+        <ImageView
+            android:id="@+id/imagenFoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/fondo_ilustracion"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            app:indicatorSize="72dp"
+            app:trackThickness="6dp" />
+    </FrameLayout>
+
+    <TextView
+        style="@style/Titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/analizando" />
+
+    <TextView
+        style="@style/Cuerpo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/analizando_detalle" />
+
+    <TextView
+        style="@style/Etiqueta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/analizando_pie" />
+</LinearLayout>

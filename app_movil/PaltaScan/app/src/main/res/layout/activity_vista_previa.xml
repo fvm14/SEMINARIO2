@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/barra"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:title="@string/vista_previa" />
+
+    <ImageView
+        android:id="@+id/imagen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_weight="1"
+        android:background="@drawable/fondo_ilustracion"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/textoArchivo"
+            style="@style/Subtitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/textoDatos"
+            style="@style/Etiqueta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/botonAnalizar"
+            style="@style/BotonPrincipal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/analizar_esta_foto" />
+
+        <Button
+            android:id="@+id/botonOtra"
+            style="@style/BotonSecundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/elegir_otra_foto" />
+    </LinearLayout>
+</LinearLayout>

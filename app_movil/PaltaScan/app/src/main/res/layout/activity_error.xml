@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="112dp"
+            android:layout_height="112dp"
+            android:background="@drawable/fondo_ilustracion"
+            android:backgroundTint="@color/aviso_fondo">
+
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_encuadre"
+                app:tint="@color/aviso_texto" />
+        </FrameLayout>
+
+        <TextView
+            style="@style/Titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="@string/error_titulo" />
+
+        <TextView
+            style="@style/Cuerpo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/error_texto" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/Etiqueta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/motivo" />
+
+                <TextView
+                    android:id="@+id/textoMotivo"
+                    style="@style/Cuerpo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/botonReintentar"
+        style="@style/BotonPrincipal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/intentar_de_nuevo" />
+
+    <Button
+        android:id="@+id/botonInicio"
+        style="@style/BotonSecundario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/volver_inicio" />
+</LinearLayout>
