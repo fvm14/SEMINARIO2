@@ -223,10 +223,25 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
   - `ConcordanciaTest` en las 108 fotos de test, contra la referencia en Python (`resultados/app/resultados_app_xiaomi11lite.json` vs `referencia_python_test.json`): madurez idéntica en 108/108 (diferencia máxima de probabilidad 0.0045), máscara del fruto idéntica, categoría OCDE igual en 107/108 y ratio de defecto con mediana de diferencia 0. En 6% de las fotos el ratio difiere, con un máximo de +17 puntos: son defectos con confianza en el límite del umbral 0.05 que se activan por diferencias numéricas mínimas.
   - Latencia en el celular (CPU, LiteRT): preproceso 104 ms, inferencia 715 ms y postproceso 80 ms, unos **0.9 s por foto**. Es 4 veces más lenta que en la PC (175 ms). Se puede reducir probando el delegado GPU (con el modelo FP16) o más hilos.
   - En MIUI la instalación por USB exige aceptar un aviso por cada APK, y adb no puede leer `Android/data`; la prueba ahora guarda también una copia en el almacenamiento interno (`run-as ... cat files/resultados_app.json`).
+- **Rediseño según `frontend/PaltaScan — Pantallas.pdf` (Fase 1, v0.2.0, 2026-09-29).** Implementado todo el diseño salvo la cámara en vivo:
+  - arranque con carga del modelo, guía rápida de 3 pasos (solo la primera vez) y barra inferior Inicio / Historial / Lotes / Ajustes;
+  - Inicio con saludo, últimos 3 análisis y accesos;
+  - Historial agrupado por día con filtros (categoría y madurez) y estado vacío;
+  - Resultado con selector original / con marcas, tarjeta OCDE, barra de % de defecto con los límites 9,4 % y 14,1 %, escala de madurez 1–5 con nombres y confianza, aviso de resultado poco confiable y botones Guardar en lote / Compartir / Nuevo análisis; el mismo layout sirve de detalle (Mover a lote / Eliminar con confirmación);
+  - Lotes como entidad (nombre, productor, notas y fecha) con barra apilada por categoría, detalle con resumen e histograma de madurez, y exportación a **CSV** (el PDF va en la fase 1b);
+  - vista previa de galería, pantalla "No pudimos analizar la foto" y Ajustes / Cómo funciona.
+- **Validación de la captura** (`ml/ValidacionCaptura.kt`), con lo que el modelo ya entrega:
+  - Bloquean el análisis, que no se guarda: sin palta, más de una palta (componentes con área ≥ 20% de la mayor) y palta cortada en el borde.
+  - Solo generan aviso: foto oscura (luminancia < 70), borrosa (varianza del Laplaciano < 40 a 256 px) o madurez con confianza < 0.6.
+  - Los umbrales se calibraron con las 108 fotos de test: el mínimo real es 184 de luminancia y 117 de nitidez, así que ninguna foto válida queda marcada.
+- **Base de datos v2:** tabla `lotes` y `inspecciones.lote_id` anulable. Cada análisis va al historial y se asigna a un lote si se desea. La migración desde v1 convierte los lotes de texto en filas.
+- 20 pruebas unitarias pasan: las 13 anteriores y 7 de validación de la captura. La inferencia no cambió.
 - Falta:
-  - reducir la latencia (delegado GPU / hilos);
-  - probar la app a mano con fotos de la cámara;
-  - contrastar el diseño con `frontend/PaltaScan — Pantallas.pdf`.
+  - instalar la v0.2.0 en el celular, recorrer las pantallas y guardar capturas;
+  - volver a correr `ConcordanciaTest`;
+  - exportar a PDF (fase 1b);
+  - cámara en vivo y modo continuo (fase 2);
+  - reducir la latencia (delegado GPU / hilos).
 
 **Etapa 4: integración.** El análisis completo corre en el celular; la validación funcional está pendiente de la prueba en el celular.
 
@@ -276,3 +291,4 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - 2026-09-28: listo el notebook de Colab `notebooks/linea_base_s1_colab.ipynb` y `scripts/train_linea_base_s1.py` (configuraciones `replica_s1` y `ablacion`) para reentrenar la línea base; `eval_linea_base_s1.py` probado localmente.
 - 2026-09-28: `probar_modelo_gui.py` v2: selector de modelos, anotación real, métricas por foto y acumuladas de defectos y madurez; verificado contra las métricas de test reportadas.
 - 2026-09-28: app probada en el celular (Xiaomi 11 Lite 5G NE, Android 14): se cambió TFLite 2.16.1 por LiteRT 1.4.2 porque no cargaba el modelo; concordancia con Python de 108/108 en madurez y 107/108 en OCDE; latencia de ~0.9 s por foto en CPU.
+- 2026-09-29: rediseño de la app (Fase 1, v0.2.0) según el PDF de pantallas: navegación inferior, resultado nuevo, historial por día con filtros, lotes con productor y exportación CSV, guía rápida, ajustes y validación de la captura (sin palta, varias, cortada, oscura, borrosa y baja confianza); base de datos v2 con migración; 20 pruebas unitarias.
