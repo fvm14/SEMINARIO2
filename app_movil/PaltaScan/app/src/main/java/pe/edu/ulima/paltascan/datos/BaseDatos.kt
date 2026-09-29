@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 
 data class Inspeccion(
     val id: Long = 0,
-    val lote: String,
+    val loteId: Long?,
     val fechaMs: Long,
     val archivoFoto: String,
     val archivoOverlay: String,
@@ -19,18 +19,56 @@ data class Inspeccion(
     val msPreproceso: Double,
     val msInferencia: Double,
     val msPostproceso: Double,
+    /** Avisos de ValidacionCaptura separados por coma (OSCURA, BORROSA, BAJA_CONFIANZA). */
+    val avisos: String = "",
 ) {
     val msTotal: Double get() = msPreproceso + msInferencia + msPostproceso
 }
 
-class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", null, 1) {
+data class Lote(
+    val id: Long = 0,
+    val nombre: String,
+    val productor: String,
+    val notas: String,
+    val fechaMs: Long,
+)
+
+/** Conteos de un conjunto de analisis (lote, sesion o historial). */
+class Resumen(inspecciones: List<Inspeccion>) {
+    val total = inspecciones.size
+    val porCategoria = IntArray(3).also { c -> inspecciones.forEach { c[it.categoria]++ } }
+    val porMadurez = IntArray(5).also { c -> inspecciones.forEach { c[it.madurez - 1]++ } }
+    fun porcentaje(categoria: Int) = if (total == 0) 0 else Math.round(100.0 * porCategoria[categoria] / total).toInt()
+}
+
+/** Filtro del historial: por categoria OCDE o por nivel de madurez. */
+data class Filtro(val categoria: Int? = null, val madurez: Int? = null)
+
+class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", null, 2) {
 
     override fun onCreate(db: SQLiteDatabase) {
+        crearLotes(db)
+        crearInspecciones(db)
+    }
+
+    private fun crearLotes(db: SQLiteDatabase) = db.execSQL(
+        """
+        CREATE TABLE lotes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            productor TEXT NOT NULL DEFAULT '',
+            notas TEXT NOT NULL DEFAULT '',
+            fecha_ms INTEGER NOT NULL
+        )
+        """.trimIndent()
+    )
+
+    private fun crearInspecciones(db: SQLiteDatabase, tabla: String = "inspecciones") {
         db.execSQL(
             """
-            CREATE TABLE inspecciones (
+            CREATE TABLE $tabla (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                lote TEXT NOT NULL,
+                lote_id INTEGER REFERENCES lotes(id) ON DELETE SET NULL,
                 fecha_ms INTEGER NOT NULL,
                 archivo_foto TEXT NOT NULL,
                 archivo_overlay TEXT NOT NULL,
@@ -40,17 +78,49 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
                 categoria INTEGER NOT NULL,
                 ms_preproceso REAL NOT NULL,
                 ms_inferencia REAL NOT NULL,
-                ms_postproceso REAL NOT NULL
+                ms_postproceso REAL NOT NULL,
+                avisos TEXT NOT NULL DEFAULT ''
             )
             """.trimIndent()
         )
-        db.execSQL("CREATE INDEX idx_lote ON inspecciones(lote)")
+        if (tabla == "inspecciones") {
+            db.execSQL("CREATE INDEX idx_lote ON inspecciones(lote_id)")
+            db.execSQL("CREATE INDEX idx_fecha ON inspecciones(fecha_ms)")
+        }
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) = Unit
+    /** v1 -> v2: el lote era un texto dentro de cada inspeccion; pasa a su propia tabla. */
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 2) {
+            crearLotes(db)
+            db.execSQL(
+                "INSERT INTO lotes (nombre, fecha_ms) SELECT lote, MIN(fecha_ms) FROM inspecciones GROUP BY lote"
+            )
+            crearInspecciones(db, "inspecciones_v2")
+            db.execSQL(
+                """
+                INSERT INTO inspecciones_v2 (id, lote_id, fecha_ms, archivo_foto, archivo_overlay, madurez,
+                    prob_madurez, ratio, categoria, ms_preproceso, ms_inferencia, ms_postproceso)
+                SELECT i.id, l.id, i.fecha_ms, i.archivo_foto, i.archivo_overlay, i.madurez, i.prob_madurez,
+                    i.ratio, i.categoria, i.ms_preproceso, i.ms_inferencia, i.ms_postproceso
+                FROM inspecciones i JOIN lotes l ON l.nombre = i.lote
+                """.trimIndent()
+            )
+            db.execSQL("DROP TABLE inspecciones")
+            db.execSQL("ALTER TABLE inspecciones_v2 RENAME TO inspecciones")
+            db.execSQL("CREATE INDEX idx_lote ON inspecciones(lote_id)")
+            db.execSQL("CREATE INDEX idx_fecha ON inspecciones(fecha_ms)")
+        }
+    }
+
+    override fun onConfigure(db: SQLiteDatabase) {
+        db.setForeignKeyConstraintsEnabled(true)
+    }
+
+    // ---------------------------------------------------------------- inspecciones
 
     fun insertar(i: Inspeccion): Long = writableDatabase.insert("inspecciones", null, ContentValues().apply {
-        put("lote", i.lote)
+        put("lote_id", i.loteId)
         put("fecha_ms", i.fechaMs)
         put("archivo_foto", i.archivoFoto)
         put("archivo_overlay", i.archivoOverlay)
@@ -61,28 +131,42 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
         put("ms_preproceso", i.msPreproceso)
         put("ms_inferencia", i.msInferencia)
         put("ms_postproceso", i.msPostproceso)
+        put("avisos", i.avisos)
     })
 
     fun obtener(id: Long): Inspeccion? =
-        readableDatabase.rawQuery("SELECT * FROM inspecciones WHERE id = ?", arrayOf(id.toString())).use { c ->
-            if (c.moveToFirst()) leer(c) else null
-        }
+        consultar("SELECT * FROM inspecciones WHERE id = ?", arrayOf(id.toString())).firstOrNull()
 
-    fun porLote(lote: String): List<Inspeccion> =
-        readableDatabase.rawQuery("SELECT * FROM inspecciones WHERE lote = ? ORDER BY fecha_ms DESC", arrayOf(lote)).use { c ->
-            buildList { while (c.moveToNext()) add(leer(c)) }
-        }
+    fun historial(filtro: Filtro = Filtro(), limite: Int? = null): List<Inspeccion> {
+        val donde = mutableListOf<String>()
+        val args = mutableListOf<String>()
+        filtro.categoria?.let { donde += "categoria = ?"; args += it.toString() }
+        filtro.madurez?.let { donde += "madurez = ?"; args += it.toString() }
+        val sql = "SELECT * FROM inspecciones" +
+            (if (donde.isEmpty()) "" else " WHERE " + donde.joinToString(" AND ")) +
+            " ORDER BY fecha_ms DESC" + (limite?.let { " LIMIT $it" } ?: "")
+        return consultar(sql, args.toTypedArray())
+    }
 
-    fun lotes(): List<String> =
-        readableDatabase.rawQuery("SELECT lote FROM inspecciones GROUP BY lote ORDER BY MAX(fecha_ms) DESC", null).use { c ->
-            buildList { while (c.moveToNext()) add(c.getString(0)) }
-        }
+    fun porLote(loteId: Long): List<Inspeccion> =
+        consultar("SELECT * FROM inspecciones WHERE lote_id = ? ORDER BY fecha_ms DESC", arrayOf(loteId.toString()))
+
+    fun contarInspecciones(): Int =
+        readableDatabase.rawQuery("SELECT COUNT(*) FROM inspecciones", null).use { it.moveToFirst(); it.getInt(0) }
+
+    fun moverALote(inspeccionId: Long, loteId: Long?) {
+        writableDatabase.update("inspecciones", ContentValues().apply { put("lote_id", loteId) },
+            "id = ?", arrayOf(inspeccionId.toString()))
+    }
 
     fun eliminar(id: Long) = writableDatabase.delete("inspecciones", "id = ?", arrayOf(id.toString()))
 
+    private fun consultar(sql: String, args: Array<String>): List<Inspeccion> =
+        readableDatabase.rawQuery(sql, args).use { c -> buildList { while (c.moveToNext()) add(leer(c)) } }
+
     private fun leer(c: Cursor) = Inspeccion(
         id = c.getLong(c.getColumnIndexOrThrow("id")),
-        lote = c.getString(c.getColumnIndexOrThrow("lote")),
+        loteId = c.getColumnIndexOrThrow("lote_id").let { if (c.isNull(it)) null else c.getLong(it) },
         fechaMs = c.getLong(c.getColumnIndexOrThrow("fecha_ms")),
         archivoFoto = c.getString(c.getColumnIndexOrThrow("archivo_foto")),
         archivoOverlay = c.getString(c.getColumnIndexOrThrow("archivo_overlay")),
@@ -93,5 +177,38 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
         msPreproceso = c.getDouble(c.getColumnIndexOrThrow("ms_preproceso")),
         msInferencia = c.getDouble(c.getColumnIndexOrThrow("ms_inferencia")),
         msPostproceso = c.getDouble(c.getColumnIndexOrThrow("ms_postproceso")),
+        avisos = c.getString(c.getColumnIndexOrThrow("avisos")),
     )
+
+    // ---------------------------------------------------------------- lotes
+
+    fun crearLote(l: Lote): Long = writableDatabase.insert("lotes", null, ContentValues().apply {
+        put("nombre", l.nombre)
+        put("productor", l.productor)
+        put("notas", l.notas)
+        put("fecha_ms", l.fechaMs)
+    })
+
+    fun lote(id: Long): Lote? =
+        consultarLotes("SELECT * FROM lotes WHERE id = ?", arrayOf(id.toString())).firstOrNull()
+
+    fun lotes(): List<Lote> = consultarLotes("SELECT * FROM lotes ORDER BY fecha_ms DESC", emptyArray())
+
+    fun contarLotes(): Int =
+        readableDatabase.rawQuery("SELECT COUNT(*) FROM lotes", null).use { it.moveToFirst(); it.getInt(0) }
+
+    private fun consultarLotes(sql: String, args: Array<String>): List<Lote> =
+        readableDatabase.rawQuery(sql, args).use { c ->
+            buildList {
+                while (c.moveToNext()) add(
+                    Lote(
+                        id = c.getLong(c.getColumnIndexOrThrow("id")),
+                        nombre = c.getString(c.getColumnIndexOrThrow("nombre")),
+                        productor = c.getString(c.getColumnIndexOrThrow("productor")),
+                        notas = c.getString(c.getColumnIndexOrThrow("notas")),
+                        fechaMs = c.getLong(c.getColumnIndexOrThrow("fecha_ms")),
+                    )
+                )
+            }
+        }
 }

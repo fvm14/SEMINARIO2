@@ -4,9 +4,6 @@ import android.app.Application
 import android.content.Context
 import pe.edu.ulima.paltascan.datos.BaseDatos
 import pe.edu.ulima.paltascan.ml.Analizador
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class PaltaScanApp : Application() {
 
@@ -19,15 +16,15 @@ class PaltaScanApp : Application() {
 
     private val prefs by lazy { getSharedPreferences("paltascan", Context.MODE_PRIVATE) }
 
-    var loteActual: String
-        get() = prefs.getString("lote_actual", null) ?: nuevoLote()
-        set(valor) = prefs.edit().putString("lote_actual", valor).apply()
+    /** La guia rapida se muestra solo la primera vez. */
+    var guiaVista: Boolean
+        get() = prefs.getBoolean("guia_vista", false)
+        set(valor) = prefs.edit().putBoolean("guia_vista", valor).apply()
 
-    fun nuevoLote(): String {
-        val nombre = "Lote " + SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).format(Date())
-        loteActual = nombre
-        return nombre
-    }
+    /** Si es false, solo se conserva la imagen con marcas. */
+    var guardarFotos: Boolean
+        get() = prefs.getBoolean("guardar_fotos", true)
+        set(valor) = prefs.edit().putBoolean("guardar_fotos", valor).apply()
 }
 
 val Context.app: PaltaScanApp get() = applicationContext as PaltaScanApp
