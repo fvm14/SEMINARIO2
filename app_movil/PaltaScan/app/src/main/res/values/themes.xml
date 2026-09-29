@@ -1,0 +1,12 @@
+<resources>
+    <color name="verde_palta">#2E7D32</color>
+    <color name="verde_oscuro">#1B5E20</color>
+    <color name="cat_i">#2E7D32</color>
+    <color name="cat_ii">#B26A00</color>
+    <color name="rechazo">#C62828</color>
+
+    <style name="Theme.PaltaScan" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/verde_palta</item>
+        <item name="colorPrimaryContainer">@color/verde_oscuro</item>
+    </style>
+</resources>

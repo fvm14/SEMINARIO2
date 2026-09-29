@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">PaltaScan</string>
+    <string name="titulo_resultado">Resultado</string>
+    <string name="titulo_historial">Historial del lote</string>
+
+    <string name="lote_actual">Lote actual</string>
+    <string name="nuevo_lote">Nuevo lote</string>
+    <string name="tomar_foto">Tomar foto</string>
+    <string name="elegir_galeria">Elegir de galería</string>
+    <string name="ver_historial">Ver historial del lote</string>
+    <string name="analizando">Analizando…</string>
+    <string name="modelo_listo">Modelo cargado: análisis en el dispositivo, sin internet.</string>
+    <string name="modelo_faltante">Falta el modelo. Copie palta_multitarea.tflite en app/src/main/assets (ver app_movil/README.md).</string>
+    <string name="sin_fruto">No se detectó una palta en la foto. Revise el encuadre y la iluminación.</string>
+    <string name="error_analisis">No se pudo analizar la imagen: %1$s</string>
+
+    <string name="original">Original</string>
+    <string name="analisis">Análisis (verde: fruto, rojo: defecto)</string>
+    <string name="categoria_ocde">Categoría OCDE</string>
+    <string name="madurez">Madurez</string>
+    <string name="madurez_valor">Nivel %1$d de 5 (%2$.0f%% de confianza)</string>
+    <string name="ratio_defecto">Área con defecto</string>
+    <string name="ratio_valor">%1$.1f%% de la superficie del fruto</string>
+    <string name="tiempos">Tiempo de procesamiento</string>
+    <string name="tiempos_valor">Total %1$.0f ms · preproceso %2$.0f · inferencia %3$.0f · postproceso %4$.0f</string>
+    <string name="analizar_otra">Analizar otra palta</string>
+
+    <string name="exportar_csv">Exportar CSV</string>
+    <string name="historial_vacio">Todavía no hay paltas analizadas en este lote.</string>
+    <string name="resumen_lote">%1$d paltas · Cat. I: %2$d · Cat. II: %3$d · Rechazo: %4$d</string>
+    <string name="exportado">CSV exportado.</string>
+</resources>

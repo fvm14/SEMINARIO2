@@ -33,3 +33,16 @@ resultados/**/visor.html
 
 # Frontend
 node_modules/
+
+
+# App Android
+app_movil/**/build/
+app_movil/**/.gradle/
+app_movil/**/local.properties
+app_movil/**/.idea/
+app_movil/**/*.apk
+
+# Modelos y fotos de prueba descargados del release
+modelos_movil/
+data/prueba_test/
+
