@@ -1,48 +1,43 @@
 package pe.edu.ulima.paltascan.ui
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import pe.edu.ulima.paltascan.R
+import pe.edu.ulima.paltascan.app
 import pe.edu.ulima.paltascan.databinding.ActivityMainBinding
+import pe.edu.ulima.paltascan.datos.Imagenes
+import pe.edu.ulima.paltascan.datos.Inspeccion
+import pe.edu.ulima.paltascan.ml.ValidacionCaptura.Problema
 import java.io.File
 
 /**
- * Contenedor con la barra inferior (Inicio, Historial, Lotes, Ajustes).
- * Tambien centraliza la captura: camara del sistema o selector de galeria.
+ * Pantalla principal: lote actual, captura (camara o galeria) y resultado del
+ * ultimo analisis en la misma pantalla. Cada analisis valido se guarda en el
+ * historial, dentro del lote actual.
  */
 class MainActivity : AppCompatActivity() {
-
-    companion object {
-        private const val EXTRA_ACCION = "accion"
-        const val ACCION_CAMARA = "camara"
-        const val ACCION_GALERIA = "galeria"
-        const val ACCION_HISTORIAL = "historial"
-
-        /** Vuelve al inicio (cerrando lo que haya encima) y, si se pide, abre la camara o la galeria. */
-        fun volver(context: Context, accion: String? = null) {
-            context.startActivity(Intent(context, MainActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                accion?.let { putExtra(EXTRA_ACCION, it) }
-            })
-        }
-    }
 
     private lateinit var b: ActivityMainBinding
     private var uriCaptura: Uri? = null
 
     private val tomarFoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { ok ->
-        if (ok) uriCaptura?.let { AnalisisActivity.abrir(this, it) }
+        if (ok) uriCaptura?.let(::analizar)
     }
 
     private val elegirFoto = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        uri?.let { VistaPreviaActivity.abrir(this, it) }
+        uri?.let(::analizar)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,17 +47,20 @@ class MainActivity : AppCompatActivity() {
         b.root.respetarBarrasDelSistema()
         uriCaptura = savedInstanceState?.getString("uri")?.let(Uri::parse)
 
-        b.navegacion.setOnItemSelectedListener { item ->
-            mostrar(item.itemId)
-            true
+        b.botonCamara.setOnClickListener { abrirCamara() }
+        b.botonGaleria.setOnClickListener {
+            elegirFoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-        if (savedInstanceState == null) b.navegacion.selectedItemId = R.id.nav_inicio
-        atenderAccion(intent)
+        b.botonHistorial.setOnClickListener { startActivity(Intent(this, HistorialActivity::class.java)) }
+        b.botonLote.setOnClickListener {
+            Acciones.elegirLote(this) { id -> app.loteActualId = id; mostrarLote() }
+        }
+        cargarModelo()
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        atenderAccion(intent)
+    override fun onResume() {
+        super.onResume()
+        mostrarLote()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -70,30 +68,21 @@ class MainActivity : AppCompatActivity() {
         uriCaptura?.let { outState.putString("uri", it.toString()) }
     }
 
-    private fun atenderAccion(intent: Intent) {
-        when (intent.getStringExtra(EXTRA_ACCION)) {
-            ACCION_CAMARA -> abrirCamara()
-            ACCION_GALERIA -> abrirGaleria()
-            ACCION_HISTORIAL -> irA(R.id.nav_historial)
+    private fun mostrarLote() {
+        b.textoLote.text = Acciones.nombreLote(this, app.loteActualId)
+    }
+
+    private fun cargarModelo() {
+        habilitar(false)
+        b.textoEstado.setText(R.string.cargando_modelo)
+        lifecycleScope.launch {
+            val listo = withContext(Dispatchers.Default) { app.analizador != null }
+            b.textoEstado.setText(if (listo) R.string.subtitulo else R.string.modelo_faltante)
+            habilitar(listo)
         }
-        intent.removeExtra(EXTRA_ACCION)
     }
 
-    fun irA(itemId: Int) {
-        b.navegacion.selectedItemId = itemId
-    }
-
-    private fun mostrar(itemId: Int) {
-        val fragment: Fragment = when (itemId) {
-            R.id.nav_historial -> HistorialFragment()
-            R.id.nav_lotes -> LotesFragment()
-            R.id.nav_ajustes -> AjustesFragment()
-            else -> InicioFragment()
-        }
-        supportFragmentManager.beginTransaction().replace(R.id.contenedor, fragment).commit()
-    }
-
-    fun abrirCamara() {
+    private fun abrirCamara() {
         val dir = File(cacheDir, "capturas").apply { mkdirs() }
         val archivo = File(dir, "captura_${System.currentTimeMillis()}.jpg")
         dir.listFiles()?.filter { it != archivo }?.forEach { it.delete() }
@@ -102,7 +91,67 @@ class MainActivity : AppCompatActivity() {
         tomarFoto.launch(uri)
     }
 
-    fun abrirGaleria() {
-        elegirFoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    private fun analizar(uri: Uri) {
+        val analizador = app.analizador ?: return
+        habilitar(false)
+        b.panelProgreso.visibility = View.VISIBLE
+        b.textoMensaje.visibility = View.GONE
+        b.resultado.root.visibility = View.GONE
+        lifecycleScope.launch {
+            try {
+                val foto = withContext(Dispatchers.IO) { Imagenes.cargar(this@MainActivity, uri) }
+                val r = withContext(Dispatchers.Default) { analizador.analizar(foto) }
+                val bloqueante = r.bloqueante
+                if (bloqueante != null) {
+                    mostrarMensaje(getString(R.string.no_analizable) + ". " + getString(motivo(bloqueante)), error = true)
+                    return@launch
+                }
+                val loteId = app.loteActualId
+                val id = withContext(Dispatchers.IO) {
+                    val marca = System.currentTimeMillis()
+                    app.baseDatos.insertar(
+                        Inspeccion(
+                            loteId = loteId, fechaMs = marca,
+                            archivoFoto = Imagenes.guardar(this@MainActivity, foto, "$marca.jpg"),
+                            archivoOverlay = Imagenes.guardar(this@MainActivity, Imagenes.superponer(foto, r), "${marca}_analisis.jpg"),
+                            madurez = r.madurez, probMadurez = r.probMadurez,
+                            ratio = r.ratio, categoria = r.categoria,
+                            msPreproceso = r.tiempos.preprocesoMs,
+                            msInferencia = r.tiempos.inferenciaMs,
+                            msPostproceso = r.tiempos.postprocesoMs,
+                            avisos = r.avisos.joinToString(",") { it.name },
+                        )
+                    )
+                }
+                app.baseDatos.obtener(id)?.let {
+                    b.resultado.mostrar(it)
+                    b.resultado.root.visibility = View.VISIBLE
+                    mostrarMensaje(getString(R.string.guardado_en, Acciones.nombreLote(this@MainActivity, loteId)), error = false)
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, getString(R.string.error_analisis, e.message), Toast.LENGTH_LONG).show()
+                b.textoMensaje.visibility = View.VISIBLE
+            } finally {
+                b.panelProgreso.visibility = View.GONE
+                habilitar(true)
+            }
+        }
+    }
+
+    private fun motivo(p: Problema) = when (p) {
+        Problema.VARIAS_PALTAS -> R.string.motivo_varias
+        Problema.PALTA_CORTADA -> R.string.motivo_cortada
+        else -> R.string.motivo_sin_palta
+    }
+
+    private fun mostrarMensaje(texto: String, error: Boolean) {
+        b.textoMensaje.text = texto
+        b.textoMensaje.setTextColor(ContextCompat.getColor(this, if (error) R.color.rechazo else R.color.texto_suave))
+        b.textoMensaje.visibility = View.VISIBLE
+    }
+
+    private fun habilitar(si: Boolean) {
+        b.botonCamara.isEnabled = si
+        b.botonGaleria.isEnabled = si
     }
 }

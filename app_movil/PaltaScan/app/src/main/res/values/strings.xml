@@ -1,157 +1,57 @@
 <resources>
     <string name="app_name">PaltaScan</string>
-    <string name="lema">Calidad y madurez de palta Hass</string>
-    <string name="preparando_modelo">Preparando el modelo…</string>
-    <string name="sin_conexion">Funciona sin conexión</string>
-    <string name="pie_prototipo">Prototipo · Universidad de Lima</string>
-    <string name="modelo_faltante">Falta el modelo en la app. Copie palta_multitarea.tflite en app/src/main/assets (ver app_movil/README.md).</string>
+    <string name="subtitulo">Defectos y madurez de palta Hass · análisis en el celular</string>
+    <string name="cargando_modelo">Cargando el modelo…</string>
+    <string name="modelo_faltante">Falta el modelo en la app (palta_multitarea.tflite en assets).</string>
 
-    <!-- Navegacion -->
-    <string name="nav_inicio">Inicio</string>
-    <string name="nav_historial">Historial</string>
-    <string name="nav_lotes">Lotes</string>
-    <string name="nav_ajustes">Ajustes</string>
-
-    <!-- Inicio -->
-    <string name="buenos_dias">Buenos días</string>
-    <string name="buenas_tardes">Buenas tardes</string>
-    <string name="buenas_noches">Buenas noches</string>
-    <string name="ultimos_analisis">Últimos análisis</string>
-    <string name="ver_todo">Ver todo</string>
-    <string name="n_analisis">%1$d análisis</string>
-
-    <string name="modo_continuo">Modo\ncontinuo</string>
-    <string name="modo_continuo_pronto">El modo continuo llegará en la siguiente versión.</string>
-    <string name="desde_galeria">Desde\ngalería</string>
-    <string name="analizar_palta">Analizar palta</string>
-    <string name="sin_analisis_inicio">Aún no hay análisis. Toma tu primera foto.</string>
-
-    <!-- Guia -->
-    <string name="guia_paso">Guía rápida · %1$d de 3</string>
-    <string name="omitir">Omitir</string>
-    <string name="siguiente">Siguiente</string>
-    <string name="empezar">Empezar</string>
-    <string name="guia_1_titulo">Una palta por foto</string>
-    <string name="guia_1_texto">Deja una sola palta frente a la cámara. Retira las demás del encuadre.</string>
-    <string name="guia_2_titulo">Buena luz, sin sombras</string>
-    <string name="guia_2_texto">Usa luz de día o una lámpara pareja. Evita el contraluz y el flash directo.</string>
-    <string name="guia_3_titulo">Llena la foto</string>
-    <string name="guia_3_texto">Acércate hasta que la palta ocupe casi toda la foto, sin cortarla. Mantén el celular quieto.</string>
-
-    <!-- Analisis -->
+    <!-- Principal -->
+    <string name="lote">Lote</string>
+    <string name="sin_lote">Sin lote</string>
+    <string name="cambiar_lote">Cambiar</string>
+    <string name="tomar_foto">Tomar foto</string>
+    <string name="galeria">Galería</string>
+    <string name="ver_historial">Historial</string>
     <string name="analizando">Analizando…</string>
-    <string name="analizando_detalle">Buscando defectos y madurez</string>
-    <string name="analizando_pie">En tu celular · sin internet</string>
-    <string name="error_analisis">No se pudo analizar la imagen: %1$s</string>
-
-    <!-- Vista previa -->
-    <string name="vista_previa">Vista previa</string>
-    <string name="analizar_esta_foto">Analizar esta foto</string>
-    <string name="elegir_otra_foto">Elegir otra foto</string>
-
-    <!-- Error -->
-    <string name="error_titulo">No pudimos analizar la foto</string>
-    <string name="error_texto">Toma otra foto con una sola palta completa dentro del encuadre.</string>
-    <string name="motivo">Motivo</string>
-    <string name="motivo_sin_palta">No se encontró una palta en la foto.</string>
-    <string name="motivo_varias">Hay más de una palta en la imagen.</string>
-    <string name="motivo_cortada">La palta aparece cortada en el borde de la foto.</string>
-    <string name="intentar_de_nuevo">Intentar de nuevo</string>
-    <string name="volver_inicio">Volver al inicio</string>
-
-    <!-- Resultado -->
-    <string name="resultado">Resultado</string>
-    <string name="analisis">Análisis</string>
-    <string name="original">Original</string>
-    <string name="con_marcas">Con marcas</string>
-    <string name="leyenda_palta">Palta</string>
-    <string name="leyenda_defecto">Defecto</string>
-    <string name="calidad_ocde">Calidad · norma OCDE</string>
-    <string name="sin_defectos">No se detectaron defectos</string>
+    <string name="sin_resultado">Toma o elige una foto de una palta para analizarla.</string>
+    <string name="mostrar_marcas">Mostrar defectos detectados</string>
+    <string name="categoria">Categoría OCDE</string>
     <string name="area_defecto">Área con defecto</string>
     <string name="madurez">Madurez</string>
-    <string name="madurez_nivel">Nivel %1$d · %2$s</string>
-    <string name="confianza">Confianza %1$d %%</string>
-    <string name="tiempo_analisis">Analizado en %1$.1f s en tu celular</string>
-    <string name="aviso_poco_confiable">Resultado poco confiable. Intenta otra foto con mejor luz.</string>
-    <string name="aviso_oscura">La foto está oscura.</string>
-    <string name="aviso_borrosa">La foto está borrosa.</string>
-    <string name="aviso_confianza">El modelo no está seguro de la madurez.</string>
-    <string name="nuevo_analisis">Nuevo análisis</string>
-    <string name="guardar_en_lote">Guardar en\nlote</string>
-    <string name="compartir">Compartir</string>
-    <string name="repetir_foto">Repetir foto</string>
-    <string name="mover_a_lote">Mover a\nlote</string>
-    <string name="eliminar">Eliminar</string>
-    <string name="en_lote">En %1$s</string>
-    <string name="sin_lote">Sin lote</string>
+    <string name="tiempo">Tiempo</string>
+    <string name="madurez_valor">%1$d de 5 · %2$s (confianza %3$d %%)</string>
+    <string name="tiempo_valor">%1$.1f s</string>
+    <string name="error_analisis">No se pudo analizar la imagen: %1$s</string>
+    <string name="no_analizable">No se pudo analizar la foto</string>
+    <string name="motivo_sin_palta">No se encontró una palta. Centra una sola palta en la foto.</string>
+    <string name="motivo_varias">Hay más de una palta. Deja solo una en la foto.</string>
+    <string name="motivo_cortada">La palta sale cortada en el borde. Aléjate un poco.</string>
+    <string name="aviso_poco_confiable">Resultado poco confiable:</string>
+    <string name="aviso_oscura">foto oscura</string>
+    <string name="aviso_borrosa">foto borrosa</string>
+    <string name="aviso_confianza">madurez dudosa</string>
     <string name="guardado_en">Guardado en %1$s</string>
-    <string name="eliminar_titulo">¿Eliminar este análisis?</string>
-    <string name="eliminar_texto">Se borrarán la foto y el resultado del %1$s. No se puede deshacer.</string>
-    <string name="cancelar">Cancelar</string>
+
+    <!-- Lotes -->
     <string name="elegir_lote">Elegir lote</string>
-    <string name="quitar_de_lote">Quitar del lote</string>
-    <string name="compartir_texto">PaltaScan: %1$s · madurez %2$d (%3$s) · %4$s de área con defecto.</string>
+    <string name="nuevo_lote">Nuevo lote</string>
+    <string name="nombre_lote">Nombre del lote</string>
+    <string name="productor">Productor u origen (opcional)</string>
+    <string name="crear">Crear</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="quitar_de_lote">Sin lote</string>
 
     <!-- Historial -->
     <string name="historial">Historial</string>
-    <string name="filtro_todas">Todas</string>
-    <string name="filtro_madurez">Madurez</string>
-    <string name="hoy">Hoy</string>
-    <string name="ayer">Ayer</string>
-    <string name="historial_vacio_titulo">Aún no hay análisis</string>
-    <string name="historial_vacio_texto">Tus resultados aparecerán aquí, ordenados por día.</string>
-    <string name="defecto_pct">Defecto %1$s</string>
-
-    <!-- Lotes -->
-    <string name="lotes">Lotes</string>
-    <string name="nuevo_lote">Nuevo lote</string>
-    <string name="lotes_vacio_titulo">Sin lotes todavía</string>
-    <string name="lotes_vacio_texto">Agrupa tus análisis por cosecha o productor para ver su calidad total.</string>
-    <string name="nombre_lote">Nombre del lote</string>
-    <string name="productor">Productor u origen</string>
-    <string name="notas">Notas</string>
-    <string name="opcional">Opcional</string>
-    <string name="fecha_valor">Fecha: %1$s</string>
-    <string name="guardar_lote">Guardar lote</string>
-    <string name="falta_nombre">Escribe un nombre para el lote.</string>
-
-
-    <string name="analisis_del_lote">Análisis del lote</string>
-    <string name="exportar">Exportar</string>
-    <string name="exportar_lote">Exportar lote</string>
-    <string name="exportar_csv">CSV</string>
-    <string name="exportar_csv_texto">Tabla con cada análisis</string>
-    <string name="exportar_pdf">PDF</string>
-    <string name="exportar_pdf_texto">Informe con resumen y fotos</string>
-    <string name="lote_vacio">Este lote aún no tiene análisis.</string>
-
-    <!-- Ajustes -->
-    <string name="ajustes">Ajustes</string>
-    <string name="datos">Datos</string>
-    <string name="guardar_fotos">Guardar fotos</string>
-    <string name="guardar_fotos_texto">Guarda la foto original con cada análisis</string>
-    <string name="idioma">Idioma</string>
-    <string name="espanol">Español</string>
-    <string name="modelo">Modelo</string>
-    <string name="version_modelo">Versión del modelo</string>
-    <string name="version_modelo_valor">Multitarea ronda 1 · TFLite rango dinámico</string>
-    <string name="como_funciona">Cómo funciona</string>
-    <string name="como_funciona_texto">Categorías OCDE y escala de madurez</string>
-    <string name="privacidad">Privacidad</string>
-    <string name="privacidad_titulo">Todo se procesa en tu celular</string>
-    <string name="privacidad_texto">Ninguna foto ni resultado se envía a internet.</string>
-    <string name="pie_ajustes">PaltaScan · prototipo · Universidad de Lima</string>
-
-    <!-- Como funciona -->
-    <string name="cf_titulo">Una foto, tres resultados</string>
-    <string name="cf_intro">El modelo encuentra la palta, marca los defectos de la cáscara y estima su madurez. Todo ocurre en tu celular.</string>
-    <string name="cf_calidad">1 · CALIDAD (NORMA OCDE)</string>
-    <string name="cf_calidad_texto">La categoría depende del área de la cáscara con defectos. Los límites de 4 cm² y 6 cm² equivalen a 9,4 % y 14,1 % del área de una palta promedio.</string>
-    <string name="cf_cat_i">Hasta 4 cm²\n≤ 9,4 %</string>
-    <string name="cf_cat_ii">Hasta 6 cm²\n9,4 – 14,1 %</string>
-    <string name="cf_rechazo">Más de 6 cm²\n&gt; 14,1 %</string>
-    <string name="cf_madurez">2 · MADUREZ</string>
-    <string name="cf_madurez_texto">Se estima por el color de la cáscara, de verde claro a casi negro. La confianza indica qué tan seguro está el modelo.</string>
-    <string name="cf_limite">La app no mide calibre ni peso. Solo evalúa defectos visibles y madurez.</string>
+    <string name="todos">Todos los análisis</string>
+    <string name="historial_vacio">Todavía no hay análisis.</string>
+    <string name="resumen">%1$d análisis · Cat. I %2$d · Cat. II %3$d · Rechazado %4$d</string>
+    <string name="resumen_madurez">Madurez 1–5: %1$s</string>
+    <string name="exportar_csv">Exportar CSV</string>
+    <string name="exportar_pdf">Exportar PDF</string>
+    <string name="mover_a_lote">Mover a lote</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="cerrar">Cerrar</string>
+    <string name="eliminar_titulo">¿Eliminar este análisis?</string>
+    <string name="eliminar_texto">Se borrarán la foto y el resultado. No se puede deshacer.</string>
+    <string name="compartir">Compartir</string>
 </resources>

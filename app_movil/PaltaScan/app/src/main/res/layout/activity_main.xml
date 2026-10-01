@@ -1,23 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fondo"
-    android:orientation="vertical">
+    android:background="@color/fondo">
 
-    <FrameLayout
-        android:id="@+id/contenedor"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navegacion"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/superficie"
-        app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/navegacion" />
-</LinearLayout>
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/texto"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textoEstado"
+            style="@style/Etiqueta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/subtitulo" />
+
+        <!-- Lote actual -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lote" />
+
+            <TextView
+                android:id="@+id/textoLote"
+                style="@style/Valor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/botonLote"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cambiar_lote" />
+        </LinearLayout>
+
+        <!-- Captura -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+
+            <Button
+                android:id="@+id/botonCamara"
+                style="@style/Boton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="@string/tomar_foto" />
+
+            <Button
+                android:id="@+id/botonGaleria"
+                style="@style/BotonBorde"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="@string/galeria" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/botonHistorial"
+            style="@style/BotonBorde"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ver_historial" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="12dp"
+            android:background="@color/linea" />
+
+        <!-- Progreso -->
+        <LinearLayout
+            android:id="@+id/panelProgreso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+
+            <TextView
+                style="@style/Valor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/analizando" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textoMensaje"
+            style="@style/Etiqueta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sin_resultado" />
+
+        <!-- Resultado -->
+        <include
+            android:id="@+id/resultado"
+            layout="@layout/vista_resultado"
+            android:visibility="gone" />
+    </LinearLayout>
+</ScrollView>

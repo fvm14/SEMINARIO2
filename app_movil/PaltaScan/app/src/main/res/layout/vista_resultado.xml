@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resultado de un analisis; se usa en la pantalla principal y en el detalle del historial. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textoAviso"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/aviso"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imagen"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:background="#EFEFEC"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/interruptorMarcas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="@string/mostrar_marcas"
+        android:textColor="@color/texto_suave" />
+
+    <TextView
+        style="@style/Etiqueta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/categoria" />
+
+    <TextView
+        android:id="@+id/textoCategoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        style="@style/Etiqueta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/area_defecto" />
+
+    <TextView
+        android:id="@+id/textoRatio"
+        style="@style/Valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        style="@style/Etiqueta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/madurez" />
+
+    <TextView
+        android:id="@+id/textoMadurez"
+        style="@style/Valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        style="@style/Etiqueta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/tiempo" />
+
+    <TextView
+        android:id="@+id/textoTiempo"
+        style="@style/Valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

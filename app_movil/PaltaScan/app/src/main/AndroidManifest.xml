@@ -12,24 +12,14 @@
         android:theme="@style/Theme.PaltaScan">
 
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.GuiaActivity" />
-        <activity
-            android:name=".ui.MainActivity"
-            android:launchMode="singleTop" />
-        <activity android:name=".ui.VistaPreviaActivity" />
-        <activity android:name=".ui.AnalisisActivity" />
-        <activity android:name=".ui.ErrorAnalisisActivity" />
-        <activity android:name=".ui.ResultadoActivity" />
-        <activity android:name=".ui.NuevoLoteActivity" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.LoteActivity" />
-        <activity android:name=".ui.ComoFuncionaActivity" />
+        <activity android:name=".ui.HistorialActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

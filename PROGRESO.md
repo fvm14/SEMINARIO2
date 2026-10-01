@@ -230,6 +230,11 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
   - Resultado con selector original / con marcas, tarjeta OCDE, barra de % de defecto con los límites 9,4 % y 14,1 %, escala de madurez 1–5 con nombres y confianza, aviso de resultado poco confiable y botones Guardar en lote / Compartir / Nuevo análisis; el mismo layout sirve de detalle (Mover a lote / Eliminar con confirmación);
   - Lotes como entidad (nombre, productor, notas y fecha) con barra apilada por categoría, detalle con resumen e histograma de madurez, y exportación a **CSV** y **PDF** (informe A4 con resumen por categoría, histograma de madurez y una fila por análisis con miniatura, generado en el celular con `PdfDocument`);
   - vista previa de galería, pantalla "No pudimos analizar la foto" y Ajustes / Cómo funciona.
+- **Diseño básico (v0.3.0, 2026-10-01).** Tras la revisión del docente, que observó que el diseño anterior se veía muy recargado, se pasó a una interfaz sobria de dos pantallas y colores apagados:
+  - **Principal:** lote actual (cambiar o crear uno), tomar foto o elegir de la galería, y debajo el resultado del último análisis: imagen con o sin marcas, categoría OCDE, % de defecto, madurez con confianza, tiempo y aviso si la foto es dudosa. Si la foto no sirve, se muestra el motivo.
+  - **Historial:** análisis por lote o todos, resumen por categoría y madurez, exportación a CSV y PDF. Al tocar un análisis se abre su detalle, con las opciones de moverlo de lote o eliminarlo.
+
+  La lógica no cambió (inferencia, validación de la captura, base de datos v2, exportadores). El diseño anterior (31 pantallas del PDF) queda guardado en la rama `diseno-material` y en la etiqueta `v0.2.0-diseno-material`.
 - **Validación de la captura** (`ml/ValidacionCaptura.kt`), con lo que el modelo ya entrega:
   - Bloquean el análisis, que no se guarda: sin palta, más de una palta (componentes con área ≥ 20% de la mayor) y palta cortada en el borde.
   - Solo generan aviso: foto oscura (luminancia < 70), borrosa (varianza del Laplaciano < 40 a 256 px) o madurez con confianza < 0.6.
@@ -299,3 +304,4 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - 2026-09-29: rediseño de la app (Fase 1, v0.2.0) según el PDF de pantallas: navegación inferior, resultado nuevo, historial por día con filtros, lotes con productor y exportación CSV, guía rápida, ajustes y validación de la captura (sin palta, varias, cortada, oscura, borrosa y baja confianza); base de datos v2 con migración; 20 pruebas unitarias.
 - 2026-09-29: exportación del lote a PDF (fase 1b) con `PdfDocument`, sin librerías nuevas.
 - 2026-09-29: v0.2.0 probada en el celular: concordancia idéntica (108/108), recorrido completo de pantallas y casos de error, exportación CSV/PDF verificada; plurales corregidos.
+- 2026-10-01: app v0.3.0 con diseño básico de 2 pantallas (principal e historial); el diseño anterior se guardó en la rama `diseno-material`.

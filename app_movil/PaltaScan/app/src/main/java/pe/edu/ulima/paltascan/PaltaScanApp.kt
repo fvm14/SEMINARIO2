@@ -16,15 +16,10 @@ class PaltaScanApp : Application() {
 
     private val prefs by lazy { getSharedPreferences("paltascan", Context.MODE_PRIVATE) }
 
-    /** La guia rapida se muestra solo la primera vez. */
-    var guiaVista: Boolean
-        get() = prefs.getBoolean("guia_vista", false)
-        set(valor) = prefs.edit().putBoolean("guia_vista", valor).apply()
-
-    /** Si es false, solo se conserva la imagen con marcas. */
-    var guardarFotos: Boolean
-        get() = prefs.getBoolean("guardar_fotos", true)
-        set(valor) = prefs.edit().putBoolean("guardar_fotos", valor).apply()
+    /** Lote donde se guardan los nuevos analisis; null = sin lote. */
+    var loteActualId: Long?
+        get() = prefs.getLong("lote_actual_id", -1L).takeIf { it > 0 && baseDatos.lote(it) != null }
+        set(valor) = prefs.edit().putLong("lote_actual_id", valor ?: -1L).apply()
 }
 
 val Context.app: PaltaScanApp get() = applicationContext as PaltaScanApp
