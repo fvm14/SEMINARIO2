@@ -18,11 +18,11 @@
         android:id="@+id/imagen"
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:background="#EFEFEC"
+        android:background="#EEEEEE"
         android:contentDescription="@null"
         android:scaleType="fitCenter" />
 
-    <com.google.android.material.materialswitch.MaterialSwitch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/interruptorMarcas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

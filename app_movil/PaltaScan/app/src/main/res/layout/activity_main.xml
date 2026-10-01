@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primario_oscuro"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/Barra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TituloBarra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name" />
+
+        <TextView
+            android:id="@+id/textoEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/subtitulo"
+            android:textColor="#E0E0E0"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
     android:background="@color/fondo">
 
     <LinearLayout
@@ -11,26 +38,10 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@color/texto"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textoEstado"
-            style="@style/Etiqueta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/subtitulo" />
-
         <!-- Lote actual -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:gravity="center_vertical">
 
             <TextView
@@ -51,7 +62,7 @@
 
             <Button
                 android:id="@+id/botonLote"
-                style="@style/Widget.Material3.Button.TextButton"
+                style="@style/BotonTexto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cambiar_lote" />
@@ -129,3 +140,4 @@
             android:visibility="gone" />
     </LinearLayout>
 </ScrollView>
+</LinearLayout>

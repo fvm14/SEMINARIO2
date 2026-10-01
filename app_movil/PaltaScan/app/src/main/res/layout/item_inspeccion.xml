@@ -11,7 +11,7 @@
         android:id="@+id/miniatura"
         android:layout_width="52dp"
         android:layout_height="52dp"
-        android:background="#EFEFEC"
+        android:background="#EEEEEE"
         android:contentDescription="@null"
         android:scaleType="centerCrop" />
 
