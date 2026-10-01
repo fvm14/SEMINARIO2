@@ -1,7 +1,7 @@
 <resources>
     <!-- Paleta simple: verde, negro y blanco, esquinas rectas. -->
-    <color name="primario">#2E7D32</color>
-    <color name="primario_oscuro">#1B5E20</color>
+    <color name="primario">#1B5E20</color>
+    <color name="primario_oscuro">#103D14</color>
     <color name="fondo">#FFFFFF</color>
     <color name="texto">#000000</color>
     <color name="texto_suave">#555555</color>

@@ -306,3 +306,4 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - 2026-09-29: v0.2.0 probada en el celular: concordancia idéntica (108/108), recorrido completo de pantallas y casos de error, exportación CSV/PDF verificada; plurales corregidos.
 - 2026-10-01: app v0.3.0 con diseño básico de 2 pantallas (principal e historial); el diseño anterior se guardó en la rama `diseno-material`.
 - 2026-10-01: estilo de la app cambiado a verde y negro con esquinas rectas (barra superior verde, botones planos); se agregó `app_movil/FUNCIONALIDADES.md` con todas las funciones de la app.
+- 2026-10-01: verde de la app oscurecido (#1B5E20).
