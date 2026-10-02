@@ -1,0 +1,22 @@
+{
+  "data": "data\\yolo_ampliado",
+  "data_eval": "data\\yolo",
+  "project": "resultados\\comparacion",
+  "name": "resnet34_madurez",
+  "imgsz": 448,
+  "epochs": 40,
+  "batch": 32,
+  "patience": 10,
+  "lr": 0.0003,
+  "workers": 4,
+  "seed": 42,
+  "max_batches": 0,
+  "sin_preentrenado": false,
+  "evaluar": false,
+  "weights": "",
+  "split": "test",
+  "eval_segmentador": "",
+  "out_dir": "",
+  "max_imagenes": 0,
+  "device": ""
+}

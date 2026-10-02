@@ -1,0 +1,137 @@
+{
+  "modelo": "YOLOv8s-seg (fallas) + ResNet-34 (madurez), dos redes",
+  "segmentador": "resultados\\yolo_multitarea\\yolov8s_base_sem1\\weights\\best.pt",
+  "clasificador": "resultados\\comparacion\\resnet34_madurez\\best.pt",
+  "parametros_clasificador_M": 21.29,
+  "split": "test",
+  "n_imagenes": 108,
+  "pixel_con_roi": {
+    "iou_palta": 0.9929,
+    "dice_palta": 0.9964,
+    "precision_palta": 0.9963,
+    "recall_palta": 0.9965,
+    "iou_defecto": 0.4433,
+    "dice_defecto": 0.6143,
+    "precision_defecto": 0.7248,
+    "recall_defecto": 0.5331
+  },
+  "ocde": {
+    "accuracy": 0.8241,
+    "mae_ratio": 0.0654,
+    "matriz_confusion": [
+      [
+        67,
+        2,
+        2
+      ],
+      [
+        1,
+        7,
+        1
+      ],
+      [
+        11,
+        2,
+        15
+      ]
+    ],
+    "etiquetas": [
+      "Categoria I",
+      "Categoria II",
+      "Rechazado"
+    ]
+  },
+  "ultralytics": {
+    "global": {
+      "metrics/precision(B)": 0.847,
+      "metrics/recall(B)": 0.8413,
+      "metrics/mAP50(B)": 0.8644,
+      "metrics/mAP50-95(B)": 0.6658,
+      "metrics/precision(M)": 0.8432,
+      "metrics/recall(M)": 0.7804,
+      "metrics/mAP50(M)": 0.8053,
+      "metrics/mAP50-95(M)": 0.5495,
+      "fitness": 1.2154,
+      "metrics/F1(B)": 0.8441,
+      "metrics/F1(M)": 0.8106
+    },
+    "por_clase": {
+      "palta": {
+        "box": {
+          "P": 0.9919112917842287,
+          "R": 1.0,
+          "mAP50": 0.995,
+          "mAP50-95": 0.9949999999999999
+        },
+        "mask": {
+          "P": 0.983371052851079,
+          "R": 0.9907407407407407,
+          "mAP50": 0.9867592592592592,
+          "mAP50-95": 0.7874281034447028
+        }
+      },
+      "defecto": {
+        "box": {
+          "P": 0.7020160143175627,
+          "R": 0.6825489527729226,
+          "mAP50": 0.7337453537407811,
+          "mAP50-95": 0.33669192715676266
+        },
+        "mask": {
+          "P": 0.7030917847792507,
+          "R": 0.5700934579439252,
+          "mAP50": 0.6239068920797057,
+          "mAP50-95": 0.3116064993024234
+        }
+      }
+    }
+  },
+  "madurez": {
+    "accuracy": 0.7778,
+    "f1_macro": 0.772,
+    "matriz_confusion": [
+      [
+        20,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        4,
+        19,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        7,
+        10,
+        3,
+        1
+      ],
+      [
+        0,
+        0,
+        5,
+        17,
+        2
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        18
+      ]
+    ]
+  },
+  "latencia_ms": {
+    "segmentador": 25.01,
+    "clasificador": 4.58,
+    "total": 29.59,
+    "dispositivo_clasificador": "cuda",
+    "dispositivo_segmentador": "cuda:0"
+  }
+}
