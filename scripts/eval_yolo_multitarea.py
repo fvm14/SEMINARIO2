@@ -34,7 +34,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from yolo_multitarea import ValidadorMultitarea, buscar_modelo_multitarea, madurez_desde_archivo  # noqa: E402
+from yolo_multitarea import ValidadorMultitarea, YoloMultitarea, buscar_modelo_multitarea, madurez_desde_archivo  # noqa: E402
+from ultralytics.models.yolo.segment import SegmentationValidator  # noqa: E402
 from rasterize_utils import poligonos_a_mascaras  # noqa: E402
 from metrics import AcumuladorMetricas  # noqa: E402
 from ocde import (calcular_ratio, clasificar_ocde, filtrar_defecto_por_roi,  # noqa: E402
@@ -117,8 +118,9 @@ def guardar_vis(ruta, img_bgr, gt_p, gt_d, pr_p, pr_d, txt_gt, txt_pr):
     cv2.imwrite(ruta, lienzo, [cv2.IMWRITE_JPEG_QUALITY, 88])
 
 
-def validacion_ultralytics(args, out_dir):
-    validador = ValidadorMultitarea(args=dict(
+def validacion_ultralytics(args, out_dir, con_madurez=True):
+    # un YOLOv8s-seg estandar (linea base de Seminario I) no tiene cabezal de madurez
+    validador = (ValidadorMultitarea if con_madurez else SegmentationValidator)(args=dict(
         model=args.weights, data=args.data, split=args.split, imgsz=args.imgsz,
         batch=args.batch, plots=True, project=out_dir, name="ultralytics", exist_ok=True,
         **({"device": args.device} if args.device else {})))
@@ -135,7 +137,7 @@ def validacion_ultralytics(args, out_dir):
     for tipo in ("B", "M"):
         p, r = stats.get(f"metrics/precision({tipo})", 0), stats.get(f"metrics/recall({tipo})", 0)
         stats[f"metrics/F1({tipo})"] = 2 * p * r / (p + r) if p + r else 0.0
-    return {k: round(float(v), 4) for k, v in stats.items()}, por_clase, validador.matriz_madurez
+    return {k: round(float(v), 4) for k, v in stats.items()}, por_clase, getattr(validador, "matriz_madurez", None)
 
 
 def main():
@@ -147,9 +149,12 @@ def main():
     os.makedirs(vis_dir, exist_ok=True)
 
     print("=== 1) Validacion estandar (mAP, como Seminario I) ===")
+    con_madurez = isinstance(YOLO(args.weights).model, YoloMultitarea)
+    if not con_madurez:
+        print("(modelo sin cabezal de madurez: se omiten las metricas de madurez)")
     stats, por_clase = {}, {}
     if not args.sin_validacion:
-        stats, por_clase, _ = validacion_ultralytics(args, out_dir)
+        stats, por_clase, _ = validacion_ultralytics(args, out_dir, con_madurez)
 
     print("\n=== 2) Analisis por imagen (OCDE, pixel IoU, latencia) ===")
     raiz = os.path.dirname(os.path.abspath(args.data))
@@ -165,8 +170,11 @@ def main():
     for n, ruta in enumerate(imagenes):
         r = modelo.predict(ruta, imgsz=args.imgsz, conf=min(args.conf, args.conf_defecto), retina_masks=True,
                            verbose=False, **({"device": args.device} if args.device else {}))[0]
-        mt = buscar_modelo_multitarea(modelo.predictor.model)
-        probs = torch.softmax(mt.madurez_logits.float(), dim=1)[0].cpu().numpy()
+        if con_madurez:
+            mt = buscar_modelo_multitarea(modelo.predictor.model)
+            probs = torch.softmax(mt.madurez_logits.float(), dim=1)[0].cpu().numpy()
+        else:
+            probs = np.zeros(5, np.float32)
         latencias.append(sum(r.speed.values()))
 
         alto, ancho = r.orig_shape
@@ -189,7 +197,7 @@ def main():
         gt_p, gt_d = gt_p.astype(bool), gt_d.astype(bool)
 
         m_gt = madurez_desde_archivo(ruta)
-        m_pr = int(probs.argmax())
+        m_pr = int(probs.argmax()) if con_madurez else m_gt  # sin cabezal: no se evalua
         t_gt = torch.from_numpy(np.stack([gt_p, gt_d])[None])
         acc_crudo.actualizar_binario(torch.from_numpy(np.stack([pr_p, pr_d])[None]), t_gt,
                                      torch.tensor([m_pr]), torch.tensor([m_gt]))
@@ -201,7 +209,7 @@ def main():
         ocde_gt.append(c_gt)
         ocde_pr.append(c_pr)
         filas.append({
-            "archivo": os.path.basename(ruta), "madurez_real": m_gt + 1, "madurez_pred": m_pr + 1,
+            "archivo": os.path.basename(ruta), "madurez_real": m_gt + 1, "madurez_pred": (m_pr + 1) if con_madurez else "",
             "confianza_madurez": round(float(probs.max()), 4),
             "ratio_real": round(r_gt, 5), "ratio_pred": round(r_pr, 5),
             "ocde_real": CATEGORIAS_OCDE[c_gt], "ocde_pred": CATEGORIAS_OCDE[c_pr],
@@ -210,7 +218,8 @@ def main():
         if n < args.n_vis:
             guardar_vis(os.path.join(vis_dir, f"{n:02d}_{stem[:40]}.jpg"), r.orig_img, gt_p, gt_d, pr_p, pr_d_roi,
                         f"REAL  mad {m_gt+1} | {CATEGORIAS_OCDE[c_gt]} ({r_gt*100:.1f}%)",
-                        f"PRED  mad {m_pr+1} ({probs.max()*100:.0f}%) | {CATEGORIAS_OCDE[c_pr]} ({r_pr*100:.1f}%)")
+                        (f"PRED  mad {m_pr+1} ({probs.max()*100:.0f}%)" if con_madurez else "PRED  sin madurez")
+                        + f" | {CATEGORIAS_OCDE[c_pr]} ({r_pr*100:.1f}%)")
         if (n + 1) % 25 == 0:
             print(f"  {n + 1}/{len(imagenes)}")
 
@@ -229,7 +238,7 @@ def main():
         "conf_palta": args.conf, "conf_defecto": args.conf_defecto, "kernel_roi": args.kernel_roi,
         "ultralytics": {"global": stats, "por_clase": por_clase},
         "pixel_sin_roi": seg(m_crudo), "pixel_con_roi": seg(m_roi),
-        "madurez": {
+        "madurez": None if not con_madurez else {
             "accuracy": round(m_crudo["acc_madurez"], 4), "f1_macro": round(m_crudo["f1_madurez"], 4),
             "matriz_confusion": matriz_mad.tolist(),
             "por_clase": classification_report(acc_crudo.gt_madurez, acc_crudo.pred_madurez, labels=list(range(5)),
@@ -246,14 +255,16 @@ def main():
         w = csv.DictWriter(f, fieldnames=list(filas[0].keys()))
         w.writeheader()
         w.writerows(filas)
-    graficar_matriz(matriz_mad, NOMBRES_MADUREZ, f"Madurez ({args.split})", os.path.join(out_dir, "matriz_madurez.png"))
+    if con_madurez:
+        graficar_matriz(matriz_mad, NOMBRES_MADUREZ, f"Madurez ({args.split})", os.path.join(out_dir, "matriz_madurez.png"))
     graficar_matriz(matriz_ocde, CATEGORIAS_OCDE, f"OCDE ({args.split})", os.path.join(out_dir, "matriz_ocde.png"))
 
     print("\n==== RESUMEN ====")
     print(f"Mascaras (Ultralytics): P {stats.get('metrics/precision(M)')} | R {stats.get('metrics/recall(M)')} | "
           f"F1 {stats.get('metrics/F1(M)')} | mAP50 {stats.get('metrics/mAP50(M)')} | mAP50-95 {stats.get('metrics/mAP50-95(M)')}")
     print(f"Pixel IoU defecto: sin ROI {m_crudo['iou_defecto']:.4f} | con ROI {m_roi['iou_defecto']:.4f}")
-    print(f"Madurez: accuracy {m_crudo['acc_madurez']:.4f} | F1 macro {m_crudo['f1_madurez']:.4f}")
+    if con_madurez:
+        print(f"Madurez: accuracy {m_crudo['acc_madurez']:.4f} | F1 macro {m_crudo['f1_madurez']:.4f}")
     print(f"OCDE: accuracy {acc_ocde:.4f} | MAE ratio {mae_ratio:.4f}")
     print(f"Latencia: {lat.mean():.1f} ms/imagen (p95 {np.percentile(lat, 95):.1f}) en {modelo.predictor.device}")
     print(f"Resultados en: {out_dir}")

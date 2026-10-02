@@ -1,0 +1,17 @@
+{
+  "data": "data\\yolo_ampliado",
+  "project": "resultados\\comparacion",
+  "name": "unet_resnet34",
+  "imgsz": 800,
+  "epochs": 100,
+  "batch": 8,
+  "patience": 20,
+  "lr": 0.001,
+  "lr_encoder": 0.0002,
+  "peso_madurez": 2.0,
+  "workers": 4,
+  "seed": 42,
+  "max_batches": 0,
+  "sin_preentrenado": false,
+  "resume": ""
+}

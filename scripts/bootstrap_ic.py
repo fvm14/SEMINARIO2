@@ -35,7 +35,7 @@ def fruto(archivo):
 
 
 def metricas(d):
-    mr, mp = d.madurez_real.values, d.madurez_pred.values
+    mr, mp = d.madurez_real.values, d.madurez_pred.fillna(0).values  # 0 = modelo sin cabezal de madurez
     rech = d[d.ocde_real == "Rechazado"]
     return {
         "madurez_accuracy": float((mr == mp).mean()),
