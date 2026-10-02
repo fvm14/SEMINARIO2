@@ -376,7 +376,7 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 
 ## 13. Pendientes transversales
 
-- **Umbrales OCDE:** falta confirmar la fuente del área de referencia de 42.4 cm² (unos 7.3 cm de diámetro). Si cambia, hay que recalcular las métricas OCDE.
+- **Umbrales OCDE:** el área de referencia de 42.4 cm² se contrastó con mediciones de palta Hass (largo × diámetro × π/4 × factor de forma 0.975 medido en el dataset): entre 40.0 y 46.5 cm² en frutos pequeños (162–207 g) y ~63.3 cm² en calibre comercial (241–267 g). **Análisis de sensibilidad** (`scripts/sensibilidad_ocde.py`, `resultados/sensibilidad_ocde/`): recalcula la categoría real y la predicha con cada área a partir de los `predicciones.csv`, sin volver a inferir. Acierto OCDE del multitarea entre 75.9% y 81.5% (siempre dentro de su IC con 42.4 cm²: 66.1–88.4%); la U-Net es la peor en todas las áreas, así que la selección de la Etapa 3 no depende del supuesto. Con áreas mayores crece la clase Rechazado y el recall de Rechazado del multitarea sube de 51.9% a 78.4%. El umbral de defecto no se toca: se calibró por IoU, no por acierto OCDE. Falta la escala real del montaje para medir cada fruto.
 
 - **Anotaciones de SAM2 a auditar:** en test hay fotos con todo el fruto marcado como defecto (la caja amplia confunde a SAM2). Plan: regla automática contra las cajas originales, revisión visual del test y val y confirmación humana (ver conversación del 2026-09-28).
 - **Criterio de cuantización:** falta medir la pérdida de mAP50 de las variantes TFLite.
@@ -420,3 +420,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-01: estilo de la app cambiado a verde y negro con esquinas rectas (barra superior verde, botones planos); se agregó `app_movil/FUNCIONALIDADES.md` con todas las funciones de la app.
 - 2026-10-01: verde de la app oscurecido (#1B5E20).
 - 2026-10-02: comparación de modelos (YOLOv8s-seg multitarea, U-Net ResNet34 multitarea, YOLOv8s-seg + ResNet-34) incorporada como Etapa 3; el prototipo pasa a ser la Etapa 4 y la integración la 5; se retira la validación del prototipo. `PROGRESO_COMPARACION.md` se unificó en este documento.
+- 2026-10-02: análisis de sensibilidad de la categoría OCDE al área de referencia del fruto (40.0, 42.4, 46.5 y 63.3 cm²) para los tres modelos; los límites actuales se mantienen.
