@@ -1,6 +1,8 @@
 # Progreso del proyecto: palta-multitarea (Seminario de Investigación II)
 
-Detección de defectos y clasificación de madurez de palta Hass con un único modelo multitarea, pensado para ejecutarse en un dispositivo móvil. Este documento resume lo realizado hasta el 27 de septiembre de 2026: el punto de partida, la arquitectura del modelo, las decisiones tomadas con su justificación, los resultados de las Etapas 1 y 2, y lo que queda pendiente.
+Detección de defectos y clasificación de madurez de palta Hass con un único modelo multitarea, pensado para ejecutarse en un dispositivo móvil. Este documento resume lo realizado hasta el 2 de octubre de 2026: el punto de partida, la arquitectura del modelo, las decisiones tomadas con su justificación, los resultados de las Etapas 1 a 5 y lo que queda pendiente.
+
+**Etapas:** 1) ampliación del dataset con pseudo-etiquetado; 2) cuantización para móvil; 3) validación de métricas (comparación con otros modelos); 4) prototipo (app Android); 5) integración del modelo y el motor OCDE en la app.
 
 ## 1. Punto de partida
 
@@ -152,7 +154,121 @@ La exportación usa entrada fija de 1×3×800×800, opset 17 y simplificación c
 
 Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 
-## 8. Decisiones principales y su justificación
+## 8. Etapa 3: validación de métricas (comparación de modelos)
+
+Nueva etapa, entre la cuantización y el prototipo. Compara el modelo propuesto con otros paradigmas de visión computacional para sustentar su elección con métricas. Los modelos alternativos se entrenan y evalúan, pero no se cuantizan ni se integran en la app. Realizada el 1 y 2 de octubre de 2026 (Fabrizio).
+
+### 8.1 Decisiones
+
+**No comparar versiones de YOLO.** En la primera fase ya se compararon YOLOv8s, YOLOv9 y YOLOv11s con resultados muy parejos, porque comparten paradigma. Repetirlo daría diferencias que, con 108 imágenes de prueba, no se distinguen del azar. Se decidió variar el paradigma y no la versión.
+
+**Filtrar las alternativas de la literatura por su capacidad de resolver la tarea.** El sistema necesita el área del defecto para calcular la proporción y asignar la categoría OCDE, lo que exige segmentación. Quedaron descartados:
+
+- Los detectores por cajas (Faster R-CNN, SSD, RetinaNet, RT-DETR), porque el área de una caja no es el área del defecto.
+- Los clasificadores como modelo único (VGG, Inception, DenseNet), porque no delimitan defectos.
+- Los modelos que requieren datos hiperespectrales o NIR, porque el dataset es RGB.
+
+**Tres modelos, todos con las dos salidas (fallas y madurez).** Ninguna arquitectura trae ambas tareas de fábrica, así que en cada caso se agrega la madurez con un cabezal o con una segunda red:
+
+| # | Modelo | Paradigma | Pregunta que responde |
+|---|---|---|---|
+| 1 | YOLOv8s-seg multitarea (propuesto) | Una red, segmentación de instancias en una etapa, cabezal de madurez | Es la propuesta |
+| 2 | U-Net con ResNet34, multitarea | Una red, segmentación semántica, cabezal de madurez | ¿Instancias o segmentación semántica? |
+| 3 | YOLOv8s-seg + ResNet-34 | Dos redes de tarea única | ¿Multitarea o redes especializadas? |
+
+Mask R-CNN (instancias en dos etapas) se dejó fuera por costo: requiere código a medida y entre 4 y 6 horas de entrenamiento. Puede agregarse como cuarta fila sin rehacer lo anterior.
+
+**Condiciones idénticas.** Los tres modelos usan la misma partición por fruto, las mismas 5,475 imágenes de entrenamiento (852 anotadas más 4,623 pseudoetiquetas), la misma validación (232) y prueba (108) con anotación humana, semilla 42, y el umbral de defecto calibrado en validación por separado para cada uno.
+
+**Criterio de selección.** Se selecciona el modelo de menor tamaño y latencia entre aquellos cuyo acierto OCDE y exactitud de madurez no sean significativamente inferiores al mejor.
+
+### 8.2 Modelos entrenados
+
+| Modelo | Script | Configuración | Entrenamiento |
+|---|---|---|---|
+| YOLOv8s-seg multitarea | `train_yolo_multitarea.py` | 800 px, lote 8, peso de madurez 2, sin mosaic | Ronda 1 (ya existía): 77 épocas, mejor la 57 |
+| YOLOv8s-seg sin madurez | `train_base_sem1.py` | Configuración de Seminario I: mosaic 1.0, hsv 0.015/0.7/0.4 | 97 épocas (parada temprana), mejor la 77, 3.2 h |
+| U-Net ResNet34 multitarea | `unet_multitarea.py` | 800 px, lote 8, AdamW, peso de madurez 2, mismos aumentos que el multitarea | 57 épocas (parada temprana), mejor la 37, 2.8 h |
+| ResNet-34 de madurez | `clasificador_madurez.py` | 448 px, lote 32, AdamW | 28 épocas (parada temprana), mejor la 18, unos 13 min |
+
+Detalles de arquitectura:
+
+- **U-Net ResNet34:** codificador ResNet34 preentrenado en ImageNet, decodificador U-Net con conexiones de salto y dos máscaras independientes (palta y defecto), más un cabezal de madurez sobre el último mapa del codificador. Pérdida: entropía cruzada binaria más Dice para la segmentación, y entropía cruzada para la madurez. 24.6 millones de parámetros.
+- **ResNet-34 de madurez:** ResNet-34 preentrenada en ImageNet con salida de 5 niveles. 21.3 millones de parámetros.
+- **Dos redes:** las fallas y la categoría OCDE provienen del YOLOv8s-seg sin madurez; la madurez, del clasificador. La latencia es la suma de ambas.
+
+Scripts de evaluación: `eval_yolo_multitarea.py` (adaptado para aceptar modelos sin cabezal de madurez), `eval_unet_multitarea.py` (calibración y evaluación) y `clasificador_madurez.py --evaluar` (evalúa y combina con el segmentador). Todos generan `predicciones.csv` y `metricas.json` en el mismo formato, de modo que `bootstrap_ic.py` compara cualquier par de modelos.
+
+### 8.3 Resultados en test
+
+108 imágenes de 39 frutos. Entre corchetes, IC 95% por bootstrap agrupado por fruto (5,000 remuestreos).
+
+| Métrica | YOLOv8s-seg multitarea (propuesto) | U-Net ResNet34 multitarea | Dos redes: YOLOv8s-seg + ResNet-34 |
+|---|---|---|---|
+| IoU de defecto (píxel) | 0.397 | 0.396 | 0.443 |
+| Acierto OCDE | 77.8% [65.7, 87.9] | 65.7% [55.7, 75.7] | 82.4% [73.0, 90.9] |
+| F1 macro OCDE | 0.654 | 0.467 | 0.749 |
+| Recall de Rechazado | 60.7% | 46.4% | 53.6% |
+| MAE del ratio | 0.075 | 0.067 | 0.065 |
+| Exactitud de madurez | 74.1% [67.3, 81.0] | 73.1% [64.2, 81.7] | 77.8% [69.7, 85.3] |
+| F1 macro de madurez | 0.737 | 0.735 | 0.772 |
+| Parámetros | 11.9 M | 24.6 M | 33.1 M (11.8 + 21.3) |
+| Tamaño FP32 | 48 MB | 98 MB | 132 MB |
+| Latencia en CPU | 416 ms | 856 ms | 584 ms (422 + 162) |
+| Umbral de defecto | 0.05 | 0.10 | 0.10 |
+
+La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del entorno de pruebas, con entrada de 800 px (448 px el clasificador) y media de 15 pasadas. Sirve para comparar los modelos entre sí; no es la latencia del teléfono.
+
+### 8.4 Diferencias frente al propuesto (bootstrap pareado)
+
+| Métrica | U-Net menos propuesto | Dos redes menos propuesto |
+|---|---|---|
+| Acierto OCDE | -12.0 puntos [-20.3, -3.4], significativa | +4.6 puntos [-1.7, +11.1], no significativa |
+| F1 macro OCDE | -0.187 [-0.287, -0.058], significativa | +0.095 [+0.008, +0.198], significativa |
+| Recall de Rechazado | -14.3 puntos [-27.6, 0.0], no significativa | -7.1 puntos [-22.9, +7.1], no significativa |
+| Exactitud de madurez | -0.9 puntos [-8.8, +6.3], no significativa | +3.7 puntos [-4.0, +11.7], no significativa |
+| F1 macro de madurez | -0.002 [-0.081, +0.071], no significativa | +0.035 [-0.049, +0.117], no significativa |
+| MAE del ratio | -0.009 [-0.034, +0.011], no significativa | -0.010 [-0.028, +0.005], no significativa |
+
+### 8.5 Interpretación
+
+**U-Net frente al propuesto.** Ambos empatan en IoU de defecto y en madurez, pero la U-Net acierta la categoría OCDE 12 puntos menos, con diferencia significativa, y requiere el doble de parámetros y de latencia. Queda descartada.
+
+**Dos redes frente al propuesto.** Las dos redes obtienen los mejores valores en casi todas las métricas de desempeño. Las diferencias en acierto OCDE y en madurez no son significativas; la del F1 macro de OCDE sí lo es, a favor de las dos redes. El propuesto conserva mejor recall de Rechazado, sin significancia. A cambio, las dos redes ocupan 2.8 veces más y tardan 40% más.
+
+**Conclusión.** La comparación sustenta la elección por equilibrio, no por superioridad. El modelo multitarea no es significativamente inferior al mejor en acierto OCDE ni en madurez, y es el de menor tamaño y latencia, por lo que cumple el criterio de selección. No corresponde afirmar que es el más exacto: cede una ventaja pequeña en exactitud a cambio de una ganancia grande en eficiencia, que es lo que pesa en un dispositivo móvil.
+
+**Efecto de agregar la madurez.** La comparación entre el YOLOv8s-seg sin madurez y el multitarea indica que la segunda tarea tiene un costo pequeño en segmentación (IoU de defecto de 0.443 a 0.397; acierto OCDE de 82.4% a 77.8%, no significativo). Las dos configuraciones difieren además en los aumentos (mosaic y color), por lo que el efecto no puede atribuirse solo al cabezal.
+
+### 8.6 Limitaciones
+
+- Una sola corrida por modelo, con semilla 42. No se midió la variación entre semillas.
+- El conjunto de prueba es pequeño (108 imágenes, 39 frutos), lo que da intervalos amplios.
+- El umbral de la U-Net (0.10) coincidió con el mínimo del barrido original. Se agregó 0.05 al barrido; falta repetir la calibración para confirmar.
+- El clasificador ResNet-34 usa entrada de 448 px, frente a 800 px de los modelos de segmentación.
+- La latencia se midió en computadora y sin cuantizar. Solo el modelo propuesto tiene medición en teléfono.
+- Todas las imágenes provienen de condiciones controladas de iluminación.
+
+### 8.7 Archivos
+
+| Qué | Dónde |
+|---|---|
+| Tabla comparativa | `resultados/comparacion/tabla_comparativa.md` |
+| U-Net: pesos, curvas y evaluación | `resultados/comparacion/unet_resnet34/` |
+| Clasificador: pesos y curvas | `resultados/comparacion/resnet34_madurez/` |
+| Dos redes: predicciones y métricas combinadas | `resultados/comparacion/dos_redes/` |
+| YOLOv8s-seg sin madurez | `resultados/yolo_multitarea/yolov8s_base_sem1/` |
+| Modelo propuesto | `resultados/yolo_multitarea/yolov8s_mt_ronda1/` |
+| Scripts nuevos | `scripts/unet_multitarea.py`, `scripts/eval_unet_multitarea.py`, `scripts/clasificador_madurez.py`, `scripts/train_base_sem1.py` |
+
+### 8.8 Pendientes
+
+1. Repetir la calibración de la U-Net con el barrido ampliado y reevaluar si cambia el umbral:
+   `python scripts/eval_unet_multitarea.py --weights resultados\comparacion\unet_resnet34\best.pt --calibrar`
+2. Opcional: agregar Mask R-CNN como cuarto modelo.
+3. Opcional: reentrenar el multitarea con mosaic activado, para comprobar si recupera la diferencia de segmentación frente al modelo sin madurez.
+
+## 9. Decisiones principales y su justificación
 
 | Decisión | Motivo |
 |---|---|
@@ -167,10 +283,11 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 | Umbral por clase calibrado en validación | Los defectos tienen confianzas más bajas que la palta; nunca se ajusta en test |
 | Regla automática de aceptación de pseudoetiquetas | Revisar miles de imágenes a mano no era viable; la regla se calibró en validación |
 | Bootstrap por fruto | Las imágenes de un mismo fruto no son independientes |
+| YOLOv8s-seg multitarea frente a U-Net y a dos redes | No es significativamente inferior al mejor en acierto OCDE ni en madurez, y es el de menor tamaño y latencia (sección 8) |
 | Dynamic range como modelo móvil | Mejor equilibrio entre tamaño, precisión y latencia |
 | App nativa Android (Kotlin, LiteRT, CameraX) | Acceso directo a delegados GPU y NNAPI y menor latencia |
 
-## 9. Repositorio y entregables
+## 10. Repositorio y entregables
 
 - **Repositorio:** github.com/fvm14/SEMINARIO2. Contiene código, splits, anotaciones de Seminario I (`data/raw/labels_seg`), métricas, curvas e informe.
 - **Fuera del repo por tamaño** (definido en `.gitignore`): dataset crudo, imágenes, pseudoetiquetas y modelos.
@@ -182,7 +299,7 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
   - Historias de usuario (productor o acopiador, operario de packing)
   - Prompt de diseño para las pantallas de la app (`frontend/PaltaScan — Pantallas.pdf`)
 
-## 10. Pendientes
+## 11. Pendientes
 
 **Cierre de la Etapa 2**
 - Exportar y evaluar a 640 px.
@@ -199,7 +316,7 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - Posible Ronda 2.
 - Revisión opcional de la muestra de control para reportar la tasa de error de las pseudoetiquetas.
 
-**Etapa 4: app** (ver sección 11)
+**Etapa 4: app** (ver sección 12)
 - ~~Portar el post-proceso de `inferencia_movil.py` a Kotlin.~~ Hecho: `app_movil/PaltaScan/`, con 13 pruebas unitarias.
 - ~~Integrar LiteRT.~~ Hecho con TensorFlow Lite 2.16. En lugar de CameraX se usa la cámara del sistema, porque el análisis es foto por foto.
 - Medir la latencia real en celular y correr la prueba de concordancia app vs. Python (`ConcordanciaTest`).
@@ -207,9 +324,9 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 **Paper**
 - Redacción con las tablas y los intervalos de confianza de este documento.
 
-## 11. Etapas 3 a 5 (Dylann)
+## 12. Etapas 4 y 5: prototipo e integración (Dylann)
 
-**Etapa 3: prototipo (app Android `app_movil/PaltaScan/`).**
+**Etapa 4: prototipo (app Android `app_movil/PaltaScan/`).**
 - Decisión: app Android nativa en Kotlin, con inferencia en el celular (TFLite dynamic range) y sin nube obligatoria.
 - Hecho: port a Kotlin de `inferencia_movil.py` y `ocde.py` (letterbox, lectura de las 5 salidas, NMS por clase, máscaras, fruto completo, ROI, ratio, categoría OCDE) y tres pantallas:
   - **Inicio:** lote, cámara o galería.
@@ -253,23 +370,18 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
   - cámara en vivo y modo continuo (fase 2);
   - reducir la latencia (delegado GPU / hilos).
 
-**Etapa 4: integración.** El análisis completo corre en el celular; la validación funcional está pendiente de la prueba en el celular.
+**Etapa 5: integración.** El modelo cuantizado y el motor OCDE corren completos en el celular. Validación funcional hecha: 20 pruebas unitarias y `ConcordanciaTest` frente a Python (108/108 en madurez, 107/108 en OCDE, ~0.9 s por foto).
 
-**Etapa 5: validación.** Planificada, aún no iniciada:
-- latencia por etapa en 2 celulares;
-- prueba de estrés de 100 análisis;
-- tres escenarios de iluminación;
-- SUS con operarios;
-- comparación con un inspector manual.
+La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se retiró del plan; su lugar lo ocupa la comparación de modelos (Etapa 3).
 
-## 12. Pendientes transversales
+## 13. Pendientes transversales
 
 - **Umbrales OCDE:** falta confirmar la fuente del área de referencia de 42.4 cm² (unos 7.3 cm de diámetro). Si cambia, hay que recalcular las métricas OCDE.
 
 - **Anotaciones de SAM2 a auditar:** en test hay fotos con todo el fruto marcado como defecto (la caja amplia confunde a SAM2). Plan: regla automática contra las cajas originales, revisión visual del test y val y confirmación humana (ver conversación del 2026-09-28).
 - **Criterio de cuantización:** falta medir la pérdida de mAP50 de las variantes TFLite.
 
-## 13. Historial de actualizaciones
+## 14. Historial de actualizaciones
 
 - 2026-09-26: primera version de este archivo. Inventario del estado real:
   Etapa 1 con ronda 1 de reentrenamiento hecha, Etapa 2 con benchmark de
@@ -307,3 +419,4 @@ Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 - 2026-10-01: app v0.3.0 con diseño básico de 2 pantallas (principal e historial); el diseño anterior se guardó en la rama `diseno-material`.
 - 2026-10-01: estilo de la app cambiado a verde y negro con esquinas rectas (barra superior verde, botones planos); se agregó `app_movil/FUNCIONALIDADES.md` con todas las funciones de la app.
 - 2026-10-01: verde de la app oscurecido (#1B5E20).
+- 2026-10-02: comparación de modelos (YOLOv8s-seg multitarea, U-Net ResNet34 multitarea, YOLOv8s-seg + ResNet-34) incorporada como Etapa 3; el prototipo pasa a ser la Etapa 4 y la integración la 5; se retira la validación del prototipo. `PROGRESO_COMPARACION.md` se unificó en este documento.
