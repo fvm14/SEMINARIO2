@@ -1,0 +1,21 @@
+{
+  "tipo": "unet",
+  "modelo": "modelos_movil/unet_resnet34_800_float32.tflite",
+  "clasificador": null,
+  "tamano_mb": 98.24,
+  "n": 108,
+  "conf_defecto": 0.1,
+  "iou_palta": 0.9961,
+  "iou_defecto": 0.3956,
+  "precision_defecto": 0.646,
+  "recall_defecto": 0.5051,
+  "madurez_acc": 0.7315,
+  "madurez_f1": 0.7349,
+  "ocde_acc": 0.6574,
+  "ocde_f1": 0.4667,
+  "recall_rechazado": 0.4643,
+  "mae_ratio": 0.067,
+  "latencia_ms_media": 877.1,
+  "latencia_ms_p95": 883.3,
+  "hilos_cpu": 4
+}

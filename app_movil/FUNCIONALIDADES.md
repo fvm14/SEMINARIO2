@@ -117,7 +117,8 @@ En el Xiaomi 11 Lite 5G NE, cada foto tarda ~0.9 s en total.
 - **Prueba instrumentada `ConcordanciaTest`:** compara la app con Python en las
   108 imágenes de prueba, con cada modelo instalado.
   - Multitarea: madurez 108/108, categoría OCDE 107/108.
-  - U-Net y dos redes: pendiente (faltan sus pesos).
+  - U-Net y dos redes: ya instalados (rango dinámico, 24.7 MB y 12.2 + 21.4 MB);
+    falta correr la prueba en el celular.
 
 ## Pendiente (Fase 2)
 

@@ -1,0 +1,21 @@
+{
+  "tipo": "dos_redes",
+  "modelo": "modelos_movil/yolov8s_seg_800_dynamic_range_quant.tflite",
+  "clasificador": "modelos_movil/resnet34_madurez_448_dynamic_range_quant.tflite",
+  "tamano_mb": 33.6,
+  "n": 108,
+  "conf_defecto": 0.1,
+  "iou_palta": 0.9901,
+  "iou_defecto": 0.4416,
+  "precision_defecto": 0.7212,
+  "recall_defecto": 0.5326,
+  "madurez_acc": 0.7407,
+  "madurez_f1": 0.7338,
+  "ocde_acc": 0.8148,
+  "ocde_f1": 0.7349,
+  "recall_rechazado": 0.5357,
+  "mae_ratio": 0.0652,
+  "latencia_ms_media": 275.6,
+  "latencia_ms_p95": 334.5,
+  "hilos_cpu": 4
+}

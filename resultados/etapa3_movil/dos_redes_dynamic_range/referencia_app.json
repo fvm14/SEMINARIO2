@@ -1,0 +1,974 @@
+[
+ {
+  "foto": "T10_d02_275_a_1_jpg.rf.wWksDXX3C4hOPp493IwD.jpg",
+  "categoria": 2,
+  "ratio": 0.16606,
+  "madurez": 1,
+  "prob_madurez": 0.994236946105957,
+  "px_fruto": 111198,
+  "px_defecto": 18466
+ },
+ {
+  "foto": "T10_d02_392_a_1_jpg.rf.WT9U0IIvLbGnQGxyJYs3.jpg",
+  "categoria": 0,
+  "ratio": 0.02415,
+  "madurez": 1,
+  "prob_madurez": 0.9693352580070496,
+  "px_fruto": 96164,
+  "px_defecto": 2322
+ },
+ {
+  "foto": "T10_d04_392_a_1_jpg.rf.geQ8XEzHwQmefNdYTksw.jpg",
+  "categoria": 1,
+  "ratio": 0.11714,
+  "madurez": 1,
+  "prob_madurez": 0.995398223400116,
+  "px_fruto": 93876,
+  "px_defecto": 10997
+ },
+ {
+  "foto": "T10_d05_331_a_1_jpg.rf.b1FGOKCfExfaWFCMww9V.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 1,
+  "prob_madurez": 0.9895213842391968,
+  "px_fruto": 126636,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d07_092_b_1_jpg.rf.IBrTGWCH8aeLo5d7YC8n.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 1,
+  "prob_madurez": 0.7499412894248962,
+  "px_fruto": 94643,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d07_162_a_1_jpg.rf.bbhRE5HNb7la08x8NujH.jpg",
+  "categoria": 2,
+  "ratio": 0.14632,
+  "madurez": 1,
+  "prob_madurez": 0.9549940824508667,
+  "px_fruto": 109913,
+  "px_defecto": 16083
+ },
+ {
+  "foto": "T10_d07_395_a_1_jpg.rf.zUv5iN86livDBX2qE7M5.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 1,
+  "prob_madurez": 0.8362563848495483,
+  "px_fruto": 99382,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d08_395_b_2_jpg.rf.DJUWEHr1NsOu1G55MsI0.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.9549390077590942,
+  "px_fruto": 100693,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d08_471_b_1_jpg.rf.pRWuPkTutq50iAoyAg3C.jpg",
+  "categoria": 1,
+  "ratio": 0.09602,
+  "madurez": 1,
+  "prob_madurez": 0.8262941837310791,
+  "px_fruto": 103968,
+  "px_defecto": 9983
+ },
+ {
+  "foto": "T10_d09_015_b_2_jpg.rf.2Ge0th0cVSofMHjbISCE.jpg",
+  "categoria": 0,
+  "ratio": 0.01193,
+  "madurez": 2,
+  "prob_madurez": 0.9893240332603455,
+  "px_fruto": 135182,
+  "px_defecto": 1613
+ },
+ {
+  "foto": "T10_d09_092_b_2_jpg.rf.DWQDYA92dLhnGvpbJtrW.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.9979586601257324,
+  "px_fruto": 92983,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d09_100_b_2_jpg.rf.85zCsiVRvzfxbqMaBLNP.jpg",
+  "categoria": 0,
+  "ratio": 0.05347,
+  "madurez": 2,
+  "prob_madurez": 0.9941121935844421,
+  "px_fruto": 103465,
+  "px_defecto": 5532
+ },
+ {
+  "foto": "T10_d09_162_b_2_jpg.rf.35WkU4ly6qoGaBbWkKFZ.jpg",
+  "categoria": 0,
+  "ratio": 0.02863,
+  "madurez": 2,
+  "prob_madurez": 0.9986411929130554,
+  "px_fruto": 111236,
+  "px_defecto": 3185
+ },
+ {
+  "foto": "T10_d09_219_b_2_jpg.rf.tH8lBZtIlsRhVmmgSrxC.jpg",
+  "categoria": 0,
+  "ratio": 0.08695,
+  "madurez": 2,
+  "prob_madurez": 0.9826481938362122,
+  "px_fruto": 122530,
+  "px_defecto": 10654
+ },
+ {
+  "foto": "T10_d10_275_b_2_jpg.rf.siGmwB5nnYXByUnGOoAu.jpg",
+  "categoria": 2,
+  "ratio": 0.40695,
+  "madurez": 2,
+  "prob_madurez": 0.9462727904319763,
+  "px_fruto": 99181,
+  "px_defecto": 40362
+ },
+ {
+  "foto": "T10_d11_015_a_3_jpg.rf.RRhl6YOx18ej2gH6aZl8.jpg",
+  "categoria": 0,
+  "ratio": 0.05852,
+  "madurez": 2,
+  "prob_madurez": 0.7035369873046875,
+  "px_fruto": 132752,
+  "px_defecto": 7768
+ },
+ {
+  "foto": "T10_d11_092_b_3_jpg.rf.L5iG9L5DjQdsXCyOPymX.jpg",
+  "categoria": 2,
+  "ratio": 0.15897,
+  "madurez": 2,
+  "prob_madurez": 0.6070078611373901,
+  "px_fruto": 88092,
+  "px_defecto": 14004
+ },
+ {
+  "foto": "T10_d11_219_a_3_jpg.rf.xhIN3sD2Hv7fbVVjuOrj.jpg",
+  "categoria": 0,
+  "ratio": 0.0159,
+  "madurez": 3,
+  "prob_madurez": 0.7953010201454163,
+  "px_fruto": 116320,
+  "px_defecto": 1849
+ },
+ {
+  "foto": "T10_d11_275_a_3_jpg.rf.0GpPj4Gg58KboiDWv09Y.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.7799628973007202,
+  "px_fruto": 101900,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d11_392_a_4_jpg.rf.a2R0RLBxOjvWLus9vcXs.jpg",
+  "categoria": 0,
+  "ratio": 0.05757,
+  "madurez": 3,
+  "prob_madurez": 0.9343966841697693,
+  "px_fruto": 85976,
+  "px_defecto": 4950
+ },
+ {
+  "foto": "T10_d12_275_a_3_jpg.rf.joYY4Q9109yJUufFoaTk.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.5610134601593018,
+  "px_fruto": 102000,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d12_471_b_2_jpg.rf.0oxDsckZowNWvf6WM7rs.jpg",
+  "categoria": 1,
+  "ratio": 0.09484,
+  "madurez": 2,
+  "prob_madurez": 0.6417045593261719,
+  "px_fruto": 97061,
+  "px_defecto": 9205
+ },
+ {
+  "foto": "T10_d13_395_b_3_jpg.rf.K2359XhUAbfgrv0Q6Q5L.jpg",
+  "categoria": 0,
+  "ratio": 0.0129,
+  "madurez": 3,
+  "prob_madurez": 0.7780634760856628,
+  "px_fruto": 98950,
+  "px_defecto": 1276
+ },
+ {
+  "foto": "T10_d13_471_a_3_jpg.rf.8407AQuYtv59mq5hszTs.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 3,
+  "prob_madurez": 0.7979374527931213,
+  "px_fruto": 100391,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d14_219_b_3_jpg.rf.3GS5ouDQBgMy3rQkHBM4.jpg",
+  "categoria": 1,
+  "ratio": 0.11222,
+  "madurez": 3,
+  "prob_madurez": 0.9791367053985596,
+  "px_fruto": 110680,
+  "px_defecto": 12421
+ },
+ {
+  "foto": "T10_d15_395_b_3_jpg.rf.dkZB2Qaupj87W1gtUDYj.jpg",
+  "categoria": 0,
+  "ratio": 0.01813,
+  "madurez": 4,
+  "prob_madurez": 0.7829331159591675,
+  "px_fruto": 96559,
+  "px_defecto": 1751
+ },
+ {
+  "foto": "T10_d16_275_b_3_jpg.rf.sRI7OyCHk4g9XMESfqfm.jpg",
+  "categoria": 2,
+  "ratio": 0.55645,
+  "madurez": 4,
+  "prob_madurez": 0.5515174269676208,
+  "px_fruto": 99698,
+  "px_defecto": 55477
+ },
+ {
+  "foto": "T10_d16_392_b_4_jpg.rf.J4DWVf3WMNrgJ8UI9fRK.jpg",
+  "categoria": 0,
+  "ratio": 0.04962,
+  "madurez": 4,
+  "prob_madurez": 0.8319818377494812,
+  "px_fruto": 85401,
+  "px_defecto": 4238
+ },
+ {
+  "foto": "T10_d17_392_a_4_jpg.rf.us9u1l4LlmCxXzhUCRA9.jpg",
+  "categoria": 1,
+  "ratio": 0.09581,
+  "madurez": 3,
+  "prob_madurez": 0.6951541304588318,
+  "px_fruto": 84978,
+  "px_defecto": 8142
+ },
+ {
+  "foto": "T10_d17_392_b_4_jpg.rf.mkhehSr7hvqljE5531tU.jpg",
+  "categoria": 0,
+  "ratio": 0.08702,
+  "madurez": 4,
+  "prob_madurez": 0.9684146046638489,
+  "px_fruto": 86197,
+  "px_defecto": 7501
+ },
+ {
+  "foto": "T10_d20_219_a_4_jpg.rf.OxGghTlPxx79eAjwHxRA.jpg",
+  "categoria": 0,
+  "ratio": 0.01676,
+  "madurez": 4,
+  "prob_madurez": 0.9859814643859863,
+  "px_fruto": 109427,
+  "px_defecto": 1834
+ },
+ {
+  "foto": "T10_d20_471_b_4_jpg.rf.kxkyqrtQOONf2ISSJ11L.jpg",
+  "categoria": 2,
+  "ratio": 0.21938,
+  "madurez": 4,
+  "prob_madurez": 0.7409530282020569,
+  "px_fruto": 91546,
+  "px_defecto": 20083
+ },
+ {
+  "foto": "T10_d22_275_b_4_jpg.rf.SXymwt3ipubsASL01FiP.jpg",
+  "categoria": 2,
+  "ratio": 0.42522,
+  "madurez": 4,
+  "prob_madurez": 0.9461578726768494,
+  "px_fruto": 101356,
+  "px_defecto": 43099
+ },
+ {
+  "foto": "T10_d23_395_b_5_jpg.rf.sxGqTOTMFMTMw7Uls1zx.jpg",
+  "categoria": 0,
+  "ratio": 0.02446,
+  "madurez": 5,
+  "prob_madurez": 0.6687146425247192,
+  "px_fruto": 95749,
+  "px_defecto": 2342
+ },
+ {
+  "foto": "T10_d24_471_a_5_jpg.rf.uJDnYlSlUmyZY7MFmpQD.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 4,
+  "prob_madurez": 0.6297074556350708,
+  "px_fruto": 96027,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d25_015_a_5_jpg.rf.kPhH0N5pFP3RErVxwWkJ.jpg",
+  "categoria": 0,
+  "ratio": 0.04422,
+  "madurez": 5,
+  "prob_madurez": 0.9309606552124023,
+  "px_fruto": 129635,
+  "px_defecto": 5733
+ },
+ {
+  "foto": "T10_d25_092_a_5_jpg.rf.bhpQcDCXaDIIsqRXwJAx.jpg",
+  "categoria": 0,
+  "ratio": 0.03281,
+  "madurez": 5,
+  "prob_madurez": 0.9757689833641052,
+  "px_fruto": 82748,
+  "px_defecto": 2715
+ },
+ {
+  "foto": "T10_d25_395_a_5_jpg.rf.9zZIOSamXAFS5tbdbW2I.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 5,
+  "prob_madurez": 0.7987133860588074,
+  "px_fruto": 95098,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T10_d26_015_b_5_jpg.rf.BdG8Rwze2KYxByGqcOND.jpg",
+  "categoria": 0,
+  "ratio": 0.01791,
+  "madurez": 5,
+  "prob_madurez": 0.9243237972259521,
+  "px_fruto": 124163,
+  "px_defecto": 2224
+ },
+ {
+  "foto": "T20_d01_161_a_1_jpg.rf.r36Ieig41ncbpcomQiyi.jpg",
+  "categoria": 0,
+  "ratio": 0.00928,
+  "madurez": 1,
+  "prob_madurez": 0.9996523857116699,
+  "px_fruto": 108312,
+  "px_defecto": 1005
+ },
+ {
+  "foto": "T20_d01_313_a_1_jpg.rf.1klAiHbibnWDHQcDhzkc.jpg",
+  "categoria": 0,
+  "ratio": 0.05401,
+  "madurez": 1,
+  "prob_madurez": 0.9739640355110168,
+  "px_fruto": 111174,
+  "px_defecto": 6005
+ },
+ {
+  "foto": "T20_d01_360_a_1_jpg.rf.k4KIbkrqdPoPmcnMaYMl.jpg",
+  "categoria": 0,
+  "ratio": 0.01687,
+  "madurez": 1,
+  "prob_madurez": 0.9881643056869507,
+  "px_fruto": 97130,
+  "px_defecto": 1639
+ },
+ {
+  "foto": "T20_d02_279_a_1_jpg.rf.qiGpQSYpRNf8vnLAgM6j.jpg",
+  "categoria": 0,
+  "ratio": 0.01304,
+  "madurez": 2,
+  "prob_madurez": 0.9508038759231567,
+  "px_fruto": 107449,
+  "px_defecto": 1401
+ },
+ {
+  "foto": "T20_d02_360_a_1_jpg.rf.sHflsZQXMh4OX0oDyZl6.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 1,
+  "prob_madurez": 0.9008599519729614,
+  "px_fruto": 98410,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d03_020_a_1_jpg.rf.yuX7H7Fa7HkhL822iZ3u.jpg",
+  "categoria": 0,
+  "ratio": 0.06195,
+  "madurez": 1,
+  "prob_madurez": 0.9951801300048828,
+  "px_fruto": 152927,
+  "px_defecto": 9474
+ },
+ {
+  "foto": "T20_d03_020_b_1_jpg.rf.pk8FUXbNi1qWQ2QTocW6.jpg",
+  "categoria": 1,
+  "ratio": 0.12211,
+  "madurez": 1,
+  "prob_madurez": 0.99784255027771,
+  "px_fruto": 154250,
+  "px_defecto": 18835
+ },
+ {
+  "foto": "T20_d03_190_b_2_jpg.rf.bIiegaqHUbV0Of9UiR7B.jpg",
+  "categoria": 1,
+  "ratio": 0.12181,
+  "madurez": 3,
+  "prob_madurez": 0.548288106918335,
+  "px_fruto": 111672,
+  "px_defecto": 13603
+ },
+ {
+  "foto": "T20_d03_360_b_2_jpg.rf.Vt9TJ05XjELgN6oqImnc.jpg",
+  "categoria": 0,
+  "ratio": 0.03323,
+  "madurez": 2,
+  "prob_madurez": 0.9815796613693237,
+  "px_fruto": 107102,
+  "px_defecto": 3559
+ },
+ {
+  "foto": "T20_d03_468_a_2_jpg.rf.Gc5gIYPsXJMpRuqXTQdN.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.9782024025917053,
+  "px_fruto": 107644,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d04_360_b_2_jpg.rf.U1m2sXU9UTl3NDHMkQd6.jpg",
+  "categoria": 0,
+  "ratio": 0.02838,
+  "madurez": 2,
+  "prob_madurez": 0.9524816870689392,
+  "px_fruto": 101427,
+  "px_defecto": 2878
+ },
+ {
+  "foto": "T20_d04_462_b_2_jpg.rf.jcCYsIqV0Libi90gZaqp.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.9867668747901917,
+  "px_fruto": 102440,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d05_085_a_3_jpg.rf.aDcNRK9J5A15JzuN6rPI.jpg",
+  "categoria": 1,
+  "ratio": 0.1057,
+  "madurez": 2,
+  "prob_madurez": 0.9455112814903259,
+  "px_fruto": 104531,
+  "px_defecto": 11049
+ },
+ {
+  "foto": "T20_d05_161_b_4_jpg.rf.1WFA0Po9FBZt8Y8797n1.jpg",
+  "categoria": 0,
+  "ratio": 0.0222,
+  "madurez": 3,
+  "prob_madurez": 0.7309500575065613,
+  "px_fruto": 93151,
+  "px_defecto": 2068
+ },
+ {
+  "foto": "T20_d05_190_a_4_jpg.rf.iucbBsKpsHK6JFRLQXyn.jpg",
+  "categoria": 0,
+  "ratio": 0.07984,
+  "madurez": 4,
+  "prob_madurez": 0.8923434019088745,
+  "px_fruto": 107701,
+  "px_defecto": 8599
+ },
+ {
+  "foto": "T20_d06_240_a_4_jpg.rf.KwWZzzaCtlssc769Xd8J.jpg",
+  "categoria": 0,
+  "ratio": 0.09395,
+  "madurez": 4,
+  "prob_madurez": 0.8790768980979919,
+  "px_fruto": 109989,
+  "px_defecto": 10334
+ },
+ {
+  "foto": "T20_d06_279_b_4_jpg.rf.4fOQNBpvL3WZm2i2Wcwz.jpg",
+  "categoria": 0,
+  "ratio": 0.03448,
+  "madurez": 4,
+  "prob_madurez": 0.9066437482833862,
+  "px_fruto": 106436,
+  "px_defecto": 3670
+ },
+ {
+  "foto": "T20_d06_468_b_4_jpg.rf.3DlkzW3TP3BuedOvgeBX.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 4,
+  "prob_madurez": 0.6317033171653748,
+  "px_fruto": 100339,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d07_085_a_3_jpg.rf.x1agl7J8ixjIs4TpqCUe.jpg",
+  "categoria": 0,
+  "ratio": 0.06858,
+  "madurez": 3,
+  "prob_madurez": 0.5708209872245789,
+  "px_fruto": 101297,
+  "px_defecto": 6947
+ },
+ {
+  "foto": "T20_d07_141_a_3_jpg.rf.ib1ZLAe44RC9mV9uZzMs.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 3,
+  "prob_madurez": 0.49060600996017456,
+  "px_fruto": 152715,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d07_462_a_3_jpg.rf.pqwWcyTAt53EjMw5h7hI.jpg",
+  "categoria": 0,
+  "ratio": 0.04387,
+  "madurez": 2,
+  "prob_madurez": 0.80863356590271,
+  "px_fruto": 95427,
+  "px_defecto": 4186
+ },
+ {
+  "foto": "T20_d08_190_b_4_jpg.rf.DHRNp4YfB6uODQBnmGAv.jpg",
+  "categoria": 1,
+  "ratio": 0.12424,
+  "madurez": 4,
+  "prob_madurez": 0.7563236951828003,
+  "px_fruto": 107119,
+  "px_defecto": 13309
+ },
+ {
+  "foto": "T20_d09_462_a_4_jpg.rf.hB6vaxDBxjwu8ym0MwFe.jpg",
+  "categoria": 0,
+  "ratio": 0.01358,
+  "madurez": 3,
+  "prob_madurez": 0.6036809682846069,
+  "px_fruto": 101475,
+  "px_defecto": 1378
+ },
+ {
+  "foto": "T20_d09_468_a_5_jpg.rf.GNpNYXPcvt82w7gw7jnZ.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 5,
+  "prob_madurez": 0.5559343695640564,
+  "px_fruto": 106351,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d10_141_a_5_jpg.rf.JUEnBXWzfdyHOe9oNnDw.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 5,
+  "prob_madurez": 0.7056990265846252,
+  "px_fruto": 149226,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d10_228_b_5_jpg.rf.mEhkX7C8pULfTZQLzeF4.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 5,
+  "prob_madurez": 0.9945949912071228,
+  "px_fruto": 108912,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d10_240_b_5_jpg.rf.n8IkHxopAsAy7yUMOw3b.jpg",
+  "categoria": 2,
+  "ratio": 0.18441,
+  "madurez": 5,
+  "prob_madurez": 0.9914371371269226,
+  "px_fruto": 104133,
+  "px_defecto": 19203
+ },
+ {
+  "foto": "T20_d10_289_b_5_jpg.rf.K8RBFZojRJREE6qX8MoK.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 5,
+  "prob_madurez": 0.9264861941337585,
+  "px_fruto": 94379,
+  "px_defecto": 0
+ },
+ {
+  "foto": "T20_d11_161_a_5_jpg.rf.ILeG9LxLvBD5PPa07thg.jpg",
+  "categoria": 0,
+  "ratio": 0.02594,
+  "madurez": 5,
+  "prob_madurez": 0.9333367943763733,
+  "px_fruto": 86042,
+  "px_defecto": 2232
+ },
+ {
+  "foto": "T20_d11_190_a_5_jpg.rf.9E8qGyQdIdJSSldlzjHX.jpg",
+  "categoria": 0,
+  "ratio": 0.07839,
+  "madurez": 5,
+  "prob_madurez": 0.9704716801643372,
+  "px_fruto": 99149,
+  "px_defecto": 7772
+ },
+ {
+  "foto": "Tam_d01_078_a_1_jpg.rf.t02YWo5Y7Fpzg39RQCni.jpg",
+  "categoria": 2,
+  "ratio": 0.22868,
+  "madurez": 1,
+  "prob_madurez": 0.9890627264976501,
+  "px_fruto": 129874,
+  "px_defecto": 29699
+ },
+ {
+  "foto": "Tam_d01_396_b_1_jpg.rf.CVY7iu6OQBObWD54JFje.jpg",
+  "categoria": 0,
+  "ratio": 0.08741,
+  "madurez": 1,
+  "prob_madurez": 0.9992998838424683,
+  "px_fruto": 95964,
+  "px_defecto": 8388
+ },
+ {
+  "foto": "Tam_d02_164_a_1_jpg.rf.TzOYMGAjlKtabJTYlQ5S.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 1,
+  "prob_madurez": 0.9917810559272766,
+  "px_fruto": 95579,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d02_209_a_1_jpg.rf.0jsPfTxG2RLdzsX9EOXs.jpg",
+  "categoria": 0,
+  "ratio": 0.01432,
+  "madurez": 1,
+  "prob_madurez": 0.9926978945732117,
+  "px_fruto": 95651,
+  "px_defecto": 1370
+ },
+ {
+  "foto": "Tam_d02_396_b_1_jpg.rf.jG9HU5TBKKAsJXehUBZH.jpg",
+  "categoria": 2,
+  "ratio": 0.2417,
+  "madurez": 1,
+  "prob_madurez": 0.9815781116485596,
+  "px_fruto": 95557,
+  "px_defecto": 23096
+ },
+ {
+  "foto": "Tam_d03_281_a_2_jpg.rf.tfsU5t1yPrvrzJfMRBpa.jpg",
+  "categoria": 0,
+  "ratio": 0.09154,
+  "madurez": 1,
+  "prob_madurez": 0.9486707448959351,
+  "px_fruto": 105049,
+  "px_defecto": 9616
+ },
+ {
+  "foto": "Tam_d03_339_b_2_jpg.rf.7bQRsPaiRmGMYKUMSICQ.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 1,
+  "prob_madurez": 0.7893517017364502,
+  "px_fruto": 108659,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d03_362_b_1_jpg.rf.fPnQcliq999xJrOVRVpo.jpg",
+  "categoria": 0,
+  "ratio": 0.04755,
+  "madurez": 1,
+  "prob_madurez": 0.8445362448692322,
+  "px_fruto": 110240,
+  "px_defecto": 5242
+ },
+ {
+  "foto": "Tam_d04_140_a_3_jpg.rf.zxkg4IO8ukNdMnLiUe6i.jpg",
+  "categoria": 1,
+  "ratio": 0.10148,
+  "madurez": 2,
+  "prob_madurez": 0.8963672518730164,
+  "px_fruto": 139540,
+  "px_defecto": 14161
+ },
+ {
+  "foto": "Tam_d04_209_a_2_jpg.rf.RdFlPkURPfi3cVImtvwZ.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.9790627956390381,
+  "px_fruto": 97570,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d04_231_b_3_jpg.rf.mcF79La0E4t2cTjXKXVF.jpg",
+  "categoria": 0,
+  "ratio": 0.04111,
+  "madurez": 4,
+  "prob_madurez": 0.42689570784568787,
+  "px_fruto": 109000,
+  "px_defecto": 4481
+ },
+ {
+  "foto": "Tam_d04_238_a_3_jpg.rf.qV1xH6Nd4fLGquvRgi5e.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.954055905342102,
+  "px_fruto": 100147,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d04_396_a_2_jpg.rf.J2mnBMCs8jGNhm8H7zkL.jpg",
+  "categoria": 0,
+  "ratio": 0.0132,
+  "madurez": 1,
+  "prob_madurez": 0.9688883423805237,
+  "px_fruto": 97108,
+  "px_defecto": 1282
+ },
+ {
+  "foto": "Tam_d04_396_b_2_jpg.rf.83eCyPbUQJIMTooU7TTa.jpg",
+  "categoria": 2,
+  "ratio": 0.17232,
+  "madurez": 1,
+  "prob_madurez": 0.9182823300361633,
+  "px_fruto": 98107,
+  "px_defecto": 16906
+ },
+ {
+  "foto": "Tam_d04_416_a_2_jpg.rf.ekIt23x3cigYF28DkA9B.jpg",
+  "categoria": 0,
+  "ratio": 0.0783,
+  "madurez": 2,
+  "prob_madurez": 0.9724777936935425,
+  "px_fruto": 96951,
+  "px_defecto": 7591
+ },
+ {
+  "foto": "Tam_d05_281_b_2_jpg.rf.miWTJH1m1Bx1qEyORgqz.jpg",
+  "categoria": 0,
+  "ratio": 0.02239,
+  "madurez": 2,
+  "prob_madurez": 0.9427911639213562,
+  "px_fruto": 79320,
+  "px_defecto": 1776
+ },
+ {
+  "foto": "Tam_d05_344_a_4_jpg.rf.2BnPgUSLqiTwoszTEllY.jpg",
+  "categoria": 2,
+  "ratio": 0.17057,
+  "madurez": 4,
+  "prob_madurez": 0.9503677487373352,
+  "px_fruto": 87048,
+  "px_defecto": 14848
+ },
+ {
+  "foto": "Tam_d05_396_b_2_jpg.rf.tMPGrf5GMEcpKnjO4xBY.jpg",
+  "categoria": 2,
+  "ratio": 0.19951,
+  "madurez": 2,
+  "prob_madurez": 0.969910204410553,
+  "px_fruto": 78666,
+  "px_defecto": 15695
+ },
+ {
+  "foto": "Tam_d05_416_a_2_jpg.rf.4uf07Yj6VO7KewfxWiwU.jpg",
+  "categoria": 0,
+  "ratio": 0.08033,
+  "madurez": 2,
+  "prob_madurez": 0.8454437851905823,
+  "px_fruto": 77828,
+  "px_defecto": 6252
+ },
+ {
+  "foto": "Tam_d05_416_b_2_jpg.rf.O24JnLvBYEnCAWbZp5o5.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 2,
+  "prob_madurez": 0.9386908411979675,
+  "px_fruto": 78686,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d06_078_b_4_jpg.rf.qIyVHGyTdNpKmlWFSPCS.jpg",
+  "categoria": 2,
+  "ratio": 0.34504,
+  "madurez": 4,
+  "prob_madurez": 0.8941336274147034,
+  "px_fruto": 131583,
+  "px_defecto": 45402
+ },
+ {
+  "foto": "Tam_d06_140_a_3_jpg.rf.9OU5IFVN0rbnHwRCLwiZ.jpg",
+  "categoria": 1,
+  "ratio": 0.10036,
+  "madurez": 4,
+  "prob_madurez": 0.7299911379814148,
+  "px_fruto": 134153,
+  "px_defecto": 13463
+ },
+ {
+  "foto": "Tam_d06_238_a_3_jpg.rf.zoWpBGQK0aVvPetUOTeA.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 3,
+  "prob_madurez": 0.8102697730064392,
+  "px_fruto": 96936,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d07_078_b_4_jpg.rf.w691jRXKD2f840dmClhN.jpg",
+  "categoria": 0,
+  "ratio": 0.01465,
+  "madurez": 4,
+  "prob_madurez": 0.9033477902412415,
+  "px_fruto": 126430,
+  "px_defecto": 1852
+ },
+ {
+  "foto": "Tam_d07_135_a_4_jpg.rf.tVLowr9As5RXWpuz8XPi.jpg",
+  "categoria": 2,
+  "ratio": 0.82817,
+  "madurez": 5,
+  "prob_madurez": 0.9586675763130188,
+  "px_fruto": 144630,
+  "px_defecto": 119778
+ },
+ {
+  "foto": "Tam_d07_140_b_4_jpg.rf.pFQqxHDvr1ZHiefEvelt.jpg",
+  "categoria": 2,
+  "ratio": 0.29648,
+  "madurez": 5,
+  "prob_madurez": 0.6579359173774719,
+  "px_fruto": 134519,
+  "px_defecto": 39882
+ },
+ {
+  "foto": "Tam_d07_374_a_3_jpg.rf.8oq9xBGTWRW2s2jUkBdN.jpg",
+  "categoria": 0,
+  "ratio": 0.06096,
+  "madurez": 3,
+  "prob_madurez": 0.7604376077651978,
+  "px_fruto": 99689,
+  "px_defecto": 6077
+ },
+ {
+  "foto": "Tam_d07_396_b_3_jpg.rf.x8Mc94YBI7GO4aAA2Ez0.jpg",
+  "categoria": 2,
+  "ratio": 0.28218,
+  "madurez": 4,
+  "prob_madurez": 0.5035309195518494,
+  "px_fruto": 93466,
+  "px_defecto": 26374
+ },
+ {
+  "foto": "Tam_d07_416_b_4_jpg.rf.CZfqPNOs80Y84V6mm2eA.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 3,
+  "prob_madurez": 0.8852302432060242,
+  "px_fruto": 92375,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d08_164_b_4_jpg.rf.NQUH5DUPbegQgPpX44PN.jpg",
+  "categoria": 2,
+  "ratio": 0.28169,
+  "madurez": 4,
+  "prob_madurez": 0.9421159625053406,
+  "px_fruto": 92851,
+  "px_defecto": 26155
+ },
+ {
+  "foto": "Tam_d08_238_a_4_jpg.rf.PcNTFreIJPtr7gjWHWqd.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 4,
+  "prob_madurez": 0.913379430770874,
+  "px_fruto": 95558,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d08_472_b_4_jpg.rf.m0AdiOTeMDJ3itta2Hm8.jpg",
+  "categoria": 0,
+  "ratio": 0.0412,
+  "madurez": 4,
+  "prob_madurez": 0.9890267252922058,
+  "px_fruto": 86907,
+  "px_defecto": 3581
+ },
+ {
+  "foto": "Tam_d09_209_a_4_jpg.rf.FpDVttdxZIydToL7HBj8.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 4,
+  "prob_madurez": 0.7744774222373962,
+  "px_fruto": 101835,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d09_281_b_5_jpg.rf.PyhR59CJkDCW2AD6SWeZ.jpg",
+  "categoria": 0,
+  "ratio": 0.0481,
+  "madurez": 4,
+  "prob_madurez": 0.5040155053138733,
+  "px_fruto": 102503,
+  "px_defecto": 4930
+ },
+ {
+  "foto": "Tam_d10_344_b_5_jpg.rf.WOx5zpR8YLdJ9fipCTVI.jpg",
+  "categoria": 1,
+  "ratio": 0.1398,
+  "madurez": 5,
+  "prob_madurez": 0.9252132773399353,
+  "px_fruto": 94943,
+  "px_defecto": 13273
+ },
+ {
+  "foto": "Tam_d10_472_b_5_jpg.rf.lshvWNhPdW1FSkDtVQHu.jpg",
+  "categoria": 0,
+  "ratio": 0.04134,
+  "madurez": 5,
+  "prob_madurez": 0.7459684610366821,
+  "px_fruto": 82784,
+  "px_defecto": 3422
+ },
+ {
+  "foto": "Tam_d11_126_b_5_jpg.rf.hQSahW2braVEsExz42vP.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 5,
+  "prob_madurez": 0.9754133820533752,
+  "px_fruto": 87497,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d11_339_b_5_jpg.rf.4qy5Nd7mVarCaRj9DAHL.jpg",
+  "categoria": 0,
+  "ratio": 0.0,
+  "madurez": 5,
+  "prob_madurez": 0.9577046632766724,
+  "px_fruto": 95541,
+  "px_defecto": 0
+ },
+ {
+  "foto": "Tam_d11_362_a_5_jpg.rf.YnbDeToTzULD4EaHeylm.jpg",
+  "categoria": 0,
+  "ratio": 0.03212,
+  "madurez": 5,
+  "prob_madurez": 0.9483510851860046,
+  "px_fruto": 95366,
+  "px_defecto": 3063
+ }
+]

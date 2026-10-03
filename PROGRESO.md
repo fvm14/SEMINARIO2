@@ -267,7 +267,7 @@ La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del
    `python scripts/eval_unet_multitarea.py --weights resultados\comparacion\unet_resnet34\best.pt --calibrar`
 2. Opcional: agregar Mask R-CNN como cuarto modelo.
 3. Opcional: reentrenar el multitarea con mosaic activado, para comprobar si recupera la diferencia de segmentación frente al modelo sin madurez.
-4. Cuantizar los dos modelos alternativos y medir su latencia en el celular (sección 8.9).
+4. Medir en el celular la latencia de los dos modelos alternativos ya cuantizados (sección 8.9).
 
 ### 8.9 Cuantización de los modelos alternativos y uso en la app (en curso)
 
@@ -279,7 +279,25 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
 - `scripts/eval_alternativos_movil.py`: evalúa los TFLite en test con el mismo protocolo que sus versiones en PyTorch (`metricas.json`, `predicciones.csv` para `bootstrap_ic.py` y `referencia_app.json` para comparar con la app) y compara la salida de la app con esa referencia (`--comparar`).
 - App v0.4.0: soporta los tres modelos (sección 12).
 
-**Falta:** los pesos `best.pt` de la U-Net, la ResNet-34 y el YOLOv8s-seg sin madurez (se entrenaron en otra máquina y no están en el repo); con ellos, convertir, evaluar la pérdida por cuantización, instalarlos en el celular y correr `ConcordanciaTest` con cada uno.
+**Hecho con los pesos reales (2026-10-02).** Exportación: diferencia máxima con PyTorch de 6.4e-6 (U-Net), 3.3e-4 (YOLO) y 1.2e-7 (ResNet). Evaluación en test (*n* = 108, PC, 4 hilos, mismos umbrales que en PyTorch). El multitarea es el de la Etapa 2 (`resultados/etapa2/`):
+
+| Modelo | Variante | Tamaño (MB) | IoU defecto | Madurez acc | OCDE acc | Latencia (ms) |
+|---|---|---|---|---|---|---|
+| YOLOv8s-seg multitarea | float32 (ONNX) | 48.0 | 0.397 | 74.1% | 77.8% | 637 |
+| | rango dinámico | **12.3** | 0.399 | 73.1% | 79.6% | **175** |
+| U-Net ResNet34 multitarea | float32 | 98.2 | 0.396 | 73.1% | 65.7% | 877 |
+| | rango dinámico | 24.7 | 0.395 | 73.1% | 65.7% | 422 |
+| YOLOv8s-seg + ResNet-34 | float32 | 132.5 | 0.443 | 77.8% | 80.6% | 577 |
+| | rango dinámico | 33.6 | 0.442 | 74.1% | 81.5% | 276 |
+
+- La cuantización no cambia la segmentación en ningún modelo (IoU de defecto ±0.003).
+- U-Net: métricas iguales a float32 y latencia a la mitad.
+- Dos redes: la madurez baja de 77.8% a 74.1% (4 fotos) por la cuantización de la ResNet-34; el OCDE sube 1 foto.
+- Dos redes en float32 da 80.6% de OCDE frente a 82.4% en PyTorch: la IoU de defecto es la misma (0.443), pero el letterbox cuadrado de 800 px cambia 2 fotos que están cerca de un límite.
+- Tras cuantizar, el multitarea sigue siendo el más pequeño (12.3 MB frente a 24.7 y 33.6) y el más rápido (175 ms frente a 422 y 276), y la diferencia de madurez con las dos redes desaparece (73.1% frente a 74.1%).
+- Resultados en `resultados/etapa3_movil/<modelo>_<variante>/`. Los tres `.tflite` de rango dinámico están en los assets de la app (`unet_resnet34.tflite`, `yolov8s_seg.tflite`, `resnet34_madurez.tflite`); el APK de depuración pesa 97 MB con los cuatro modelos.
+
+**Falta:** instalar en el celular, correr `ConcordanciaTest` con cada modelo (latencia en el teléfono y concordancia con `referencia_app.json`) y repetirlo con el multitarea para confirmar que el cambio de código no lo afectó.
 
 ## 9. Decisiones principales y su justificación
 
@@ -442,3 +460,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-02: comparación de modelos (YOLOv8s-seg multitarea, U-Net ResNet34 multitarea, YOLOv8s-seg + ResNet-34) incorporada como Etapa 3; el prototipo pasa a ser la Etapa 4 y la integración la 5; se retira la validación del prototipo. `PROGRESO_COMPARACION.md` se unificó en este documento.
 - 2026-10-02: análisis de sensibilidad de la categoría OCDE al área de referencia del fruto (40.0, 42.4, 46.5 y 63.3 cm²) para los tres modelos; los límites actuales se mantienen.
 - 2026-10-02: app v0.4.0 con soporte para los tres modelos de la comparación (selector de modelo, base de datos v3) y scripts para exportar, cuantizar y evaluar en TFLite la U-Net, el YOLOv8s-seg sin madurez y la ResNet-34; probados con pesos de prueba, a la espera de los pesos reales.
+- 2026-10-02: U-Net ResNet34, YOLOv8s-seg sin madurez y ResNet-34 cuantizados en rango dinámico con los pesos reales y evaluados en test (sección 8.9): sin pérdida de segmentación; el multitarea sigue siendo el más pequeño y rápido. Los tres modelos ya van en la app; falta medirlos en el celular.
