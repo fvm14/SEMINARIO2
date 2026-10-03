@@ -445,7 +445,7 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
     | Dos redes | 0.8 FPS | 1.4 FPS |
 
   - En vivo, la U-Net marca como palta zonas del fondo; los dos YOLO no. La U-Net clasifica cada píxel sin umbral por objeto, mientras que YOLO solo genera máscaras de instancias con confianza ≥ 0.35. En el análisis por foto no afecta el ratio, porque se toma la región más grande, pero explica su menor acierto OCDE.
-  - Prueba con fotos de paltas en un monitor: el multitarea casi no las detecta y el YOLO de las dos redes sí. El YOLO de las dos redes se entrenó con mosaic y aumentos de color fuertes (como Seminario I), y el multitarea sin mosaic, porque la madurez es una etiqueta por imagen. Ver la sección 13.
+  - Prueba con fotos de paltas en un monitor: los dos YOLO (multitarea y dos redes) las detectan y segmentan; la U-Net no detectó la palta en la primera prueba. (Corrección: en una versión anterior de esta nota se atribuyó ese fallo al multitarea, pero en esa prueba la app tenía seleccionada la U-Net.)
 - Falta: optimizar el pre y el posprocesamiento (~200 ms por cuadro); ver las mejoras futuras en la sección 13.
 
 **Etapa 5: integración.** El modelo cuantizado y el motor OCDE corren completos en el celular. Validación funcional hecha: 23 pruebas unitarias y `ConcordanciaTest` frente a Python (108/108 en madurez, 107/108 en OCDE, ~0.9 s por foto en CPU y ~0.45 s en GPU).
@@ -454,7 +454,7 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 
 ## 13. Pendientes transversales
 
-- **Robustez fuera del dataset:** todas las fotos del dataset tienen una palta, el mismo fondo, la misma distancia y la misma luz. En la cámara en vivo, el multitarea casi no detecta fotos de paltas mostradas en un monitor; el YOLO sin madurez (entrenado con mosaic) sí. Mejora futura: madurez por instancia (un valor por palta en vez de uno por imagen), que permitiría activar mosaic y analizar varias paltas a la vez.
+- **Robustez fuera del dataset:** todas las fotos del dataset tienen una palta, el mismo fondo, la misma distancia y la misma luz. La robustez fuera de esas condiciones no se ha medido: en la cámara en vivo, los dos YOLO detectaron fotos de paltas mostradas en un monitor y la U-Net no, pero es una prueba informal. Mejora futura: madurez por instancia (un valor por palta en vez de uno por imagen), que permitiría activar mosaic y analizar varias paltas a la vez.
 
 - **Umbrales OCDE:** el área de referencia de 42.4 cm² se contrastó con mediciones de palta Hass (largo × diámetro × π/4 × factor de forma 0.975 medido en el dataset): entre 40.0 y 46.5 cm² en frutos pequeños (162–207 g) y ~63.3 cm² en calibre comercial (241–267 g). **Análisis de sensibilidad** (`scripts/sensibilidad_ocde.py`, `resultados/sensibilidad_ocde/`): recalcula la categoría real y la predicha con cada área a partir de los `predicciones.csv`, sin volver a inferir. Acierto OCDE del multitarea entre 75.9% y 81.5% (siempre dentro de su IC con 42.4 cm²: 66.1–88.4%); la U-Net es la peor en todas las áreas, así que la selección de la Etapa 3 no depende del supuesto. Con áreas mayores crece la clase Rechazado y el recall de Rechazado del multitarea sube de 51.9% a 78.4%. El umbral de defecto no se toca: se calibró por IoU, no por acierto OCDE. Falta la escala real del montaje para medir cada fruto.
 
@@ -507,3 +507,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-02: app v0.5.0: cámara en vivo (CameraX) con recuadro de resultados, contornos de paltas y defectos, y selector CPU/GPU. Con GPU, el multitarea pasa de 906 a 445 ms por foto en el celular (de 1.1 a 2.2 por segundo); medidos también la U-Net y las dos redes (sección 12).
 - 2026-10-02: FPS de la cámara en vivo con GPU: 1.9 el multitarea, 1.4 las dos redes y 1.3 la U-Net (con CPU: 1.0, 0.8 y 0.7).
 - 2026-10-02: mAP de las variantes cuantizadas del multitarea (`scripts/map_movil.py`): mAP50 de máscaras 0.779 (FP32 y FP16), 0.777 (rango dinámico) y 0.734 (INT8). Umbral de la U-Net recalibrado con el barrido extendido a 0.01: 0.03 (antes 0.10, en el borde); U-Net reevaluada en test (OCDE 62.0%, −15.7 puntos frente al propuesto, significativa), en sensibilidad, en TFLite y en el celular. La conclusión de la comparación no cambia.
+- 2026-10-02: corrección: la prueba con fotos en un monitor en la que no se detectó la palta se hizo con la U-Net seleccionada, no con el multitarea; el multitarea sí detecta y segmenta esas fotos (secciones 12 y 13).
