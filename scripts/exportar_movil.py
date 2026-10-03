@@ -59,8 +59,10 @@ def _inferencia_separada(cabezal, imgsz):
     return inferencia
 
 
-def preparar(weights, imgsz=800):
-    m = buscar_modelo_multitarea(YOLO(weights).model).float().eval()
+def preparar(weights, imgsz=800, multitarea=True):
+    """multitarea=False: YOLOv8s-seg estandar, sin cabezal de madurez."""
+    m = YOLO(weights).model
+    m = (buscar_modelo_multitarea(m) if multitarea else m).float().eval()
     m = m.fuse(verbose=False)
     for mod in m.modules():
         if isinstance(mod, Detect):
