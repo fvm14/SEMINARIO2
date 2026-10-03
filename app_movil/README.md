@@ -71,8 +71,9 @@ cd app_movil/PaltaScan
 
 1. Copiar las 108 fotos de prueba a la app:
    `adb push data/prueba_test/. /sdcard/Android/data/pe.edu.ulima.paltascan/files/prueba/`
-2. Correr `./gradlew connectedDebugAndroidTest` (todos los modelos instalados;
-   con `-Pandroid.testInstrumentationRunnerArguments.modelo=unet` solo uno).
+2. `./gradlew installDebug installDebugAndroidTest` y luego
+   `adb shell am instrument -w [-e modelo unet] [-e procesador gpu] pe.edu.ulima.paltascan.test/androidx.test.runner.AndroidJUnitRunner`
+   (sin `-e modelo`, todos los instalados; con GPU, los archivos llevan `_gpu`).
 3. Sacar los resultados: `adb exec-out run-as pe.edu.ulima.paltascan cat files/resultados_app_unet.json`
    (`resultados_app.json` para el propuesto).
 4. Comparar: `python scripts/eval_alternativos_movil.py --comparar <referencia_app.json> <resultados_app_*.json>`
@@ -88,11 +89,12 @@ del letterbox.
   mascaras y el ratio se calculan en el espacio del letterbox (maximo
   800x800) en vez de a la resolucion original. El kernel ROI se escala en
   proporcion.
-- Modo foto por foto (no video en vivo).
+- Los análisis que se guardan son foto por foto; la cámara en vivo analiza el
+  cuadro más reciente (~1 FPS en CPU, ~2 FPS en GPU con el multitarea) y no guarda.
 
 ## Pendiente
 
 - [x] Modelos alternativos cuantizados e instalados en assets.
 - [x] Latencia en el celular de los tres modelos y concordancia con Python.
-- [ ] Camara en vivo con medicion de FPS.
-- [ ] Delegado GPU.
+- [x] Camara en vivo con medicion de FPS (falta medirla con GPU).
+- [x] Delegado GPU (selector CPU/GPU).

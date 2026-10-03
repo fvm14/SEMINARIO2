@@ -1,8 +1,8 @@
-# PaltaScan: funcionalidades (v0.4.0)
+# PaltaScan: funcionalidades (v0.5.0)
 
 App Android que analiza fotos de palta Hass **en el celular, sin conexión**. Usa
 el modelo multitarea YOLOv8s-seg exportado a TFLite (rango dinámico, 12.3 MB)
-y corre con LiteRT 1.4.2.
+y corre con LiteRT 1.4.2, en la CPU o en la GPU del celular.
 
 ## Estilo
 
@@ -48,7 +48,23 @@ Cada análisis guarda el modelo con que se hizo, y el resultado lo indica.
 - los **avisos**, si los hay;
 - el mensaje "Guardado en <lote>".
 
-### 2. Historial
+### 2. Cámara en vivo
+
+Botón **Cámara en vivo** de la pantalla principal (pide el permiso de cámara la
+primera vez). Muestra la cámara y la analiza de forma continua:
+
+- **Contornos:** cada palta detectada con borde verde y relleno suave; los
+  defectos en rojo. Con una sola palta se pintan los defectos que entran al %.
+- **Recuadro arriba a la derecha:** categoría OCDE (franja verde, ámbar o
+  roja), % de defecto, madurez (1–5 y nombre), confianza (con "dudosa" si es
+  menor de 60%), avisos de foto oscura o borrosa, y FPS con los ms del cuadro.
+  Si no hay palta, hay varias o sale cortada, la franja lo dice.
+- Abajo, la indicación de encuadre, el modelo y si corre en CPU o GPU.
+- Se analiza siempre el cuadro más reciente; los que llegan mientras el modelo
+  trabaja se descartan. Las marcas van ~1 cuadro detrás de la imagen.
+- No guarda nada en el historial (para guardar, usar "Tomar foto").
+
+### 3. Historial
 
 - **Selector:** "Todos los análisis" o un lote concreto.
 - **Resumen:** total, cantidad por categoría y cantidad por nivel de madurez.
@@ -122,9 +138,14 @@ En el Xiaomi 11 Lite 5G NE, cada foto tarda ~0.9 s en total.
   - Tiempo total por foto en el Xiaomi 11 Lite 5G NE: multitarea 906 ms,
     dos redes 1272 ms, U-Net 1390 ms.
 
+## Procesador
+
+Fila **Procesador** en la pantalla principal (solo si el celular admite la
+GPU): **CPU (4 hilos)** o **GPU** (delegado GPU de LiteRT, media precisión).
+Si la GPU no puede cargar el modelo, se usa la CPU y aparece un aviso. Con GPU,
+el multitarea tarda ~0.45 s por foto en vez de ~0.9 s.
+
 ## Pendiente (Fase 2)
 
-- Cámara en vivo con CameraX:
-  - chequeo de luz y enfoque en tiempo real;
-  - modo continuo con conteo por categoría.
-- Medir la latencia con el delegado GPU.
+- Modo continuo con conteo por categoría y guardado desde la cámara en vivo.
+- Optimizar el pre y el posprocesamiento (~200 ms por foto).

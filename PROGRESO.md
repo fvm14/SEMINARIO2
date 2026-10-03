@@ -413,16 +413,32 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
   - Pantalla principal: fila "Modelo" con "Cambiar" (solo si hay más de un modelo); cada análisis guarda el modelo (base de datos v3, migración desde v2 con `multitarea` por defecto) y el resultado y el CSV lo indican.
   - `ConcordanciaTest` corre todos los modelos instalados (o uno con el argumento `modelo`) y escribe `resultados_app_<modelo>.json`.
   - 23 pruebas unitarias pasan (3 nuevas: máscaras de la U-Net y lectura de salidas sin madurez).
-- Falta:
-  - cámara en vivo y modo continuo (fase 2);
-  - reducir la latencia (delegado GPU / hilos);
-  - los tres modelos de la comparación ya están instalados y medidos en el celular (sección 8.9).
+- **Cámara en vivo y GPU (v0.5.0, 2026-10-02):**
+  - `CamaraVivoActivity` (CameraX 1.4.2): vista de la cámara a 4:3 (~1280×960) y análisis continuo del cuadro más reciente (`STRATEGY_KEEP_ONLY_LATEST`: los cuadros que llegan mientras el modelo trabaja se descartan, así que el FPS lo fija la latencia). Recuadro arriba a la derecha con categoría OCDE (franja del color de la categoría), % de defecto, madurez y confianza, avisos de luz/nitidez y FPS con ms por cuadro. Con varias paltas, palta cortada o sin palta, la franja lo indica. No guarda en el historial.
+  - Contornos en vivo (`Imagenes.contornos`): todas las paltas detectadas con borde verde y los defectos en rojo, dibujados con la misma escala que la cámara (`fitCenter` en ambas capas).
+  - Selector **CPU / GPU** en la pantalla principal (solo si el teléfono admite el delegado GPU). El `Analizador` crea y usa los intérpretes en un hilo propio (el delegado GPU lo exige) y, si la GPU falla, vuelve a la CPU y lo avisa. `ConcordanciaTest` acepta `-e procesador gpu`.
+  - **GPU en el Xiaomi 11 Lite 5G NE** (`ConcordanciaTest`, 108 fotos; la GPU ejecuta 292 de 297 operaciones del multitarea):
 
-**Etapa 5: integración.** El modelo cuantizado y el motor OCDE corren completos en el celular. Validación funcional hecha: 20 pruebas unitarias y `ConcordanciaTest` frente a Python (108/108 en madurez, 107/108 en OCDE, ~0.9 s por foto).
+    | Modelo | CPU: inferencia / total | GPU: inferencia / total | Madurez CPU → GPU | OCDE CPU → GPU |
+    |---|---|---|---|---|
+    | Multitarea | 711 / 906 ms | **244 / 445 ms** | 73.1% → 74.1% | 78.7% → 76.9% |
+    | U-Net | 1221 / 1390 ms | 475 / 658 ms | 73.1% → 72.2% | 65.7% → 65.7% |
+    | Dos redes | 1031 / 1272 ms | 371 / 609 ms | 75.9% → 77.8% | 80.6% → 82.4% |
+
+    La GPU usa media precisión: frente a la CPU, el multitarea cambia la categoría en 2 de 108 fotos y la madurez en 1. Con GPU, el preprocesamiento y el posprocesamiento (~200 ms) ya son casi la mitad del tiempo.
+  - Cámara en vivo con CPU: 1.0 FPS el multitarea (990 ms por cuadro) y 0.8 FPS las dos redes. Falta medir el modo en vivo con GPU.
+  - Prueba con fotos de paltas en un monitor: el multitarea casi no las detecta y el YOLO de las dos redes sí. El YOLO de las dos redes se entrenó con mosaic y aumentos de color fuertes (como Seminario I), y el multitarea sin mosaic, porque la madurez es una etiqueta por imagen. Ver la sección 13.
+- Falta:
+  - medir el FPS del modo en vivo con GPU;
+  - optimizar el pre y el posprocesamiento (~200 ms por cuadro).
+
+**Etapa 5: integración.** El modelo cuantizado y el motor OCDE corren completos en el celular. Validación funcional hecha: 23 pruebas unitarias y `ConcordanciaTest` frente a Python (108/108 en madurez, 107/108 en OCDE, ~0.9 s por foto en CPU y ~0.45 s en GPU).
 
 La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se retiró del plan; su lugar lo ocupa la comparación de modelos (Etapa 3).
 
 ## 13. Pendientes transversales
+
+- **Robustez fuera del dataset:** todas las fotos del dataset tienen una palta, el mismo fondo, la misma distancia y la misma luz. En la cámara en vivo, el multitarea casi no detecta fotos de paltas mostradas en un monitor; el YOLO sin madurez (entrenado con mosaic) sí. Mejora futura: madurez por instancia (un valor por palta en vez de uno por imagen), que permitiría activar mosaic y analizar varias paltas a la vez.
 
 - **Umbrales OCDE:** el área de referencia de 42.4 cm² se contrastó con mediciones de palta Hass (largo × diámetro × π/4 × factor de forma 0.975 medido en el dataset): entre 40.0 y 46.5 cm² en frutos pequeños (162–207 g) y ~63.3 cm² en calibre comercial (241–267 g). **Análisis de sensibilidad** (`scripts/sensibilidad_ocde.py`, `resultados/sensibilidad_ocde/`): recalcula la categoría real y la predicha con cada área a partir de los `predicciones.csv`, sin volver a inferir. Acierto OCDE del multitarea entre 75.9% y 81.5% (siempre dentro de su IC con 42.4 cm²: 66.1–88.4%); la U-Net es la peor en todas las áreas, así que la selección de la Etapa 3 no depende del supuesto. Con áreas mayores crece la clase Rechazado y el recall de Rechazado del multitarea sube de 51.9% a 78.4%. El umbral de defecto no se toca: se calibró por IoU, no por acierto OCDE. Falta la escala real del montaje para medir cada fruto.
 
@@ -472,3 +488,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-02: app v0.4.0 con soporte para los tres modelos de la comparación (selector de modelo, base de datos v3) y scripts para exportar, cuantizar y evaluar en TFLite la U-Net, el YOLOv8s-seg sin madurez y la ResNet-34; probados con pesos de prueba, a la espera de los pesos reales.
 - 2026-10-02: U-Net ResNet34, YOLOv8s-seg sin madurez y ResNet-34 cuantizados en rango dinámico con los pesos reales y evaluados en test (sección 8.9): sin pérdida de segmentación; el multitarea sigue siendo el más pequeño y rápido. Los tres modelos ya van en la app; falta medirlos en el celular.
 - 2026-10-02: los tres modelos de la comparación medidos en el celular con `ConcordanciaTest` (sección 8.9): concordancia con Python de 107–108/108 en OCDE y 105–108/108 en madurez; por foto, 906 ms el multitarea, 1272 ms las dos redes y 1390 ms la U-Net. El multitarea da lo mismo que en la v0.3.0.
+- 2026-10-02: app v0.5.0: cámara en vivo (CameraX) con recuadro de resultados, contornos de paltas y defectos, y selector CPU/GPU. Con GPU, el multitarea pasa de 906 a 445 ms por foto en el celular (de 1.1 a 2.2 por segundo); medidos también la U-Net y las dos redes (sección 12).
