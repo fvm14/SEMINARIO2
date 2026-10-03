@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Recuadro de resultados sobre la camara: negro translucido, borde verde, esquinas rectas. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#D9000000" />
+    <stroke android:width="2dp" android:color="@color/primario" />
+</shape>

@@ -15,7 +15,8 @@ import java.io.File
  * <archivos externos de la app>/prueba/ con cada modelo instalado y escribe
  * resultados_app_<modelo>.json para compararlo con la referencia en Python
  * (referencia_app.py o eval_alternativos_movil.py).
- * Con -e modelo <id> se corre solo ese modelo.
+ * Con -e modelo <id> se corre solo ese modelo; con -e procesador gpu, en la
+ * GPU (los archivos llevan el sufijo _gpu).
  */
 @RunWith(AndroidJUnit4::class)
 class ConcordanciaTest {
@@ -28,11 +29,13 @@ class ConcordanciaTest {
         assertTrue("No hay fotos en $dir", fotos.isNotEmpty())
 
         val soloModelo = InstrumentationRegistry.getArguments().getString("modelo")
+        val gpu = InstrumentationRegistry.getArguments().getString("procesador") == "gpu"
         val modelos = Configuracion.MODELOS.filter { Analizador.existeModelo(ctx, it) && (soloModelo == null || it.id == soloModelo) }
         assertTrue("No hay modelos instalados", modelos.isNotEmpty())
 
         for (modelo in modelos) {
-            val analizador = Analizador.cargar(ctx, modelo)
+            val analizador = Analizador.cargar(ctx, modelo, gpu)
+            assertTrue("No se pudo usar la GPU con ${modelo.id}", analizador.gpu == gpu)
             val filas = fotos.map { f ->
                 val r = analizador.analizar(BitmapFactory.decodeFile(f.absolutePath))
                 """{"foto":"${f.name}","categoria":${r.categoria},"ratio":${"%.5f".format(java.util.Locale.US, r.ratio)},""" +
@@ -42,7 +45,8 @@ class ConcordanciaTest {
             }
             analizador.cerrar()
             val json = "[\n" + filas.joinToString(",\n") + "\n]"
-            val nombre = if (modelo == Configuracion.MODELO_POR_DEFECTO) "resultados_app.json" else "resultados_app_${modelo.id}.json"
+            val base = if (modelo == Configuracion.MODELO_POR_DEFECTO) "resultados_app" else "resultados_app_${modelo.id}"
+            val nombre = base + (if (gpu) "_gpu" else "") + ".json"
             File(ctx.getExternalFilesDir(null), nombre).writeText(json)
             // Copia interna: algunas capas (MIUI) no dejan leer Android/data por adb;
             // se saca con `adb exec-out run-as pe.edu.ulima.paltascan cat files/<nombre>`

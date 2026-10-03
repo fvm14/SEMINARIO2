@@ -101,6 +101,38 @@
                 android:text="@string/cambiar_lote" />
         </LinearLayout>
 
+        <!-- Procesador (solo si el telefono admite la GPU) -->
+        <LinearLayout
+            android:id="@+id/filaProcesador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/procesador" />
+
+            <TextView
+                android:id="@+id/textoProcesador"
+                style="@style/Valor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/botonProcesador"
+                style="@style/BotonTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cambiar_lote" />
+        </LinearLayout>
+
         <!-- Captura -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -125,6 +157,13 @@
                 android:layout_weight="1"
                 android:text="@string/galeria" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/botonVivo"
+            style="@style/Boton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/camara_vivo" />
 
         <Button
             android:id="@+id/botonHistorial"

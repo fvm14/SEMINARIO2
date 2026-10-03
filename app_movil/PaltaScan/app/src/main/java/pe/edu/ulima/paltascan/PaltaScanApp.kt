@@ -22,14 +22,23 @@ class PaltaScanApp : Application() {
             ?: modelosDisponibles.firstOrNull() ?: Configuracion.MODELO_POR_DEFECTO
         set(valor) = prefs.edit().putString("modelo_id", valor.id).apply()
 
+    /** Si el telefono admite el delegado GPU (si no, no se ofrece la opcion). */
+    val gpuDisponible: Boolean by lazy { Analizador.gpuDisponible() }
+
+    /** Ejecutar el modelo en la GPU en vez de la CPU (por defecto, CPU). */
+    var usarGpu: Boolean
+        get() = gpuDisponible && prefs.getBoolean("usar_gpu", false)
+        set(valor) = prefs.edit().putBoolean("usar_gpu", valor).apply()
+
     private var cargado: Analizador? = null
 
-    /** null si el modelo no esta en assets. Al cambiar de modelo se libera el anterior. */
+    /** null si el modelo no esta en assets. Al cambiar de modelo o de procesador se libera el anterior. */
     val analizador: Analizador?
         @Synchronized get() {
             val modelo = modeloActual
-            cargado?.let { if (it.modelo == modelo) return it else it.cerrar() }
-            cargado = if (Analizador.existeModelo(this, modelo)) Analizador.cargar(this, modelo) else null
+            val gpu = usarGpu
+            cargado?.let { if (it.modelo == modelo && it.pidioGpu == gpu) return it else it.cerrar() }
+            cargado = if (Analizador.existeModelo(this, modelo)) Analizador.cargar(this, modelo, gpu) else null
             return cargado
         }
 

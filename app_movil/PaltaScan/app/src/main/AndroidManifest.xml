@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".PaltaScanApp"
@@ -20,6 +21,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.HistorialActivity" />
+        <activity
+            android:name=".ui.CamaraVivoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PaltaScan.Camara" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

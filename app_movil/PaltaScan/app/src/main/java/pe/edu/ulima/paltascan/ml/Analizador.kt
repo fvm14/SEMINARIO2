@@ -6,12 +6,19 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.util.Log
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.gpu.CompatibilityList
+import org.tensorflow.lite.gpu.GpuDelegate
 import java.io.FileInputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class Tiempos(val preprocesoMs: Double, val inferenciaMs: Double, val postprocesoMs: Double) {
     val totalMs: Double get() = preprocesoMs + inferenciaMs + postprocesoMs
@@ -42,11 +49,20 @@ class ResultadoAnalisis(
  *  - UNET: mascaras semanticas + madurez (una red);
  *  - DOS_REDES: YOLOv8s-seg sin madurez + clasificador de madurez.
  * Despues de las mascaras el camino es el mismo: fruto completo, ROI, ratio y OCDE.
+ *
+ * Los interpretes se crean y se usan siempre en un mismo hilo propio, porque
+ * el delegado GPU lo exige; analizar() se puede llamar desde cualquier hilo.
  */
 class Analizador private constructor(
     val modelo: ModeloApp,
+    /** Si se pidio la GPU (aunque no se haya podido usar). */
+    val pidioGpu: Boolean,
+    /** Si los interpretes corren con el delegado GPU. */
+    val gpu: Boolean,
+    private val hilo: ExecutorService,
     private val principal: Interpreter,
     private val clasificador: Interpreter?,
+    private val delegados: List<GpuDelegate>,
 ) {
 
     private val entrada = principal.getInputTensor(0)
@@ -57,23 +73,69 @@ class Analizador private constructor(
     private val lienzoClas: Int = entradaClas?.shape()?.let { if (it[3] == 3) it[1] else it[2] } ?: 0
 
     companion object {
-        fun cargar(context: Context, modelo: ModeloApp = Configuracion.MODELO_POR_DEFECTO): Analizador =
-            Analizador(modelo, interprete(context, modelo.archivo), modelo.archivoClasificador?.let { interprete(context, it) })
+        private const val TAG = "Analizador"
+
+        /** Con gpu = true intenta el delegado GPU; si falla, carga en CPU (ver [gpu]). */
+        fun cargar(context: Context, modelo: ModeloApp = Configuracion.MODELO_POR_DEFECTO, gpu: Boolean = false): Analizador {
+            val hilo = Executors.newSingleThreadExecutor()
+            return enHilo(hilo) {
+                if (gpu) {
+                    val delegados = ArrayList<GpuDelegate>()
+                    try {
+                        val principal = interprete(context, modelo.archivo, delegados)
+                        val clasificador = modelo.archivoClasificador?.let { interprete(context, it, delegados) }
+                        return@enHilo Analizador(modelo, true, true, hilo, principal, clasificador, delegados)
+                    } catch (e: Throwable) {
+                        Log.w(TAG, "No se pudo usar la GPU con ${modelo.id}; se usa la CPU", e)
+                        delegados.forEach { it.close() }
+                    }
+                }
+                Analizador(
+                    modelo, gpu, false, hilo, interprete(context, modelo.archivo, null),
+                    modelo.archivoClasificador?.let { interprete(context, it, null) }, emptyList(),
+                )
+            }
+        }
+
+        /** Si el telefono admite el delegado GPU de LiteRT. */
+        fun gpuDisponible(): Boolean = try {
+            CompatibilityList().use { it.isDelegateSupportedOnThisDevice }
+        } catch (e: Throwable) {
+            false
+        }
+
+        private fun <T> enHilo(hilo: ExecutorService, tarea: () -> T): T = try {
+            hilo.submit(Callable(tarea)).get()
+        } catch (e: ExecutionException) {
+            throw e.cause ?: e
+        }
 
         fun existeModelo(context: Context, modelo: ModeloApp = Configuracion.MODELO_POR_DEFECTO): Boolean {
             val assets = context.assets.list("")?.toSet().orEmpty()
             return modelo.archivos.all { it in assets }
         }
 
-        private fun interprete(context: Context, archivo: String): Interpreter {
+        /** delegados != null: con GPU (el delegado creado se agrega a la lista para cerrarlo despues). */
+        private fun interprete(context: Context, archivo: String, delegados: MutableList<GpuDelegate>?): Interpreter {
             val fd = context.assets.openFd(archivo)
             val mapeado = FileInputStream(fd.fileDescriptor).channel
                 .map(FileChannel.MapMode.READ_ONLY, fd.startOffset, fd.declaredLength)
-            return Interpreter(mapeado, Interpreter.Options().setNumThreads(Configuracion.HILOS_CPU))
+            val opciones = Interpreter.Options().setNumThreads(Configuracion.HILOS_CPU)
+            if (delegados != null) {
+                val delegado = CompatibilityList().use { GpuDelegate(it.bestOptionsForThisDevice) }
+                delegados += delegado
+                opciones.addDelegate(delegado)
+            }
+            return Interpreter(mapeado, opciones)
         }
     }
 
-    fun analizar(foto: Bitmap): ResultadoAnalisis {
+    /** "CPU" o "GPU": con que se esta ejecutando el modelo. */
+    val procesador: String get() = if (gpu) "GPU" else "CPU"
+
+    fun analizar(foto: Bitmap): ResultadoAnalisis = enHilo(hilo) { analizarAqui(foto) }
+
+    private fun analizarAqui(foto: Bitmap): ResultadoAnalisis {
         val t0 = System.nanoTime()
         val lb = Letterbox.calcular(foto.height, foto.width, lienzo)
         val buffer = prepararEntrada(foto, lb, entrada, nhwc)
@@ -209,7 +271,14 @@ class Analizador private constructor(
     }
 
     fun cerrar() {
-        principal.close()
-        clasificador?.close()
+        try {
+            enHilo(hilo) {
+                principal.close()
+                clasificador?.close()
+                delegados.forEach { it.close() }
+            }
+        } finally {
+            hilo.shutdown()
+        }
     }
 }

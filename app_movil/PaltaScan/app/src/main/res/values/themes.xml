@@ -28,6 +28,12 @@
         <item name="android:navigationBarColor">#000000</item>
     </style>
 
+    <!-- Camara en vivo: barras del sistema en negro -->
+    <style name="Theme.PaltaScan.Camara">
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:windowBackground">#000000</item>
+    </style>
+
     <style name="Recto">
         <item name="cornerSize">0dp</item>
     </style>

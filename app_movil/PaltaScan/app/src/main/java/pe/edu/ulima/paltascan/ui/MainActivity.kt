@@ -52,11 +52,13 @@ class MainActivity : AppCompatActivity() {
         b.botonGaleria.setOnClickListener {
             elegirFoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+        b.botonVivo.setOnClickListener { startActivity(Intent(this, CamaraVivoActivity::class.java)) }
         b.botonHistorial.setOnClickListener { startActivity(Intent(this, HistorialActivity::class.java)) }
         b.botonLote.setOnClickListener {
             Acciones.elegirLote(this) { id -> app.loteActualId = id; mostrarLote() }
         }
         b.botonModelo.setOnClickListener { elegirModelo() }
+        b.botonProcesador.setOnClickListener { elegirProcesador() }
         cargarModelo()
     }
 
@@ -78,6 +80,24 @@ class MainActivity : AppCompatActivity() {
     private fun mostrarModelo() {
         b.filaModelo.visibility = if (app.modelosDisponibles.size > 1) View.VISIBLE else View.GONE
         b.textoModeloActual.text = app.modeloActual.nombre
+        b.filaProcesador.visibility = if (app.gpuDisponible) View.VISIBLE else View.GONE
+        b.textoProcesador.setText(if (app.usarGpu) R.string.procesador_gpu else R.string.procesador_cpu)
+    }
+
+    /** CPU o GPU (delegado de LiteRT), para comparar la latencia. */
+    private fun elegirProcesador() {
+        val opciones = arrayOf(getString(R.string.procesador_cpu), getString(R.string.procesador_gpu))
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.elegir_procesador)
+            .setSingleChoiceItems(opciones, if (app.usarGpu) 1 else 0) { d, i ->
+                d.dismiss()
+                if ((i == 1) != app.usarGpu) {
+                    app.usarGpu = i == 1
+                    mostrarModelo()
+                    cargarModelo()
+                }
+            }
+            .show()
     }
 
     /** Solo para la comparacion de modelos: el resultado guardado indica con cual se hizo. */
@@ -102,9 +122,12 @@ class MainActivity : AppCompatActivity() {
         habilitar(false)
         b.textoEstado.setText(R.string.cargando_modelo)
         lifecycleScope.launch {
-            val listo = withContext(Dispatchers.Default) { app.analizador != null }
-            b.textoEstado.setText(if (listo) R.string.subtitulo else R.string.modelo_faltante)
-            habilitar(listo)
+            val analizador = withContext(Dispatchers.Default) { app.analizador }
+            b.textoEstado.setText(if (analizador != null) R.string.subtitulo else R.string.modelo_faltante)
+            if (analizador != null && analizador.pidioGpu && !analizador.gpu) {
+                Toast.makeText(this@MainActivity, R.string.gpu_fallo, Toast.LENGTH_LONG).show()
+            }
+            habilitar(analizador != null)
         }
     }
 
@@ -180,6 +203,8 @@ class MainActivity : AppCompatActivity() {
     private fun habilitar(si: Boolean) {
         b.botonCamara.isEnabled = si
         b.botonGaleria.isEnabled = si
+        b.botonVivo.isEnabled = si
         b.botonModelo.isEnabled = si
+        b.botonProcesador.isEnabled = si
     }
 }

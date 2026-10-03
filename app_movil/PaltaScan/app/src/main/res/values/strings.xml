@@ -11,6 +11,11 @@
     <string name="modelo">Modelo</string>
     <string name="elegir_modelo">Modelo para analizar</string>
     <string name="modelo_valor">Modelo: %1$s</string>
+    <string name="procesador">Procesador</string>
+    <string name="elegir_procesador">Ejecutar el modelo en</string>
+    <string name="procesador_cpu">CPU (4 hilos)</string>
+    <string name="procesador_gpu">GPU</string>
+    <string name="gpu_fallo">No se pudo usar la GPU con este modelo; se usa la CPU.</string>
     <string name="tomar_foto">Tomar foto</string>
     <string name="galeria">Galería</string>
     <string name="ver_historial">Historial</string>
@@ -33,6 +38,20 @@
     <string name="aviso_borrosa">foto borrosa</string>
     <string name="aviso_confianza">madurez dudosa</string>
     <string name="guardado_en">Guardado en %1$s</string>
+    <string name="camara_vivo">Cámara en vivo</string>
+
+    <!-- Camara en vivo -->
+    <string name="vivo_indicacion">Apunta a una sola palta, entera y con buena luz.</string>
+    <string name="vivo_esperando">Analizando…</string>
+    <string name="vivo_sin_palta">Sin palta</string>
+    <string name="vivo_varias">Varias paltas</string>
+    <string name="vivo_cortada">Palta cortada</string>
+    <string name="vivo_defecto">Defecto %1$s</string>
+    <string name="vivo_madurez">Madurez %1$d · %2$s</string>
+    <string name="vivo_confianza">Confianza %1$d %%</string>
+    <string name="vivo_dudosa">Confianza %1$d %% · dudosa</string>
+    <string name="vivo_fps">%1$.1f FPS · %2$d ms</string>
+    <string name="vivo_permiso">Se necesita permiso de cámara para el modo en vivo.</string>
 
     <!-- Lotes -->
     <string name="elegir_lote">Elegir lote</string>
