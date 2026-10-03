@@ -1,0 +1,50 @@
+[
+  {
+    "modelo": "modelos_movil/palta_multitarea_800.onnx",
+    "n": 108,
+    "caja_map50": 0.8171,
+    "caja_map50_95": 0.6472,
+    "caja_ap50_palta": 0.995,
+    "caja_ap50_defecto": 0.6392,
+    "mascara_map50": 0.7785,
+    "mascara_map50_95": 0.6111,
+    "mascara_ap50_palta": 0.995,
+    "mascara_ap50_defecto": 0.562
+  },
+  {
+    "modelo": "modelos_movil/palta_multitarea_800_float16.tflite",
+    "n": 108,
+    "caja_map50": 0.8171,
+    "caja_map50_95": 0.6471,
+    "caja_ap50_palta": 0.995,
+    "caja_ap50_defecto": 0.6393,
+    "mascara_map50": 0.7785,
+    "mascara_map50_95": 0.6111,
+    "mascara_ap50_palta": 0.995,
+    "mascara_ap50_defecto": 0.5621
+  },
+  {
+    "modelo": "modelos_movil/palta_multitarea_800_dynamic_range_quant.tflite",
+    "n": 108,
+    "caja_map50": 0.8183,
+    "caja_map50_95": 0.6457,
+    "caja_ap50_palta": 0.995,
+    "caja_ap50_defecto": 0.6415,
+    "mascara_map50": 0.7774,
+    "mascara_map50_95": 0.6107,
+    "mascara_ap50_palta": 0.995,
+    "mascara_ap50_defecto": 0.5599
+  },
+  {
+    "modelo": "modelos_movil/palta_multitarea_800_integer_quant.tflite",
+    "n": 108,
+    "caja_map50": 0.7637,
+    "caja_map50_95": 0.5545,
+    "caja_ap50_palta": 0.995,
+    "caja_ap50_defecto": 0.5325,
+    "mascara_map50": 0.7335,
+    "mascara_map50_95": 0.5881,
+    "mascara_ap50_palta": 0.995,
+    "mascara_ap50_defecto": 0.472
+  }
+]
