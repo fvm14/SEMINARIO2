@@ -32,7 +32,7 @@ from ocde import (CATEGORIAS_OCDE, KERNEL_DILATACION_ROI, calcular_ratio, clasif
 from rasterize_utils import poligonos_a_mascaras  # noqa: E402
 from unet_multitarea import UNetMultitarea, leer_lista, letterbox, madurez_desde_archivo, normalizar  # noqa: E402
 
-UMBRALES = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+UMBRALES = [0.01, 0.02, 0.03, 0.04, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
 
 @torch.no_grad()

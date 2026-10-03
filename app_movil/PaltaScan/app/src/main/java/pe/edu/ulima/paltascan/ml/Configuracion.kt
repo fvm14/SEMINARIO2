@@ -31,7 +31,7 @@ data class ModeloApp(
 object Configuracion {
     val MODELOS = listOf(
         ModeloApp("multitarea", "YOLOv8s-seg multitarea", TipoModelo.MULTITAREA, "palta_multitarea.tflite", 0.05f),
-        ModeloApp("unet", "U-Net ResNet34 multitarea", TipoModelo.UNET, "unet_resnet34.tflite", 0.10f),
+        ModeloApp("unet", "U-Net ResNet34 multitarea", TipoModelo.UNET, "unet_resnet34.tflite", 0.03f),
         ModeloApp(
             "dos_redes", "YOLOv8s-seg + ResNet-34", TipoModelo.DOS_REDES, "yolov8s_seg.tflite", 0.10f,
             archivoClasificador = "resnet34_madurez.tflite",

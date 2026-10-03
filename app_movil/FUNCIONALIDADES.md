@@ -105,7 +105,7 @@ Se calcula después de la inferencia.
      y la madurez;
    - **dos redes:** el YOLOv8s-seg segmenta y la ResNet-34 clasifica la madurez.
 3. **Postproceso:** en los YOLO, NMS y máscaras por instancia; en la U-Net,
-   umbral por píxel (palta > 0.5, defecto > 0.10). Después, en todos, fruto
+   umbral por píxel (palta > 0.5, defecto > 0.03). Después, en todos, fruto
    completo, filtro ROI y razón entre píxeles con defecto y píxeles de la palta.
 4. **Clasificación OCDE** según esa razón, con los umbrales de Cat. I, Cat. II
    y Rechazado.
@@ -136,7 +136,7 @@ En el Xiaomi 11 Lite 5G NE, cada foto tarda ~0.9 s en total.
   - U-Net: OCDE y madurez 108/108; dos redes: OCDE 107/108, madurez 105/108
     (las 3 diferencias son fotos con confianza de madurez < 0.6).
   - Tiempo total por foto en el Xiaomi 11 Lite 5G NE: multitarea 906 ms,
-    dos redes 1272 ms, U-Net 1390 ms.
+    dos redes 1272 ms, U-Net 1427 ms.
 
 ## Procesador
 

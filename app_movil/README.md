@@ -33,7 +33,7 @@ este nombre (estan en `.gitignore`: no se suben al repo):
 | Modelo | Archivo(s) en assets | Umbral de defecto |
 |---|---|---|
 | YOLOv8s-seg multitarea (propuesto) | `palta_multitarea.tflite` | 0.05 |
-| U-Net ResNet34 multitarea | `unet_resnet34.tflite` | 0.10 |
+| U-Net ResNet34 multitarea | `unet_resnet34.tflite` | 0.03 |
 | YOLOv8s-seg + ResNet-34 (dos redes) | `yolov8s_seg.tflite` y `resnet34_madurez.tflite` | 0.10 |
 
 Si hay mas de un modelo, la pantalla principal muestra la fila "Modelo" para
@@ -50,7 +50,7 @@ python scripts/exportar_alternativos.py --unet resultados/comparacion/unet_resne
 python scripts/onnx_a_tflite.py modelos_movil/unet_resnet34_800.onnx \
     modelos_movil/yolov8s_seg_800.onnx modelos_movil/resnet34_madurez_448.onnx
 # 3) Evaluar en test lo que se pierde al cuantizar (y dejar la referencia para la app)
-python scripts/eval_alternativos_movil.py --tipo unet --conf-defecto 0.10 \
+python scripts/eval_alternativos_movil.py --tipo unet --conf-defecto 0.03 \
     --modelo modelos_movil/unet_resnet34_800_dynamic_range_quant.tflite --salida resultados/etapa3_movil/unet_dynamic_range
 python scripts/eval_alternativos_movil.py --tipo dos_redes --conf-defecto 0.10 \
     --modelo modelos_movil/yolov8s_seg_800_dynamic_range_quant.tflite \

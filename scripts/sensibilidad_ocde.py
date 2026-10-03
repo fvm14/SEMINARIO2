@@ -22,7 +22,7 @@ SALIDA = RAIZ / "resultados" / "sensibilidad_ocde"
 
 MODELOS = {
     "YOLOv8s-seg multitarea (propuesto)": "resultados/yolo_multitarea/yolov8s_mt_ronda1/eval_test_20260924_021049/predicciones.csv",
-    "U-Net ResNet34 multitarea": "resultados/comparacion/unet_resnet34/eval_test_20261002_140015/predicciones.csv",
+    "U-Net ResNet34 multitarea": "resultados/comparacion/unet_resnet34/eval_test_20261002_231042/predicciones.csv",
     "YOLOv8s-seg + ResNet-34": "resultados/comparacion/dos_redes/predicciones.csv",
 }
 

@@ -150,13 +150,24 @@ La exportación usa entrada fija de 1×3×800×800, opset 17 y simplificación c
 | **TFLite dynamic range** | **12 MB** | **0.399** | **73.1%** | **79.6%** | **60.7%** | **175 ms** |
 | TFLite INT8 | 12 MB | 0.402 | 65.7% | 75.9% | 39.3% | 125 ms |
 
+**mAP de detección** (`scripts/map_movil.py`, `resultados/etapa2/map_variantes.json`): mismo criterio que la validación de Ultralytics (confianza ≥ 0.001, NMS 0.7, máscaras a la resolución de los prototipos), con el mismo letterbox para todas las variantes. El ONNX FP32 da 0.779 de mAP50 de máscaras, igual al 0.780 de Ultralytics en PyTorch.
+
+| Versión | mAP50 máscaras | mAP50-95 máscaras | mAP50 cajas | AP50 defecto (máscaras) |
+|---|---|---|---|---|
+| ONNX FP32 | 0.779 | 0.611 | 0.817 | 0.562 |
+| TFLite FP16 | 0.779 | 0.611 | 0.817 | 0.562 |
+| **TFLite dynamic range** | **0.777** | **0.611** | **0.818** | **0.560** |
+| TFLite INT8 | 0.734 | 0.588 | 0.764 | 0.472 |
+
+El rango dinámico pierde 0.1 puntos de mAP50 y el INT8 completo 4.5 (9 en el AP50 de defecto). La palta queda en 0.995 en todas.
+
 **Decisión.** Dynamic range es el modelo principal para la app en CPU: un cuarto del tamaño, sin pérdida relevante y 3.6 veces más rápido que FP32. FP16 queda para probar con el delegado GPU del celular. El INT8 completo pierde 8 puntos de madurez y la detección de rechazados cae de 61% a 39%, porque las confianzas bajas de defecto y el cabezal de clasificación son los más sensibles al redondeo. Se documenta como hallazgo: el costo de la cuantización completa en un modelo multitarea.
 
 Los modelos están en `modelos_movil/` y las métricas en `resultados/etapa2/`.
 
 ## 8. Etapa 3: validación de métricas (comparación de modelos)
 
-Nueva etapa, entre la cuantización y el prototipo. Compara el modelo propuesto con otros paradigmas de visión computacional para sustentar su elección con métricas. Los modelos alternativos se entrenan y evalúan, pero no se cuantizan ni se integran en la app. Realizada el 1 y 2 de octubre de 2026 (Fabrizio).
+Nueva etapa, entre la cuantización y el prototipo. Compara el modelo propuesto con otros paradigmas de visión computacional para sustentar su elección con métricas. Los modelos alternativos se entrenan y evalúan; después también se cuantizaron y se midieron en la app (sección 8.9). Realizada el 1 y 2 de octubre de 2026 (Fabrizio).
 
 ### 8.1 Decisiones
 
@@ -205,34 +216,34 @@ Scripts de evaluación: `eval_yolo_multitarea.py` (adaptado para aceptar modelos
 
 | Métrica | YOLOv8s-seg multitarea (propuesto) | U-Net ResNet34 multitarea | Dos redes: YOLOv8s-seg + ResNet-34 |
 |---|---|---|---|
-| IoU de defecto (píxel) | 0.397 | 0.396 | 0.443 |
-| Acierto OCDE | 77.8% [65.7, 87.9] | 65.7% [55.7, 75.7] | 82.4% [73.0, 90.9] |
-| F1 macro OCDE | 0.654 | 0.467 | 0.749 |
-| Recall de Rechazado | 60.7% | 46.4% | 53.6% |
-| MAE del ratio | 0.075 | 0.067 | 0.065 |
+| IoU de defecto (píxel) | 0.397 | 0.388 | 0.443 |
+| Acierto OCDE | 77.8% [65.7, 87.9] | 62.0% [50.0, 73.9] | 82.4% [73.0, 90.9] |
+| F1 macro OCDE | 0.654 | 0.463 | 0.749 |
+| Recall de Rechazado | 60.7% | 60.7% | 53.6% |
+| MAE del ratio | 0.075 | 0.074 | 0.065 |
 | Exactitud de madurez | 74.1% [67.3, 81.0] | 73.1% [64.2, 81.7] | 77.8% [69.7, 85.3] |
 | F1 macro de madurez | 0.737 | 0.735 | 0.772 |
 | Parámetros | 11.9 M | 24.6 M | 33.1 M (11.8 + 21.3) |
 | Tamaño FP32 | 48 MB | 98 MB | 132 MB |
 | Latencia en CPU | 416 ms | 856 ms | 584 ms (422 + 162) |
-| Umbral de defecto | 0.05 | 0.10 | 0.10 |
+| Umbral de defecto | 0.05 | 0.03 | 0.10 |
 
-La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del entorno de pruebas, con entrada de 800 px (448 px el clasificador) y media de 15 pasadas. Sirve para comparar los modelos entre sí; no es la latencia del teléfono.
+La U-Net se reevaluó el 2026-10-02 con el umbral recalibrado (0.03, sección 8.6); con el umbral anterior (0.10) daba IoU 0.396, OCDE 65.7%, F1 OCDE 0.467, recall de Rechazado 46.4% y MAE 0.067 (`eval_test_20261002_140015`). La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del entorno de pruebas, con entrada de 800 px (448 px el clasificador) y media de 15 pasadas. Sirve para comparar los modelos entre sí; no es la latencia del teléfono.
 
 ### 8.4 Diferencias frente al propuesto (bootstrap pareado)
 
 | Métrica | U-Net menos propuesto | Dos redes menos propuesto |
 |---|---|---|
-| Acierto OCDE | -12.0 puntos [-20.3, -3.4], significativa | +4.6 puntos [-1.7, +11.1], no significativa |
-| F1 macro OCDE | -0.187 [-0.287, -0.058], significativa | +0.095 [+0.008, +0.198], significativa |
-| Recall de Rechazado | -14.3 puntos [-27.6, 0.0], no significativa | -7.1 puntos [-22.9, +7.1], no significativa |
+| Acierto OCDE | -15.7 puntos [-27.6, -3.5], significativa | +4.6 puntos [-1.7, +11.1], no significativa |
+| F1 macro OCDE | -0.191 [-0.317, -0.036], significativa | +0.095 [+0.008, +0.198], significativa |
+| Recall de Rechazado | 0.0 puntos [-20.8, +23.8], no significativa | -7.1 puntos [-22.9, +7.1], no significativa |
 | Exactitud de madurez | -0.9 puntos [-8.8, +6.3], no significativa | +3.7 puntos [-4.0, +11.7], no significativa |
 | F1 macro de madurez | -0.002 [-0.081, +0.071], no significativa | +0.035 [-0.049, +0.117], no significativa |
-| MAE del ratio | -0.009 [-0.034, +0.011], no significativa | -0.010 [-0.028, +0.005], no significativa |
+| MAE del ratio | -0.001 [-0.027, +0.021], no significativa | -0.010 [-0.028, +0.005], no significativa |
 
 ### 8.5 Interpretación
 
-**U-Net frente al propuesto.** Ambos empatan en IoU de defecto y en madurez, pero la U-Net acierta la categoría OCDE 12 puntos menos, con diferencia significativa, y requiere el doble de parámetros y de latencia. Queda descartada.
+**U-Net frente al propuesto.** Ambos empatan en IoU de defecto y en madurez, pero la U-Net acierta la categoría OCDE 15.7 puntos menos, con diferencia significativa, y requiere el doble de parámetros y de latencia. Queda descartada. Con el umbral anterior (0.10) la diferencia era de 12.0 puntos, también significativa: la conclusión no depende del umbral.
 
 **Dos redes frente al propuesto.** Las dos redes obtienen los mejores valores en casi todas las métricas de desempeño. Las diferencias en acierto OCDE y en madurez no son significativas; la del F1 macro de OCDE sí lo es, a favor de las dos redes. El propuesto conserva mejor recall de Rechazado, sin significancia. A cambio, las dos redes ocupan 2.8 veces más y tardan 40% más.
 
@@ -244,9 +255,9 @@ La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del
 
 - Una sola corrida por modelo, con semilla 42. No se midió la variación entre semillas.
 - El conjunto de prueba es pequeño (108 imágenes, 39 frutos), lo que da intervalos amplios.
-- El umbral de la U-Net (0.10) coincidió con el mínimo del barrido original. Se agregó 0.05 al barrido; falta repetir la calibración para confirmar.
+- **Umbral de la U-Net recalibrado (2026-10-02).** El 0.10 original coincidía con el mínimo del barrido. Con 0.05 agregado, el máximo volvió a quedar en el borde, así que el barrido se extendió a 0.01–0.04: la IoU de defecto en validación sube hasta 0.4235 en **0.03** y baja después (0.4223 en 0.02 y 0.4039 en 0.01). Se adoptó 0.03 y se reevaluó la U-Net en test, en TFLite y en el celular.
 - El clasificador ResNet-34 usa entrada de 448 px, frente a 800 px de los modelos de segmentación.
-- La latencia se midió en computadora y sin cuantizar. Solo el modelo propuesto tiene medición en teléfono.
+- La latencia de esta tabla se midió en computadora y sin cuantizar; la del teléfono está en la sección 8.9.
 - Todas las imágenes provienen de condiciones controladas de iluminación.
 
 ### 8.7 Archivos
@@ -263,8 +274,7 @@ La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del
 
 ### 8.8 Pendientes
 
-1. Repetir la calibración de la U-Net con el barrido ampliado y reevaluar si cambia el umbral:
-   `python scripts/eval_unet_multitarea.py --weights resultados\comparacion\unet_resnet34\best.pt --calibrar`
+1. ~~Repetir la calibración de la U-Net~~: hecho, umbral 0.03 (sección 8.6).
 2. Opcional: agregar Mask R-CNN como cuarto modelo.
 3. Opcional: reentrenar el multitarea con mosaic activado, para comprobar si recupera la diferencia de segmentación frente al modelo sin madurez.
 
@@ -284,13 +294,13 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
 |---|---|---|---|---|---|---|
 | YOLOv8s-seg multitarea | float32 (ONNX) | 48.0 | 0.397 | 74.1% | 77.8% | 637 |
 | | rango dinámico | **12.3** | 0.399 | 73.1% | 79.6% | **175** |
-| U-Net ResNet34 multitarea | float32 | 98.2 | 0.396 | 73.1% | 65.7% | 877 |
-| | rango dinámico | 24.7 | 0.395 | 73.1% | 65.7% | 422 |
+| U-Net ResNet34 multitarea | float32 | 98.2 | 0.388 | 73.1% | 62.0% | 877 |
+| | rango dinámico | 24.7 | 0.387 | 73.1% | 61.1% | 422 |
 | YOLOv8s-seg + ResNet-34 | float32 | 132.5 | 0.443 | 77.8% | 80.6% | 577 |
 | | rango dinámico | 33.6 | 0.442 | 74.1% | 81.5% | 276 |
 
 - La cuantización no cambia la segmentación en ningún modelo (IoU de defecto ±0.003).
-- U-Net: métricas iguales a float32 y latencia a la mitad.
+- U-Net (umbral 0.03): misma segmentación y madurez que float32, OCDE de 62.0% a 61.1% (1 foto) y latencia a la mitad. Las latencias en PC de esta tabla son de una misma sesión; al reevaluar la U-Net con el nuevo umbral el equipo estaba más lento (también el multitarea: 264 ms), así que se conservaron las de la primera medición.
 - Dos redes: la madurez baja de 77.8% a 74.1% (4 fotos) por la cuantización de la ResNet-34; el OCDE sube 1 foto.
 - Dos redes en float32 da 80.6% de OCDE frente a 82.4% en PyTorch: la IoU de defecto es la misma (0.443), pero el letterbox cuadrado de 800 px cambia 2 fotos que están cerca de un límite.
 - Tras cuantizar, el multitarea sigue siendo el más pequeño (12.3 MB frente a 24.7 y 33.6) y el más rápido (175 ms frente a 422 y 276), y la diferencia de madurez con las dos redes desaparece (73.1% frente a 74.1%).
@@ -301,12 +311,12 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
 | Modelo | Igual a Python: OCDE | Igual a Python: madurez | Madurez acc | OCDE acc | Inferencia (ms) | Total por foto (ms) |
 |---|---|---|---|---|---|---|
 | YOLOv8s-seg multitarea | 107/108 | 108/108 | 73.1% | 78.7% | **711** | **906** |
-| U-Net ResNet34 multitarea | 108/108 | 108/108 | 73.1% | 65.7% | 1221 | 1390 |
+| U-Net ResNet34 multitarea | 108/108 | 108/108 | 73.1% | 61.1% | 1253 | 1427 |
 | YOLOv8s-seg + ResNet-34 | 107/108 | 105/108 | 75.9% | 80.6% | 1031 | 1272 |
 
 - Multitarea: resultados idénticos a la v0.3.0 (mismos ratios y probabilidades), así que el cambio de código no lo afectó.
 - Dos redes: las 3 fotos con otra madurez tenían confianza entre 0.43 y 0.60 en Python; la ResNet a 448 px es más sensible a la diferencia de reescalado entre Android y OpenCV (la app reduce la foto a 1600 px antes). El acierto en el celular no empeora (75.9% de madurez frente a 74.1% en Python).
-- En el teléfono el multitarea es 1.4 veces más rápido que las dos redes y 1.5 veces más rápido que la U-Net en el total por foto. Las dos redes corren dos modelos en serie (YOLO a 800 px y ResNet a 448 px).
+- En el teléfono el multitarea es 1.4 veces más rápido que las dos redes y 1.6 veces más rápido que la U-Net en el total por foto. Las dos redes corren dos modelos en serie (YOLO a 800 px y ResNet a 448 px).
 - Resultados en `resultados/etapa3_movil/celular/resultados_app_<modelo>.json`.
 
 ## 9. Decisiones principales y su justificación
@@ -408,7 +418,7 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
   - Se corrigieron los plurales ("1 lote", "1 palta").
   - La foto "Cat. II" (ratio de 9,4 % en Python) salió Cat. I con 9,1 % en la app: es la foto límite que ya difería en la concordancia.
 - **Varios modelos (v0.4.0, 2026-10-02)**, para medir en el celular los modelos de la comparación:
-  - `Configuracion.MODELOS`: multitarea (propuesto, umbral de defecto 0.05), U-Net ResNet34 (0.10) y dos redes YOLOv8s-seg + ResNet-34 (0.10), cada uno con sus archivos en assets. Solo se ofrecen los que están instalados.
+  - `Configuracion.MODELOS`: multitarea (propuesto, umbral de defecto 0.05), U-Net ResNet34 (0.03, recalibrado; antes 0.10) y dos redes YOLOv8s-seg + ResNet-34 (0.10), cada uno con sus archivos en assets. Solo se ofrecen los que están instalados.
   - `Analizador` generalizado: en la U-Net, las máscaras salen por umbral por píxel (`Postproceso.mascarasSemanticas`: palta > 0.5, defecto > umbral, recortadas al contenido del letterbox); en las dos redes, el YOLO sin madurez pasa por el mismo postproceso que el multitarea y la madurez sale del clasificador (letterbox a 448 px; el tiempo de inferencia suma ambas redes). Desde las máscaras, todo es igual (fruto completo, ROI, ratio, OCDE, validación de la captura).
   - Pantalla principal: fila "Modelo" con "Cambiar" (solo si hay más de un modelo); cada análisis guarda el modelo (base de datos v3, migración desde v2 con `multitarea` por defecto) y el resultado y el CSV lo indican.
   - `ConcordanciaTest` corre todos los modelos instalados (o uno con el argumento `modelo`) y escribe `resultados_app_<modelo>.json`.
@@ -422,7 +432,7 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
     | Modelo | CPU: inferencia / total | GPU: inferencia / total | Madurez CPU → GPU | OCDE CPU → GPU |
     |---|---|---|---|---|
     | Multitarea | 711 / 906 ms | **244 / 445 ms** | 73.1% → 74.1% | 78.7% → 76.9% |
-    | U-Net | 1221 / 1390 ms | 475 / 658 ms | 73.1% → 72.2% | 65.7% → 65.7% |
+    | U-Net | 1253 / 1427 ms | 482 / 677 ms | 73.1% → 72.2% | 61.1% → 62.0% |
     | Dos redes | 1031 / 1272 ms | 371 / 609 ms | 75.9% → 77.8% | 80.6% → 82.4% |
 
     La GPU usa media precisión: frente a la CPU, el multitarea cambia la categoría en 2 de 108 fotos y la madurez en 1. Con GPU, el preprocesamiento y el posprocesamiento (~200 ms) ya son casi la mitad del tiempo.
@@ -496,3 +506,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-02: los tres modelos de la comparación medidos en el celular con `ConcordanciaTest` (sección 8.9): concordancia con Python de 107–108/108 en OCDE y 105–108/108 en madurez; por foto, 906 ms el multitarea, 1272 ms las dos redes y 1390 ms la U-Net. El multitarea da lo mismo que en la v0.3.0.
 - 2026-10-02: app v0.5.0: cámara en vivo (CameraX) con recuadro de resultados, contornos de paltas y defectos, y selector CPU/GPU. Con GPU, el multitarea pasa de 906 a 445 ms por foto en el celular (de 1.1 a 2.2 por segundo); medidos también la U-Net y las dos redes (sección 12).
 - 2026-10-02: FPS de la cámara en vivo con GPU: 1.9 el multitarea, 1.4 las dos redes y 1.3 la U-Net (con CPU: 1.0, 0.8 y 0.7).
+- 2026-10-02: mAP de las variantes cuantizadas del multitarea (`scripts/map_movil.py`): mAP50 de máscaras 0.779 (FP32 y FP16), 0.777 (rango dinámico) y 0.734 (INT8). Umbral de la U-Net recalibrado con el barrido extendido a 0.01: 0.03 (antes 0.10, en el borde); U-Net reevaluada en test (OCDE 62.0%, −15.7 puntos frente al propuesto, significativa), en sensibilidad, en TFLite y en el celular. La conclusión de la comparación no cambia.
