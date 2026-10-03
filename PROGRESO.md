@@ -426,11 +426,17 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
     | Dos redes | 1031 / 1272 ms | 371 / 609 ms | 75.9% → 77.8% | 80.6% → 82.4% |
 
     La GPU usa media precisión: frente a la CPU, el multitarea cambia la categoría en 2 de 108 fotos y la madurez en 1. Con GPU, el preprocesamiento y el posprocesamiento (~200 ms) ya son casi la mitad del tiempo.
-  - Cámara en vivo con CPU: 1.0 FPS el multitarea (990 ms por cuadro) y 0.8 FPS las dos redes. Falta medir el modo en vivo con GPU.
+  - Cámara en vivo (FPS medido entre cuadros, incluye convertir y girar el cuadro y dibujar los contornos):
+
+    | Modelo | CPU | GPU |
+    |---|---|---|
+    | Multitarea | 1.0 FPS | **1.9 FPS** (478 ms por cuadro) |
+    | U-Net | 0.7 FPS | 1.3 FPS |
+    | Dos redes | 0.8 FPS | 1.4 FPS |
+
+  - En vivo, la U-Net marca como palta zonas del fondo; los dos YOLO no. La U-Net clasifica cada píxel sin umbral por objeto, mientras que YOLO solo genera máscaras de instancias con confianza ≥ 0.35. En el análisis por foto no afecta el ratio, porque se toma la región más grande, pero explica su menor acierto OCDE.
   - Prueba con fotos de paltas en un monitor: el multitarea casi no las detecta y el YOLO de las dos redes sí. El YOLO de las dos redes se entrenó con mosaic y aumentos de color fuertes (como Seminario I), y el multitarea sin mosaic, porque la madurez es una etiqueta por imagen. Ver la sección 13.
-- Falta:
-  - medir el FPS del modo en vivo con GPU;
-  - optimizar el pre y el posprocesamiento (~200 ms por cuadro).
+- Falta: optimizar el pre y el posprocesamiento (~200 ms por cuadro); ver las mejoras futuras en la sección 13.
 
 **Etapa 5: integración.** El modelo cuantizado y el motor OCDE corren completos en el celular. Validación funcional hecha: 23 pruebas unitarias y `ConcordanciaTest` frente a Python (108/108 en madurez, 107/108 en OCDE, ~0.9 s por foto en CPU y ~0.45 s en GPU).
 
@@ -489,3 +495,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-02: U-Net ResNet34, YOLOv8s-seg sin madurez y ResNet-34 cuantizados en rango dinámico con los pesos reales y evaluados en test (sección 8.9): sin pérdida de segmentación; el multitarea sigue siendo el más pequeño y rápido. Los tres modelos ya van en la app; falta medirlos en el celular.
 - 2026-10-02: los tres modelos de la comparación medidos en el celular con `ConcordanciaTest` (sección 8.9): concordancia con Python de 107–108/108 en OCDE y 105–108/108 en madurez; por foto, 906 ms el multitarea, 1272 ms las dos redes y 1390 ms la U-Net. El multitarea da lo mismo que en la v0.3.0.
 - 2026-10-02: app v0.5.0: cámara en vivo (CameraX) con recuadro de resultados, contornos de paltas y defectos, y selector CPU/GPU. Con GPU, el multitarea pasa de 906 a 445 ms por foto en el celular (de 1.1 a 2.2 por segundo); medidos también la U-Net y las dos redes (sección 12).
+- 2026-10-02: FPS de la cámara en vivo con GPU: 1.9 el multitarea, 1.4 las dos redes y 1.3 la U-Net (con CPU: 1.0, 0.8 y 0.7).

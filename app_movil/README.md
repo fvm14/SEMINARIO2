@@ -90,11 +90,11 @@ del letterbox.
   800x800) en vez de a la resolucion original. El kernel ROI se escala en
   proporcion.
 - Los análisis que se guardan son foto por foto; la cámara en vivo analiza el
-  cuadro más reciente (~1 FPS en CPU, ~2 FPS en GPU con el multitarea) y no guarda.
+  cuadro más reciente (1.0 FPS en CPU y 1.9 FPS en GPU con el multitarea) y no guarda.
 
 ## Pendiente
 
 - [x] Modelos alternativos cuantizados e instalados en assets.
 - [x] Latencia en el celular de los tres modelos y concordancia con Python.
-- [x] Camara en vivo con medicion de FPS (falta medirla con GPU).
+- [x] Camara en vivo con medicion de FPS.
 - [x] Delegado GPU (selector CPU/GPU).
