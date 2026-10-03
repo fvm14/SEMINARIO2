@@ -117,8 +117,10 @@ En el Xiaomi 11 Lite 5G NE, cada foto tarda ~0.9 s en total.
 - **Prueba instrumentada `ConcordanciaTest`:** compara la app con Python en las
   108 imágenes de prueba, con cada modelo instalado.
   - Multitarea: madurez 108/108, categoría OCDE 107/108.
-  - U-Net y dos redes: ya instalados (rango dinámico, 24.7 MB y 12.2 + 21.4 MB);
-    falta correr la prueba en el celular.
+  - U-Net: OCDE y madurez 108/108; dos redes: OCDE 107/108, madurez 105/108
+    (las 3 diferencias son fotos con confianza de madurez < 0.6).
+  - Tiempo total por foto en el Xiaomi 11 Lite 5G NE: multitarea 906 ms,
+    dos redes 1272 ms, U-Net 1390 ms.
 
 ## Pendiente (Fase 2)
 
@@ -126,4 +128,3 @@ En el Xiaomi 11 Lite 5G NE, cada foto tarda ~0.9 s en total.
   - chequeo de luz y enfoque en tiempo real;
   - modo continuo con conteo por categoría.
 - Medir la latencia con el delegado GPU.
-- Latencia en el celular de los tres modelos de la comparación.

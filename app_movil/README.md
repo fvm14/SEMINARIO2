@@ -93,6 +93,6 @@ del letterbox.
 ## Pendiente
 
 - [x] Modelos alternativos cuantizados e instalados en assets.
-- [ ] Latencia en el celular de los tres modelos y concordancia con Python.
+- [x] Latencia en el celular de los tres modelos y concordancia con Python.
 - [ ] Camara en vivo con medicion de FPS.
 - [ ] Delegado GPU.

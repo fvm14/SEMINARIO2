@@ -267,9 +267,8 @@ La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del
    `python scripts/eval_unet_multitarea.py --weights resultados\comparacion\unet_resnet34\best.pt --calibrar`
 2. Opcional: agregar Mask R-CNN como cuarto modelo.
 3. Opcional: reentrenar el multitarea con mosaic activado, para comprobar si recupera la diferencia de segmentación frente al modelo sin madurez.
-4. Medir en el celular la latencia de los dos modelos alternativos ya cuantizados (sección 8.9).
 
-### 8.9 Cuantización de los modelos alternativos y uso en la app (en curso)
+### 8.9 Cuantización de los modelos alternativos y uso en la app
 
 Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres modelos, con el mismo esquema de cuantización que el propuesto (rango dinámico).
 
@@ -297,7 +296,18 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
 - Tras cuantizar, el multitarea sigue siendo el más pequeño (12.3 MB frente a 24.7 y 33.6) y el más rápido (175 ms frente a 422 y 276), y la diferencia de madurez con las dos redes desaparece (73.1% frente a 74.1%).
 - Resultados en `resultados/etapa3_movil/<modelo>_<variante>/`. Los tres `.tflite` de rango dinámico están en los assets de la app (`unet_resnet34.tflite`, `yolov8s_seg.tflite`, `resnet34_madurez.tflite`); el APK de depuración pesa 97 MB con los cuatro modelos.
 
-**Falta:** instalar en el celular, correr `ConcordanciaTest` con cada modelo (latencia en el teléfono y concordancia con `referencia_app.json`) y repetirlo con el multitarea para confirmar que el cambio de código no lo afectó.
+**En el celular (2026-10-02, Xiaomi 11 Lite 5G NE, CPU con 4 hilos, app v0.4.0).** `ConcordanciaTest` sobre las 108 fotos de test, con cada modelo:
+
+| Modelo | Igual a Python: OCDE | Igual a Python: madurez | Madurez acc | OCDE acc | Inferencia (ms) | Total por foto (ms) |
+|---|---|---|---|---|---|---|
+| YOLOv8s-seg multitarea | 107/108 | 108/108 | 73.1% | 78.7% | **711** | **906** |
+| U-Net ResNet34 multitarea | 108/108 | 108/108 | 73.1% | 65.7% | 1221 | 1390 |
+| YOLOv8s-seg + ResNet-34 | 107/108 | 105/108 | 75.9% | 80.6% | 1031 | 1272 |
+
+- Multitarea: resultados idénticos a la v0.3.0 (mismos ratios y probabilidades), así que el cambio de código no lo afectó.
+- Dos redes: las 3 fotos con otra madurez tenían confianza entre 0.43 y 0.60 en Python; la ResNet a 448 px es más sensible a la diferencia de reescalado entre Android y OpenCV (la app reduce la foto a 1600 px antes). El acierto en el celular no empeora (75.9% de madurez frente a 74.1% en Python).
+- En el teléfono el multitarea es 1.4 veces más rápido que las dos redes y 1.5 veces más rápido que la U-Net en el total por foto. Las dos redes corren dos modelos en serie (YOLO a 800 px y ResNet a 448 px).
+- Resultados en `resultados/etapa3_movil/celular/resultados_app_<modelo>.json`.
 
 ## 9. Decisiones principales y su justificación
 
@@ -406,7 +416,7 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
 - Falta:
   - cámara en vivo y modo continuo (fase 2);
   - reducir la latencia (delegado GPU / hilos);
-  - instalar los modelos alternativos cuando estén sus pesos.
+  - los tres modelos de la comparación ya están instalados y medidos en el celular (sección 8.9).
 
 **Etapa 5: integración.** El modelo cuantizado y el motor OCDE corren completos en el celular. Validación funcional hecha: 20 pruebas unitarias y `ConcordanciaTest` frente a Python (108/108 en madurez, 107/108 en OCDE, ~0.9 s por foto).
 
@@ -461,3 +471,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-02: análisis de sensibilidad de la categoría OCDE al área de referencia del fruto (40.0, 42.4, 46.5 y 63.3 cm²) para los tres modelos; los límites actuales se mantienen.
 - 2026-10-02: app v0.4.0 con soporte para los tres modelos de la comparación (selector de modelo, base de datos v3) y scripts para exportar, cuantizar y evaluar en TFLite la U-Net, el YOLOv8s-seg sin madurez y la ResNet-34; probados con pesos de prueba, a la espera de los pesos reales.
 - 2026-10-02: U-Net ResNet34, YOLOv8s-seg sin madurez y ResNet-34 cuantizados en rango dinámico con los pesos reales y evaluados en test (sección 8.9): sin pérdida de segmentación; el multitarea sigue siendo el más pequeño y rápido. Los tres modelos ya van en la app; falta medirlos en el celular.
+- 2026-10-02: los tres modelos de la comparación medidos en el celular con `ConcordanciaTest` (sección 8.9): concordancia con Python de 107–108/108 en OCDE y 105–108/108 en madurez; por foto, 906 ms el multitarea, 1272 ms las dos redes y 1390 ms la U-Net. El multitarea da lo mismo que en la v0.3.0.
