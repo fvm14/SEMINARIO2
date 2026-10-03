@@ -82,4 +82,11 @@
         style="@style/Valor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textoModelo"
+        style="@style/Etiqueta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp" />
 </LinearLayout>

@@ -14,6 +14,7 @@ import pe.edu.ulima.paltascan.app
 import pe.edu.ulima.paltascan.databinding.VistaResultadoBinding
 import pe.edu.ulima.paltascan.datos.Inspeccion
 import pe.edu.ulima.paltascan.datos.Lote
+import pe.edu.ulima.paltascan.ml.Configuracion
 import pe.edu.ulima.paltascan.ml.ValidacionCaptura.Problema
 import java.io.File
 
@@ -105,6 +106,7 @@ fun VistaResultadoBinding.mostrar(i: Inspeccion) {
         R.string.madurez_valor, i.madurez, Textos.nombreMadurez(i.madurez), Math.round(i.probMadurez * 100)
     )
     textoTiempo.text = ctx.getString(R.string.tiempo_valor, i.msTotal / 1000)
+    textoModelo.text = ctx.getString(R.string.modelo_valor, Configuracion.modelo(i.modelo).nombre)
 
     val avisos = i.avisos.split(",").filter { it.isNotBlank() }.mapNotNull { runCatching { Problema.valueOf(it) }.getOrNull() }
     textoAviso.visibility = if (avisos.isEmpty()) View.GONE else View.VISIBLE

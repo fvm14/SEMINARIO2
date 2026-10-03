@@ -8,6 +8,9 @@
     <string name="lote">Lote</string>
     <string name="sin_lote">Sin lote</string>
     <string name="cambiar_lote">Cambiar</string>
+    <string name="modelo">Modelo</string>
+    <string name="elegir_modelo">Modelo para analizar</string>
+    <string name="modelo_valor">Modelo: %1$s</string>
     <string name="tomar_foto">Tomar foto</string>
     <string name="galeria">Galería</string>
     <string name="ver_historial">Historial</string>

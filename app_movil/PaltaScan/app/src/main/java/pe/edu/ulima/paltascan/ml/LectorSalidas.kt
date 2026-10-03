@@ -6,7 +6,7 @@ class Tensor(val forma: IntArray, val datos: FloatArray)
 /**
  * Identifica las salidas por su forma, como BackendTFLite.__call__ en
  * inferencia_movil.py (el orden de salida de onnx2tf no es fijo):
- *   5 valores           -> madurez
+ *   5 valores           -> madurez (no la tiene el YOLO sin cabezal de madurez)
  *   3D                  -> prototipos ([H, W, 32] o [32, H, W])
  *   2D [C, N] o [N, C]  -> cajas (C=4), puntajes (C=2), coeficientes (C=32)
  *                          o el formato antiguo con todo junto (C=38)
@@ -59,7 +59,7 @@ object LectorSalidas {
         return SalidaModelo(
             cajas, puntajes, coefs, n,
             requireNotNull(proto) { "Falta la salida de prototipos" }, ph, pw,
-            requireNotNull(madurez) { "Falta la salida de madurez" },
+            madurez,
         )
     }
 

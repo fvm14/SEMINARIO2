@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -55,12 +56,14 @@ class MainActivity : AppCompatActivity() {
         b.botonLote.setOnClickListener {
             Acciones.elegirLote(this) { id -> app.loteActualId = id; mostrarLote() }
         }
+        b.botonModelo.setOnClickListener { elegirModelo() }
         cargarModelo()
     }
 
     override fun onResume() {
         super.onResume()
         mostrarLote()
+        mostrarModelo()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -70,6 +73,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun mostrarLote() {
         b.textoLote.text = Acciones.nombreLote(this, app.loteActualId)
+    }
+
+    private fun mostrarModelo() {
+        b.filaModelo.visibility = if (app.modelosDisponibles.size > 1) View.VISIBLE else View.GONE
+        b.textoModeloActual.text = app.modeloActual.nombre
+    }
+
+    /** Solo para la comparacion de modelos: el resultado guardado indica con cual se hizo. */
+    private fun elegirModelo() {
+        val modelos = app.modelosDisponibles
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.elegir_modelo)
+            .setSingleChoiceItems(modelos.map { it.nombre }.toTypedArray(), modelos.indexOf(app.modeloActual)) { d, i ->
+                d.dismiss()
+                if (modelos[i] != app.modeloActual) {
+                    app.modeloActual = modelos[i]
+                    mostrarModelo()
+                    b.resultado.root.visibility = View.GONE
+                    b.textoMensaje.visibility = View.GONE
+                    cargarModelo()
+                }
+            }
+            .show()
     }
 
     private fun cargarModelo() {
@@ -120,6 +146,7 @@ class MainActivity : AppCompatActivity() {
                             msInferencia = r.tiempos.inferenciaMs,
                             msPostproceso = r.tiempos.postprocesoMs,
                             avisos = r.avisos.joinToString(",") { it.name },
+                            modelo = analizador.modelo.id,
                         )
                     )
                 }
@@ -153,5 +180,6 @@ class MainActivity : AppCompatActivity() {
     private fun habilitar(si: Boolean) {
         b.botonCamara.isEnabled = si
         b.botonGaleria.isEnabled = si
+        b.botonModelo.isEnabled = si
     }
 }

@@ -9,11 +9,11 @@ object ExportadorCsv {
     private val formato = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
 
     fun generar(lote: Lote?, inspecciones: List<Inspeccion>): String = buildString {
-        appendLine("id,lote,productor,fecha,madurez,prob_madurez,ratio_defecto,categoria_ocde,avisos,ms_preproceso,ms_inferencia,ms_postproceso,ms_total")
+        appendLine("id,lote,productor,fecha,modelo,madurez,prob_madurez,ratio_defecto,categoria_ocde,avisos,ms_preproceso,ms_inferencia,ms_postproceso,ms_total")
         for (i in inspecciones.sortedBy { it.fechaMs }) {
             appendLine(
                 listOf(
-                    i.id, csv(lote?.nombre ?: ""), csv(lote?.productor ?: ""), formato.format(Date(i.fechaMs)), i.madurez,
+                    i.id, csv(lote?.nombre ?: ""), csv(lote?.productor ?: ""), formato.format(Date(i.fechaMs)), csv(i.modelo), i.madurez,
                     "%.4f".format(Locale.US, i.probMadurez), "%.4f".format(Locale.US, i.ratio),
                     csv(Ocde.CATEGORIAS[i.categoria]), csv(i.avisos),
                     "%.1f".format(Locale.US, i.msPreproceso), "%.1f".format(Locale.US, i.msInferencia),

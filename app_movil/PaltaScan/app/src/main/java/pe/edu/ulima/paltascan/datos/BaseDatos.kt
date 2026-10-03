@@ -21,6 +21,8 @@ data class Inspeccion(
     val msPostproceso: Double,
     /** Avisos de ValidacionCaptura separados por coma (OSCURA, BORROSA, BAJA_CONFIANZA). */
     val avisos: String = "",
+    /** id del modelo de Configuracion.MODELOS con que se hizo el analisis. */
+    val modelo: String = "multitarea",
 ) {
     val msTotal: Double get() = msPreproceso + msInferencia + msPostproceso
 }
@@ -44,7 +46,7 @@ class Resumen(inspecciones: List<Inspeccion>) {
 /** Filtro del historial: por categoria OCDE o por nivel de madurez. */
 data class Filtro(val categoria: Int? = null, val madurez: Int? = null)
 
-class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", null, 2) {
+class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", null, 3) {
 
     override fun onCreate(db: SQLiteDatabase) {
         crearLotes(db)
@@ -79,7 +81,8 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
                 ms_preproceso REAL NOT NULL,
                 ms_inferencia REAL NOT NULL,
                 ms_postproceso REAL NOT NULL,
-                avisos TEXT NOT NULL DEFAULT ''
+                avisos TEXT NOT NULL DEFAULT '',
+                modelo TEXT NOT NULL DEFAULT 'multitarea'
             )
             """.trimIndent()
         )
@@ -89,7 +92,10 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
         }
     }
 
-    /** v1 -> v2: el lote era un texto dentro de cada inspeccion; pasa a su propia tabla. */
+    /**
+     * v1 -> v2: el lote era un texto dentro de cada inspeccion; pasa a su propia tabla.
+     * v2 -> v3: se registra el modelo de cada analisis (los anteriores son del multitarea).
+     */
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
             crearLotes(db)
@@ -110,6 +116,10 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
             db.execSQL("ALTER TABLE inspecciones_v2 RENAME TO inspecciones")
             db.execSQL("CREATE INDEX idx_lote ON inspecciones(lote_id)")
             db.execSQL("CREATE INDEX idx_fecha ON inspecciones(fecha_ms)")
+        }
+        // Desde v1 la tabla nueva ya trae la columna modelo
+        if (oldVersion == 2) {
+            db.execSQL("ALTER TABLE inspecciones ADD COLUMN modelo TEXT NOT NULL DEFAULT 'multitarea'")
         }
     }
 
@@ -132,6 +142,7 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
         put("ms_inferencia", i.msInferencia)
         put("ms_postproceso", i.msPostproceso)
         put("avisos", i.avisos)
+        put("modelo", i.modelo)
     })
 
     fun obtener(id: Long): Inspeccion? =
@@ -178,6 +189,7 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
         msInferencia = c.getDouble(c.getColumnIndexOrThrow("ms_inferencia")),
         msPostproceso = c.getDouble(c.getColumnIndexOrThrow("ms_postproceso")),
         avisos = c.getString(c.getColumnIndexOrThrow("avisos")),
+        modelo = c.getString(c.getColumnIndexOrThrow("modelo")),
     )
 
     // ---------------------------------------------------------------- lotes

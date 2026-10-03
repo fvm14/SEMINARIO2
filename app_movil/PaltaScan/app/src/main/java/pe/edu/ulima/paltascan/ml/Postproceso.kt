@@ -17,7 +17,8 @@ class SalidaModelo(
     val prototipos: FloatArray,
     val altoProto: Int,
     val anchoProto: Int,
-    val madurez: FloatArray,
+    /** null en el YOLO sin cabezal de madurez (la madurez sale del clasificador). */
+    val madurez: FloatArray?,
 ) {
     val canalesProto: Int get() = prototipos.size / (altoProto * anchoProto)
 }
@@ -132,6 +133,34 @@ object Postproceso {
                     val abajo = prob[yb * pw + xa] * (1 - tx) + prob[yb * pw + xb] * tx
                     if (arriba * (1 - ty) + abajo * ty > 0.5f) destino[fila + (x - lb.left)] = true
                 }
+            }
+        }
+        return Mascaras(lb.nw, lb.nh, palta, defecto)
+    }
+
+    /**
+     * U-Net (segmentacion semantica): la salida ya trae la probabilidad de palta
+     * y de defecto por pixel del lienzo, [H, W, 2] (NHWC) o [2, H, W]. Se recorta
+     * la zona del contenido y se umbraliza como eval_unet_multitarea.py
+     * (palta > umbralPalta, defecto > umbralDefecto).
+     */
+    fun mascarasSemanticas(t: Tensor, lb: Letterbox, umbralPalta: Float, umbralDefecto: Float): Mascaras {
+        val f = t.forma
+        require(f.size == 3) { "Salida de mascaras con forma inesperada: ${f.joinToString()}" }
+        val hwc = f[2] == 2
+        val h = if (hwc) f[0] else f[1]
+        val w = if (hwc) f[1] else f[2]
+        require(h == lb.lienzo && w == lb.lienzo) { "Mascaras de ${h}x$w para un lienzo de ${lb.lienzo}" }
+        val palta = BooleanArray(lb.nh * lb.nw)
+        val defecto = BooleanArray(lb.nh * lb.nw)
+        for (y in 0 until lb.nh) {
+            val fila = (y + lb.top) * w
+            for (x in 0 until lb.nw) {
+                val p = fila + x + lb.left
+                val pPalta = if (hwc) t.datos[2 * p] else t.datos[p]
+                val pDefecto = if (hwc) t.datos[2 * p + 1] else t.datos[h * w + p]
+                palta[y * lb.nw + x] = pPalta > umbralPalta
+                defecto[y * lb.nw + x] = pDefecto > umbralDefecto
             }
         }
         return Mascaras(lb.nw, lb.nh, palta, defecto)

@@ -68,6 +68,39 @@
                 android:text="@string/cambiar_lote" />
         </LinearLayout>
 
+        <!-- Modelo (solo si hay mas de uno instalado) -->
+        <LinearLayout
+            android:id="@+id/filaModelo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/modelo" />
+
+            <TextView
+                android:id="@+id/textoModeloActual"
+                style="@style/Valor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/botonModelo"
+                style="@style/BotonTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cambiar_lote" />
+        </LinearLayout>
+
         <!-- Captura -->
         <LinearLayout
             android:layout_width="match_parent"

@@ -35,70 +35,105 @@ class ResultadoAnalisis(
     val avisos: List<ValidacionCaptura.Problema> get() = problemas.filter { !it.bloqueante }
 }
 
-/** Pipeline completo de inferencia_movil.analizar() sobre un Bitmap. */
-class Analizador private constructor(private val interprete: Interpreter) {
+/**
+ * Pipeline completo de inferencia_movil.analizar() sobre un Bitmap, para
+ * cualquiera de los modelos de Configuracion.MODELOS:
+ *  - MULTITAREA: YOLOv8s-seg con madurez (una red);
+ *  - UNET: mascaras semanticas + madurez (una red);
+ *  - DOS_REDES: YOLOv8s-seg sin madurez + clasificador de madurez.
+ * Despues de las mascaras el camino es el mismo: fruto completo, ROI, ratio y OCDE.
+ */
+class Analizador private constructor(
+    val modelo: ModeloApp,
+    private val principal: Interpreter,
+    private val clasificador: Interpreter?,
+) {
 
-    private val entrada = interprete.getInputTensor(0)
-    private val formaEntrada = entrada.shape()
-    private val nhwc = formaEntrada[3] == 3
-    val lienzo: Int = if (nhwc) formaEntrada[1] else formaEntrada[2]
+    private val entrada = principal.getInputTensor(0)
+    private val nhwc = entrada.shape()[3] == 3
+    val lienzo: Int = if (nhwc) entrada.shape()[1] else entrada.shape()[2]
+
+    private val entradaClas = clasificador?.getInputTensor(0)
+    private val lienzoClas: Int = entradaClas?.shape()?.let { if (it[3] == 3) it[1] else it[2] } ?: 0
 
     companion object {
-        fun cargar(context: Context, archivo: String = Configuracion.ARCHIVO_MODELO): Analizador {
-            val fd = context.assets.openFd(archivo)
-            val modelo = FileInputStream(fd.fileDescriptor).channel
-                .map(FileChannel.MapMode.READ_ONLY, fd.startOffset, fd.declaredLength)
-            val opciones = Interpreter.Options().setNumThreads(Configuracion.HILOS_CPU)
-            return Analizador(Interpreter(modelo, opciones))
+        fun cargar(context: Context, modelo: ModeloApp = Configuracion.MODELO_POR_DEFECTO): Analizador =
+            Analizador(modelo, interprete(context, modelo.archivo), modelo.archivoClasificador?.let { interprete(context, it) })
+
+        fun existeModelo(context: Context, modelo: ModeloApp = Configuracion.MODELO_POR_DEFECTO): Boolean {
+            val assets = context.assets.list("")?.toSet().orEmpty()
+            return modelo.archivos.all { it in assets }
         }
 
-        fun existeModelo(context: Context, archivo: String = Configuracion.ARCHIVO_MODELO): Boolean =
-            context.assets.list("")?.contains(archivo) == true
+        private fun interprete(context: Context, archivo: String): Interpreter {
+            val fd = context.assets.openFd(archivo)
+            val mapeado = FileInputStream(fd.fileDescriptor).channel
+                .map(FileChannel.MapMode.READ_ONLY, fd.startOffset, fd.declaredLength)
+            return Interpreter(mapeado, Interpreter.Options().setNumThreads(Configuracion.HILOS_CPU))
+        }
     }
 
     fun analizar(foto: Bitmap): ResultadoAnalisis {
         val t0 = System.nanoTime()
         val lb = Letterbox.calcular(foto.height, foto.width, lienzo)
-        val buffer = prepararEntrada(foto, lb)
+        val buffer = prepararEntrada(foto, lb, entrada, nhwc)
+        val bufferClas = entradaClas?.let {
+            prepararEntrada(foto, Letterbox.calcular(foto.height, foto.width, lienzoClas), it, it.shape()[3] == 3)
+        }
 
         val t1 = System.nanoTime()
-        val salidas = HashMap<Int, Any>()
-        val buffersSalida = (0 until interprete.outputTensorCount).map { i ->
-            val t = interprete.getOutputTensor(i)
-            ByteBuffer.allocateDirect(t.numBytes()).order(ByteOrder.nativeOrder()).also { salidas[i] = it }
-        }
-        interprete.runForMultipleInputsOutputs(arrayOf(buffer), salidas)
+        val tensores = correr(principal, buffer)
+        val tensoresClas = clasificador?.let { correr(it, requireNotNull(bufferClas)) }
 
         val t2 = System.nanoTime()
-        val tensores = buffersSalida.mapIndexed { i, b -> leerTensor(i, b) }
-        val salida = LectorSalidas.leer(tensores, lienzo)
-        val instancias = Postproceso.seleccionar(salida)
-        val m = Postproceso.mascaras(salida, instancias, lb)
+        val m: Mascaras
+        val probs: FloatArray
+        if (modelo.tipo == TipoModelo.UNET) {
+            probs = tensores.first { it.datos.size == 5 }.datos
+            m = Postproceso.mascarasSemanticas(
+                tensores.first { it.datos.size != 5 }, lb, Configuracion.UMBRAL_PALTA_UNET, modelo.confDefecto
+            )
+        } else {
+            val salida = LectorSalidas.leer(tensores, lienzo)
+            val instancias = Postproceso.seleccionar(salida, confDefecto = modelo.confDefecto)
+            m = Postproceso.mascaras(salida, instancias, lb)
+            probs = tensoresClas?.first { it.datos.size == 5 }?.datos
+                ?: requireNotNull(salida.madurez) { "El modelo no entrega la madurez" }
+        }
         val union = BooleanArray(m.palta.size) { m.palta[it] || m.defecto[it] }
         val nFrutos = ValidacionCaptura.contarFrutos(union, m.ancho, m.alto)
         val fruto = Ocde.frutoCompleto(m.palta, m.defecto, m.ancho, m.alto)
         val defecto = Ocde.filtrarDefectoPorRoi(fruto, m.defecto, m.ancho, m.alto, lb.kernelRoi(Configuracion.KERNEL_ROI_PX))
         val ratio = Ocde.calcularRatio(fruto, defecto)
         var mejor = 0
-        for (i in salida.madurez.indices) if (salida.madurez[i] > salida.madurez[mejor]) mejor = i
+        for (i in probs.indices) if (probs[i] > probs[mejor]) mejor = i
         val t3 = System.nanoTime()
         val (luminancia, nitidez) = calidadImagen(foto)
         val problemas = ValidacionCaptura.revisar(
-            fruto, m.ancho, m.alto, nFrutos, luminancia, nitidez, salida.madurez[mejor]
+            fruto, m.ancho, m.alto, nFrutos, luminancia, nitidez, probs[mejor]
         )
 
         return ResultadoAnalisis(
             categoria = Ocde.clasificar(ratio),
             ratio = ratio,
             madurez = mejor + 1,
-            probMadurez = salida.madurez[mejor],
-            probabilidades = salida.madurez,
+            probMadurez = probs[mejor],
+            probabilidades = probs,
             mascaras = m,
             fruto = fruto,
             defecto = defecto,
             tiempos = Tiempos((t1 - t0) / 1e6, (t2 - t1) / 1e6, (t3 - t2) / 1e6),
             problemas = problemas,
         )
+    }
+
+    private fun correr(it: Interpreter, buffer: ByteBuffer): List<Tensor> {
+        val salidas = HashMap<Int, Any>()
+        val buffers = (0 until it.outputTensorCount).map { i ->
+            ByteBuffer.allocateDirect(it.getOutputTensor(i).numBytes()).order(ByteOrder.nativeOrder()).also { b -> salidas[i] = b }
+        }
+        it.runForMultipleInputsOutputs(arrayOf(buffer), salidas)
+        return buffers.mapIndexed { i, b -> leerTensor(it, i, b) }
     }
 
     /** Brillo y nitidez sobre la foto reducida a 256 px (fuera del tiempo medido). */
@@ -117,7 +152,8 @@ class Analizador private constructor(private val interprete: Interpreter) {
         return ValidacionCaptura.luminancia(gris) to ValidacionCaptura.nitidez(gris, w, h)
     }
 
-    private fun prepararEntrada(foto: Bitmap, lb: Letterbox): ByteBuffer {
+    private fun prepararEntrada(foto: Bitmap, lb: Letterbox, entrada: org.tensorflow.lite.Tensor, nhwc: Boolean): ByteBuffer {
+        val lienzo = lb.lienzo
         val lienzoBmp = Bitmap.createBitmap(lienzo, lienzo, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(lienzoBmp)
         canvas.drawColor(Color.rgb(114, 114, 114))
@@ -152,7 +188,7 @@ class Analizador private constructor(private val interprete: Interpreter) {
         return buf
     }
 
-    private fun leerTensor(indice: Int, b: ByteBuffer): Tensor {
+    private fun leerTensor(interprete: Interpreter, indice: Int, b: ByteBuffer): Tensor {
         val t = interprete.getOutputTensor(indice)
         val forma = t.shape().drop(1).toIntArray()
         b.rewind()
@@ -172,5 +208,8 @@ class Analizador private constructor(private val interprete: Interpreter) {
         return Tensor(forma, datos)
     }
 
-    fun cerrar() = interprete.close()
+    fun cerrar() {
+        principal.close()
+        clasificador?.close()
+    }
 }

@@ -2,6 +2,7 @@ package pe.edu.ulima.paltascan.ml
 
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LectorSalidasTest {
@@ -54,5 +55,20 @@ class LectorSalidasTest {
         )
         assertArrayEquals(det.copyOfRange(0, 4 * n), s.cajas, 0f)
         assertArrayEquals(det.copyOfRange(6 * n, 38 * n), s.coeficientes, 0f)
+    }
+
+    @Test
+    fun yoloSinMadurezDejaLaMadurezVacia() {
+        val s = LectorSalidas.leer(
+            listOf(
+                Tensor(intArrayOf(4, 4, 32), serie(512, 0f)),
+                Tensor(intArrayOf(32, n), serie(32 * n, 0f)),
+                Tensor(intArrayOf(4, n), serie(4 * n, 0f)),
+                Tensor(intArrayOf(2, n), serie(2 * n, 0f)),
+            ),
+            lienzo,
+        )
+        assertEquals(n, s.n)
+        assertNull(s.madurez)
     }
 }
