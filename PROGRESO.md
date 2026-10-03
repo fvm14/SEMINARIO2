@@ -267,6 +267,19 @@ La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del
    `python scripts/eval_unet_multitarea.py --weights resultados\comparacion\unet_resnet34\best.pt --calibrar`
 2. Opcional: agregar Mask R-CNN como cuarto modelo.
 3. Opcional: reentrenar el multitarea con mosaic activado, para comprobar si recupera la diferencia de segmentación frente al modelo sin madurez.
+4. Cuantizar los dos modelos alternativos y medir su latencia en el celular (sección 8.9).
+
+### 8.9 Cuantización de los modelos alternativos y uso en la app (en curso)
+
+Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres modelos, con el mismo esquema de cuantización que el propuesto (rango dinámico).
+
+**Hecho (código, probado con pesos de prueba):**
+- `scripts/exportar_alternativos.py`: exporta a ONNX la U-Net (salidas `mascaras` [1, 2, 800, 800] con sigmoide y `madurez` [1, 5]), el YOLOv8s-seg sin madurez (mismas 4 salidas separadas que el multitarea, sin la madurez) y la ResNet-34 (`madurez` [1, 5], entrada de 448 px). La normalización de ImageNet va dentro del modelo, así la app prepara la entrada igual para todos (RGB 0-1 con letterbox). Compara cada ONNX con PyTorch (diferencia máxima ≤ 2e-4).
+- `scripts/onnx_a_tflite.py`: ONNX → TFLite con onnx2tf (convertidor de TensorFlow, como en la Etapa 2) en float32, float16 y rango dinámico. Se ejecuta en un entorno aparte con tensorflow 2.20 y onnx2tf. El float32 reproduce al ONNX (diferencia ≤ 6e-6). Tamaños en rango dinámico: U-Net 24.7 MB, YOLOv8s-seg 12.2 MB, ResNet-34 21.4 MB.
+- `scripts/eval_alternativos_movil.py`: evalúa los TFLite en test con el mismo protocolo que sus versiones en PyTorch (`metricas.json`, `predicciones.csv` para `bootstrap_ic.py` y `referencia_app.json` para comparar con la app) y compara la salida de la app con esa referencia (`--comparar`).
+- App v0.4.0: soporta los tres modelos (sección 12).
+
+**Falta:** los pesos `best.pt` de la U-Net, la ResNet-34 y el YOLOv8s-seg sin madurez (se entrenaron en otra máquina y no están en el repo); con ellos, convertir, evaluar la pérdida por cuantización, instalarlos en el celular y correr `ConcordanciaTest` con cada uno.
 
 ## 9. Decisiones principales y su justificación
 
@@ -366,9 +379,16 @@ La latencia corresponde solo a la inferencia, medida en PyTorch sobre la CPU del
   - La exportación a CSV y PDF funciona.
   - Se corrigieron los plurales ("1 lote", "1 palta").
   - La foto "Cat. II" (ratio de 9,4 % en Python) salió Cat. I con 9,1 % en la app: es la foto límite que ya difería en la concordancia.
+- **Varios modelos (v0.4.0, 2026-10-02)**, para medir en el celular los modelos de la comparación:
+  - `Configuracion.MODELOS`: multitarea (propuesto, umbral de defecto 0.05), U-Net ResNet34 (0.10) y dos redes YOLOv8s-seg + ResNet-34 (0.10), cada uno con sus archivos en assets. Solo se ofrecen los que están instalados.
+  - `Analizador` generalizado: en la U-Net, las máscaras salen por umbral por píxel (`Postproceso.mascarasSemanticas`: palta > 0.5, defecto > umbral, recortadas al contenido del letterbox); en las dos redes, el YOLO sin madurez pasa por el mismo postproceso que el multitarea y la madurez sale del clasificador (letterbox a 448 px; el tiempo de inferencia suma ambas redes). Desde las máscaras, todo es igual (fruto completo, ROI, ratio, OCDE, validación de la captura).
+  - Pantalla principal: fila "Modelo" con "Cambiar" (solo si hay más de un modelo); cada análisis guarda el modelo (base de datos v3, migración desde v2 con `multitarea` por defecto) y el resultado y el CSV lo indican.
+  - `ConcordanciaTest` corre todos los modelos instalados (o uno con el argumento `modelo`) y escribe `resultados_app_<modelo>.json`.
+  - 23 pruebas unitarias pasan (3 nuevas: máscaras de la U-Net y lectura de salidas sin madurez).
 - Falta:
   - cámara en vivo y modo continuo (fase 2);
-  - reducir la latencia (delegado GPU / hilos).
+  - reducir la latencia (delegado GPU / hilos);
+  - instalar los modelos alternativos cuando estén sus pesos.
 
 **Etapa 5: integración.** El modelo cuantizado y el motor OCDE corren completos en el celular. Validación funcional hecha: 20 pruebas unitarias y `ConcordanciaTest` frente a Python (108/108 en madurez, 107/108 en OCDE, ~0.9 s por foto).
 
@@ -421,3 +441,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-01: verde de la app oscurecido (#1B5E20).
 - 2026-10-02: comparación de modelos (YOLOv8s-seg multitarea, U-Net ResNet34 multitarea, YOLOv8s-seg + ResNet-34) incorporada como Etapa 3; el prototipo pasa a ser la Etapa 4 y la integración la 5; se retira la validación del prototipo. `PROGRESO_COMPARACION.md` se unificó en este documento.
 - 2026-10-02: análisis de sensibilidad de la categoría OCDE al área de referencia del fruto (40.0, 42.4, 46.5 y 63.3 cm²) para los tres modelos; los límites actuales se mantienen.
+- 2026-10-02: app v0.4.0 con soporte para los tres modelos de la comparación (selector de modelo, base de datos v3) y scripts para exportar, cuantizar y evaluar en TFLite la U-Net, el YOLOv8s-seg sin madurez y la ResNet-34; probados con pesos de prueba, a la espera de los pesos reales.

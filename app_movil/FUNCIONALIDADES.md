@@ -1,4 +1,4 @@
-# PaltaScan: funcionalidades (v0.3.0)
+# PaltaScan: funcionalidades (v0.4.0)
 
 App Android que analiza fotos de palta Hass **en el celular, sin conexión**. Usa
 el modelo multitarea YOLOv8s-seg exportado a TFLite (rango dinámico, 12.3 MB)
@@ -23,6 +23,15 @@ quedan deshabilitados.
 - "+ Nuevo lote", que pide nombre y productor.
 
 La app recuerda el lote elegido aunque se cierre.
+
+**Modelo** (solo si hay más de un modelo instalado, para la comparación de
+modelos): muestra con qué modelo se analiza y el botón **Cambiar** permite
+elegir entre:
+- YOLOv8s-seg multitarea (el propuesto, por defecto);
+- U-Net ResNet34 multitarea;
+- YOLOv8s-seg + ResNet-34 (dos redes).
+
+Cada análisis guarda el modelo con que se hizo, y el resultado lo indica.
 
 **Botones:**
 - **Tomar foto:** abre la cámara del sistema.
@@ -72,12 +81,16 @@ Se calcula después de la inferencia.
 ## Análisis
 
 1. **Preproceso:** corrige la orientación EXIF, reduce la imagen y aplica
-   letterbox a 640×640.
-2. **Inferencia** en un único modelo con dos tareas:
-   - segmentación de la palta y de sus defectos;
-   - clasificación de la madurez en 5 clases.
-3. **Postproceso:** NMS, máscaras y cálculo de la razón entre píxeles con
-   defecto y píxeles de la palta.
+   letterbox a 800×800 (448×448 para el clasificador de las dos redes).
+2. **Inferencia**, según el modelo:
+   - **multitarea:** una red que segmenta la palta y sus defectos y clasifica
+     la madurez en 5 clases;
+   - **U-Net:** una red que da la probabilidad de palta y de defecto por píxel
+     y la madurez;
+   - **dos redes:** el YOLOv8s-seg segmenta y la ResNet-34 clasifica la madurez.
+3. **Postproceso:** en los YOLO, NMS y máscaras por instancia; en la U-Net,
+   umbral por píxel (palta > 0.5, defecto > 0.10). Después, en todos, fruto
+   completo, filtro ROI y razón entre píxeles con defecto y píxeles de la palta.
 4. **Clasificación OCDE** según esa razón, con los umbrales de Cat. I, Cat. II
    y Rechazado.
 
@@ -86,23 +99,25 @@ En el Xiaomi 11 Lite 5G NE, cada foto tarda ~0.9 s en total.
 
 ## Datos
 
-- **Base SQLite local (v2):**
+- **Base SQLite local (v3):**
   - tabla `lotes`: nombre, productor y fecha;
   - tabla `inspecciones`: fotos, madurez, probabilidad, razón, categoría,
-    tiempos, avisos y `lote_id` (anulable).
-- La migración desde la v1 conserva el historial.
+    tiempos, avisos, modelo usado y `lote_id` (anulable).
+- La migración desde la v1 y la v2 conserva el historial (los análisis
+  anteriores quedan con el modelo multitarea).
+- El CSV incluye la columna `modelo`.
 - Las fotos (original y con marcas) se guardan en el almacenamiento interno de
   la app.
 - No se envía nada a internet.
 
 ## Pruebas
 
-- **20 pruebas unitarias:** validación de la captura, postproceso, OCDE, CSV,
-  etc.
+- **23 pruebas unitarias:** validación de la captura, postproceso (también el
+  de la U-Net), lectura de salidas con y sin madurez, OCDE, etc.
 - **Prueba instrumentada `ConcordanciaTest`:** compara la app con Python en las
-  108 imágenes de prueba.
-  - Madurez: 108/108.
-  - Categoría OCDE: 107/108.
+  108 imágenes de prueba, con cada modelo instalado.
+  - Multitarea: madurez 108/108, categoría OCDE 107/108.
+  - U-Net y dos redes: pendiente (faltan sus pesos).
 
 ## Pendiente (Fase 2)
 
@@ -110,3 +125,4 @@ En el Xiaomi 11 Lite 5G NE, cada foto tarda ~0.9 s en total.
   - chequeo de luz y enfoque en tiempo real;
   - modo continuo con conteo por categoría.
 - Medir la latencia con el delegado GPU.
+- Latencia en el celular de los tres modelos de la comparación.

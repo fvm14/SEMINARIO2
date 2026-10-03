@@ -1,75 +1,86 @@
-# PaltaScan — app Android (Etapas 3 y 4)
+# PaltaScan — app Android
 
 App Android nativa (Kotlin) que evalua una palta desde una foto **en el propio
 celular, sin internet**: segmenta la palta y sus defectos, clasifica la
 madurez (1-5) y asigna la categoria OCDE. Guarda un historial por lote que se
-puede exportar a CSV.
-
+exporta a CSV y PDF. Detalle de todas las funciones en `FUNCIONALIDADES.md`.
 
 ## Estructura
 
 ```
 PaltaScan/app/src/main/java/pe/edu/ulima/paltascan/
   ml/            Nucleo del modelo, port de scripts/inferencia_movil.py y scripts/ocde.py
-    Configuracion.kt  umbrales (palta 0.35, defecto 0.05 para ronda1, IoU 0.7, ROI 20 px)
-    Letterbox.kt      geometria del letterbox (igual que en Python)
-    LectorSalidas.kt  identifica las 5 salidas del .tflite por su forma
-    Postproceso.kt    confianza, NMS por clase, mascara = sigmoide(coef . prototipos)
-    Ocde.kt           fruto completo, filtro ROI, ratio defecto/fruto, categoria
-    Analizador.kt     pipeline completo con TFLite y tiempos por etapa
-  datos/         SQLite (historial), CSV y utilidades de imagen
-  ui/            Inicio, Resultado, Historial
-PaltaScan/app/src/test/   tests de la logica en la PC (sin celular ni modelo)
+    Configuracion.kt     modelos disponibles y umbrales (palta 0.35, defecto por modelo, IoU 0.7, ROI 20 px)
+    Letterbox.kt         geometria del letterbox (igual que en Python)
+    LectorSalidas.kt     identifica las salidas del .tflite por su forma
+    Postproceso.kt       YOLO: confianza, NMS por clase, mascara = sigmoide(coef . prototipos);
+                         U-Net: recorte y umbral de las mascaras semanticas
+    Ocde.kt              fruto completo, filtro ROI, ratio defecto/fruto, categoria
+    ValidacionCaptura.kt sin palta, varias, cortada, oscura, borrosa, baja confianza
+    Analizador.kt        pipeline completo con LiteRT y tiempos por etapa
+  datos/         SQLite (lotes e historial), CSV, PDF y utilidades de imagen
+  ui/            Pantalla principal e historial
+PaltaScan/app/src/test/          pruebas de la logica en la PC (sin celular ni modelo)
+PaltaScan/app/src/androidTest/   ConcordanciaTest: analiza las fotos de prueba en el celular
 ```
 
-Todo lo de `ml/` excepto `Analizador.kt` es Kotlin puro, asi que se prueba en la
-PC con `gradlew test`.
+## Modelos
 
-## Pantallas
+La app trae el modelo propuesto y, para la comparacion de modelos, puede
+incluir los otros dos. Cada uno va en `PaltaScan/app/src/main/assets/` con
+este nombre (estan en `.gitignore`: no se suben al repo):
 
-1. **Inicio**: lote actual (y boton "Nuevo lote"), "Tomar foto", "Elegir de
-   galeria" e "Historial". Si falta el modelo, lo avisa y desactiva el
-   analisis.
-2. **Resultado**: tarjeta con la categoria OCDE (color segun la categoria),
-   foto original junto a la foto con el fruto en verde y los defectos en rojo,
-   madurez con su confianza, % de area con defecto y tiempo por etapa
-   (preproceso, inferencia y postproceso).
-3. **Historial del lote**: conteo por categoria y por madurez, lista de paltas
-   (tocar una abre su resultado) y "Exportar CSV".
+| Modelo | Archivo(s) en assets | Umbral de defecto |
+|---|---|---|
+| YOLOv8s-seg multitarea (propuesto) | `palta_multitarea.tflite` | 0.05 |
+| U-Net ResNet34 multitarea | `unet_resnet34.tflite` | 0.10 |
+| YOLOv8s-seg + ResNet-34 (dos redes) | `yolov8s_seg.tflite` y `resnet34_madurez.tflite` | 0.10 |
 
-## Poner el modelo (pendiente: lo tiene el companero)
+Si hay mas de un modelo, la pantalla principal muestra la fila "Modelo" para
+elegir con cual analizar; cada analisis guarda el modelo usado.
 
-1. Generar el TFLite desde `best.pt` de `yolov8s_mt_ronda1`
-   (`scripts/exportar_movil.py` → ONNX → TFLite dynamic-range, ver Etapa 2).
-2. Copiarlo como `PaltaScan/app/src/main/assets/palta_multitarea.tflite`.
-   Esta en `.gitignore`: no se sube al repo.
-3. Si se usa otro modelo, ajustar `CONF_DEFECTO` en `Configuracion.kt` segun
-   su calibracion.
+**Generar los modelos alternativos** (desde la raiz del proyecto):
+
+```bash
+# 1) ONNX (entorno del proyecto, con PyTorch)
+python scripts/exportar_alternativos.py --unet resultados/comparacion/unet_resnet34/best.pt \
+    --yolo resultados/yolo_multitarea/yolov8s_base_sem1/weights/best.pt \
+    --resnet resultados/comparacion/resnet34_madurez/best.pt
+# 2) TFLite float32, float16 y rango dinamico (entorno aparte con tensorflow y onnx2tf)
+python scripts/onnx_a_tflite.py modelos_movil/unet_resnet34_800.onnx \
+    modelos_movil/yolov8s_seg_800.onnx modelos_movil/resnet34_madurez_448.onnx
+# 3) Evaluar en test lo que se pierde al cuantizar (y dejar la referencia para la app)
+python scripts/eval_alternativos_movil.py --tipo unet --conf-defecto 0.10 \
+    --modelo modelos_movil/unet_resnet34_800_dynamic_range_quant.tflite --salida resultados/etapa3_movil/unet_dynamic_range
+python scripts/eval_alternativos_movil.py --tipo dos_redes --conf-defecto 0.10 \
+    --modelo modelos_movil/yolov8s_seg_800_dynamic_range_quant.tflite \
+    --clasificador modelos_movil/resnet34_madurez_448_dynamic_range_quant.tflite --salida resultados/etapa3_movil/dos_redes_dynamic_range
+```
+
+Luego copiar los `*_dynamic_range_quant.tflite` a assets con los nombres de la tabla.
 
 ## Compilar y probar
 
-Requisitos ya presentes en la PC: Android Studio (con su JDK), Android SDK 36
-y un emulador (`Medium_Phone`).
-
 ```bash
 cd app_movil/PaltaScan
-# (Git Bash) usar el JDK de Android Studio
-export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
-./gradlew testDebugUnitTest   # 13 tests de la logica
-./gradlew assembleDebug       # APK en app/build/outputs/apk/debug/
+./gradlew testDebugUnitTest   # 23 pruebas de la logica
+./gradlew installDebug        # instala en el celular conectado (MIUI pide aceptar)
 ```
 
-O abrir la carpeta `app_movil/PaltaScan` en Android Studio y darle a Run.
+## Verificar contra Python en el celular
 
-## Verificar contra Python (cuando llegue el modelo)
+1. Copiar las 108 fotos de prueba a la app:
+   `adb push data/prueba_test/. /sdcard/Android/data/pe.edu.ulima.paltascan/files/prueba/`
+2. Correr `./gradlew connectedDebugAndroidTest` (todos los modelos instalados;
+   con `-Pandroid.testInstrumentationRunnerArguments.modelo=unet` solo uno).
+3. Sacar los resultados: `adb exec-out run-as pe.edu.ulima.paltascan cat files/resultados_app_unet.json`
+   (`resultados_app.json` para el propuesto).
+4. Comparar: `python scripts/eval_alternativos_movil.py --comparar <referencia_app.json> <resultados_app_*.json>`
+   o, para el propuesto, `scripts/referencia_app.py`.
 
-```bash
-python scripts/referencia_app.py --modelo <ruta>.tflite --fotos <carpeta> --conf-defecto 0.05
-```
-
-Analizar las mismas fotos en la app: la categoria OCDE y la madurez deben
-coincidir, y el ratio puede diferir en milesimas, porque la app trabaja a la
-resolucion del letterbox.
+La categoria OCDE y la madurez deben coincidir; el ratio puede diferir en
+milesimas en fotos que no son cuadradas, porque la app trabaja a la resolucion
+del letterbox.
 
 ## Diferencias con Python (conscientes)
 
@@ -77,12 +88,11 @@ resolucion del letterbox.
   mascaras y el ratio se calculan en el espacio del letterbox (maximo
   800x800) en vez de a la resolucion original. El kernel ROI se escala en
   proporcion.
-- Modo foto por foto (no video en vivo): con segmentacion a 800 px, el video
-  en tiempo real no es realista en un celular.
+- Modo foto por foto (no video en vivo).
 
 ## Pendiente
 
-- [ ] Poner el modelo y medir la latencia real en un celular (gama media y alta).
-- [ ] Comparar app vs. `referencia_app.py` sobre las fotos de test.
-- [ ] Revisar las pantallas contra `frontend/PaltaScan — Pantallas.pdf`.
-- [ ] Umbrales OCDE con fuente citable (hoy 0.094 / 0.141, igual que `scripts/ocde.py`).
+- [ ] Pesos de los modelos alternativos para cuantizarlos e instalarlos.
+- [ ] Latencia en el celular de los tres modelos y concordancia con Python.
+- [ ] Camara en vivo con medicion de FPS.
+- [ ] Delegado GPU.
