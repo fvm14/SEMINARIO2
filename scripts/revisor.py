@@ -24,72 +24,61 @@ import os
 import pandas as pd
 
 HTML = r"""<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><title>Revision de pseudo-etiquetas</title>
-<style>
-:root{--bd:#dde1e7;--tx:#1d2330;--sub:#5d6675;--ok:#2e7d32;--bad:#c62828}
-*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f3f4f6;color:var(--tx)}
-header{background:#fff;border-bottom:1px solid var(--bd);padding:10px 20px;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
-h1{font-size:17px;margin:0}.sub{color:var(--sub);font-size:13px}
-.barra{flex:1;min-width:200px;height:10px;background:#e5e7eb;border-radius:5px;overflow:hidden}
-.barra div{height:100%;background:#1d2330}
-main{display:flex;flex-direction:column;align-items:center;padding:14px}
-#img{max-width:98vw;max-height:70vh;border:1px solid var(--bd);background:#fff}
-.meta{margin:10px 0;font-size:15px;text-align:center}
-.meta .motivo{color:#b45309;font-weight:600}
-.botones{display:flex;gap:10px;margin-top:6px}
-button{font-size:15px;padding:9px 18px;border-radius:8px;border:1px solid var(--bd);background:#fff;cursor:pointer}
-.co{background:#b45309;color:#fff;border-color:#b45309}.estado.corregir{color:#b45309}
-.ap{background:var(--ok);color:#fff;border-color:var(--ok)}.re{background:var(--bad);color:#fff;border-color:var(--bad)}
-.estado{font-weight:700}.estado.aprobada{color:var(--ok)}.estado.rechazada{color:var(--bad)}
-.fin{padding:60px;font-size:18px;text-align:center}
-select{font-size:13px;padding:4px}
-</style></head><body>
-<header><h1>Revision de pseudo-etiquetas</h1>
-<div class="barra"><div id="prog"></div></div>
-<span class="sub" id="cont"></span>
-<select id="filtro"><option value="pend">Pendientes</option><option value="todas">Todas</option><option value="aprobada">Aprobadas</option><option value="rechazada">Rechazadas</option><option value="corregir">Para corregir</option></select>
-<button onclick="exportar()">Exportar decisiones</button></header>
-<main id="main"></main>
+<html lang="es"><head><meta charset="utf-8"><title>Revisor</title>
+<style>img{max-width:100%;max-height:72vh;display:block}body{margin:8px;font-family:sans-serif;font-size:14px}</style>
+</head><body>
+<div>
+Grupo: <select id="grupo"></select>
+Estado: <select id="filtro"><option value="pend">Pendientes</option><option value="todas">Todas</option><option value="aprobada">Aprobadas</option><option value="rechazada">Rechazadas</option><option value="corregir">Para corregir</option></select>
+<button onclick="exportar()">Exportar CSV</button>
+<span id="cuentas"></span>
+</div>
+<div id="ficha"></div>
+<div id="foto"></div>
+<div>
+<button onclick="atras()">Anterior (Z)</button>
+<button onclick="decidir('rechazada')">Rechazar (R)</button>
+<button onclick="decidir('corregir')">Corregir despues (C)</button>
+<button onclick="saltar()">Saltar (S)</button>
+<button onclick="decidir('aprobada')">Aprobar (A)</button>
+</div>
+<p>Izquierda: original. Derecha: pseudo-etiqueta (verde = palta, rojo = defecto). Aprobar si el contorno verde sigue la palta y cada zona roja es un defecto real. Rechazar si falta un defecto evidente o sobra uno grande.</p>
 <script>
 const D = __DATOS__;
 const KEY = "revision_pseudo_" + D.id;
+const GRUPOS = [["control", "Control"], ["rectangular", "Rectangulares"], ["dudosa", "Dudosas"], ["todos", "Todos"]];
 let dec = {}; try { dec = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) {}
 let historial = [], i = 0;
+const $ = id => document.getElementById(id);
 const guardar = () => { try { localStorage.setItem(KEY, JSON.stringify(dec)); } catch(e) {} };
-function vista(){ const f = document.getElementById("filtro").value;
-  return D.filas.filter(r => f === "todas" ? true : f === "pend" ? !dec[r.archivo] : dec[r.archivo] === f); }
+const delGrupo = () => { const g = $("grupo").value; return g === "todos" ? D.filas : D.filas.filter(r => r.grupo === g); };
+function vista(){ const f = $("filtro").value;
+  return delGrupo().filter(r => f === "todas" ? true : f === "pend" ? !dec[r.archivo] : dec[r.archivo] === f); }
 function pintar(){
-  const v = vista(), hechas = Object.keys(dec).length, ap = Object.values(dec).filter(x => x === "aprobada").length;
-  document.getElementById("prog").style.width = (100*hechas/D.filas.length) + "%";
-  const co = Object.values(dec).filter(x => x === "corregir").length;
-  document.getElementById("cont").textContent = `${hechas}/${D.filas.length} revisadas | ${ap} aprobadas | ${hechas-ap-co} rechazadas | ${co} para corregir`;
-  if (!v.length) { document.getElementById("main").innerHTML = '<div class="fin">No quedan imagenes en este filtro. Pulsa "Exportar decisiones" y mueve el archivo a data/pseudo/.</div>'; return; }
+  const G = delGrupo(), v = vista();
+  const n = e => G.filter(r => dec[r.archivo] === e).length;
+  const ap = n("aprobada"), re = n("rechazada"), co = n("corregir"), hechas = ap + re + co;
+  $("cuentas").textContent = ` Revisadas ${hechas}/${G.length} | aprobadas ${ap} | rechazadas ${re} | corregir ${co} | aprobacion ${hechas ? (100 * ap / hechas).toFixed(1) + "%" : "-"}`;
+  if (!v.length) { $("foto").textContent = "No quedan imagenes con este grupo y estado."; $("ficha").textContent = ""; return; }
   if (i >= v.length) i = v.length - 1; if (i < 0) i = 0;
   const r = v[i], d = dec[r.archivo];
-  document.getElementById("main").innerHTML = `
-    <img id="img" src="revision/${encodeURIComponent(r.archivo)}">
-    <div class="meta">${i+1}/${v.length} en este filtro &nbsp;|&nbsp; <b>${r.archivo}</b> &nbsp;|&nbsp; madurez ${r.madurez}
-      &nbsp;|&nbsp; ${r.n_defectos} defecto(s) &nbsp;|&nbsp; ${r.estado === "auto" ? "<b>CONTROL</b>: aprobada por el modelo" : `<span class="motivo">${r.motivo}</span>`}
-      ${d ? `&nbsp;|&nbsp; <span class="estado ${d}">${d}</span>` : ""}</div>
-    <div class="sub">Izquierda: foto original. Derecha: pseudo-etiqueta (verde = palta, rojo = defecto).</div>
-    <div class="botones"><button onclick="atras()">&larr; Anterior (Z)</button>
-      <button class="re" onclick="decidir('rechazada')">Rechazar (R)</button>
-      <button class="co" onclick="decidir('corregir')">Corregir despues (C)</button>
-      <button onclick="saltar()">Saltar (S)</button>
-      <button class="ap" onclick="decidir('aprobada')">Aprobar (A)</button></div>`;
-  const sig = v[i+1]; if (sig) { const p = new Image(); p.src = "revision/" + encodeURIComponent(sig.archivo); }
+  $("ficha").textContent = `${i + 1}/${v.length} | ${r.archivo} | madurez ${r.madurez} | defectos ${r.n_defectos} | ${r.grupo}${r.motivo ? " | " + r.motivo : ""} | decision: ${d || "pendiente"}`;
+  $("foto").innerHTML = `<img src="revision/${encodeURIComponent(r.archivo)}" alt="">`;
+  const sig = v[i + 1]; if (sig) { const p = new Image(); p.src = "revision/" + encodeURIComponent(sig.archivo); }
 }
 function decidir(x){ const v = vista(); if (!v.length) return; const r = v[i];
   historial.push([r.archivo, dec[r.archivo]]); dec[r.archivo] = x; guardar();
-  if (document.getElementById("filtro").value !== "pend") i++; pintar(); }
+  if ($("filtro").value !== "pend") i++; pintar(); }
 function saltar(){ i++; pintar(); }
 function atras(){ const h = historial.pop(); if (h) { if (h[1]) dec[h[0]] = h[1]; else delete dec[h[0]]; guardar();
-  const f = document.getElementById("filtro").value; if (f !== "pend") i = Math.max(0, i-1); else i = 0; } else i = Math.max(0, i-1); pintar(); }
+  if ($("filtro").value !== "pend") i = Math.max(0, i - 1); else i = 0; } else i = Math.max(0, i - 1); pintar(); }
 function exportar(){ const filas = ["archivo,decision"].concat(Object.entries(dec).map(([a, d]) => `${a},${d}`));
   const b = new Blob([filas.join("\n") + "\n"], {type: "text/csv"}); const a = document.createElement("a");
   a.href = URL.createObjectURL(b); a.download = "revision_decisiones.csv"; a.click(); }
-document.getElementById("filtro").onchange = () => { i = 0; pintar(); };
-document.addEventListener("keydown", e => { const k = e.key.toLowerCase();
+$("grupo").innerHTML = GRUPOS.map(([k, t]) => { const c = k === "todos" ? D.filas.length : D.filas.filter(r => r.grupo === k).length;
+  return c ? `<option value="${k}">${t} (${c})</option>` : ""; }).join("");
+$("grupo").onchange = $("filtro").onchange = () => { i = 0; pintar(); };
+document.addEventListener("keydown", e => { if (e.target.tagName === "SELECT") return; const k = e.key.toLowerCase();
   if (k === "a" || e.key === "ArrowRight") decidir("aprobada");
   else if (k === "r") decidir("rechazada"); else if (k === "c") decidir("corregir"); else if (k === "s") saltar();
   else if (k === "z" || e.key === "Backspace" || e.key === "ArrowLeft") { e.preventDefault(); atras(); } });
@@ -113,7 +102,8 @@ def main():
     d["turno"] = d.groupby(["grupo", "madurez"]).azar.rank()
     d = d.sort_values(["grupo", "turno", "madurez"])
     filas = [{"archivo": r.archivo, "estado": r.estado, "motivo": r.motivo if isinstance(r.motivo, str) else "",
-              "madurez": int(r.madurez), "n_defectos": int(r.n_defectos)} for r in d.itertuples()]
+              "madurez": int(r.madurez), "n_defectos": int(r.n_defectos),
+              "grupo": ["control", "rectangular", "dudosa"][int(r.grupo)]} for r in d.itertuples()]
     ident = f"{len(filas)}_{filas[0]['archivo'] if filas else ''}"
     html = HTML.replace("__DATOS__", json.dumps({"id": ident, "filas": filas}, ensure_ascii=False))
     salida = os.path.join(args.dir, "revision.html")
