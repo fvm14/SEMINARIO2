@@ -101,7 +101,11 @@ fun VistaResultadoBinding.mostrar(i: Inspeccion) {
 
     textoCategoria.text = Textos.CATEGORIAS[i.categoria]
     textoCategoria.setTextColor(ContextCompat.getColor(ctx, Textos.colorCategoria(i.categoria)))
-    textoRatio.text = Textos.porcentaje(i.ratio)
+    textoRatio.text = if (i.caras == 2 && i.ratioA != null && i.ratioB != null) {
+        ctx.getString(R.string.ratio_dos_caras, Textos.porcentaje(i.ratio), Textos.porcentaje(i.ratioA), Textos.porcentaje(i.ratioB))
+    } else {
+        Textos.porcentaje(i.ratio)
+    }
     textoMadurez.text = ctx.getString(
         R.string.madurez_valor, i.madurez, Textos.nombreMadurez(i.madurez), Math.round(i.probMadurez * 100)
     )

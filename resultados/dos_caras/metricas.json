@@ -1,0 +1,186 @@
+{
+  "modelo": "modelos_movil\\palta_multitarea_800_dynamic_range_quant.tflite",
+  "conf_defecto": 0.05,
+  "n_pares": 104,
+  "n_frutos": 39,
+  "sin_anotacion": {
+    "pares_con_categoria_distinta_entre_lados": 0.4231,
+    "cambio_al_agregar_lado_b": 0.4423,
+    "cambio_al_agregar_lado_a": 0.3077,
+    "distribucion_pred_una_cara": {
+      "Categoria I": 140,
+      "Rechazado": 44,
+      "Categoria II": 24
+    },
+    "distribucion_pred_dos_caras": {
+      "Rechazado": 49,
+      "Categoria I": 39,
+      "Categoria II": 16
+    }
+  },
+  "n_pares_con_ambos_lados_anotados": 104,
+  "con_anotacion": {
+    "ocde_acierto_una": {
+      "valor": 0.6298,
+      "ic95": [
+        0.5194,
+        0.7414
+      ]
+    },
+    "ocde_f1_macro_una": {
+      "valor": 0.4923,
+      "ic95": [
+        0.4133,
+        0.5775
+      ]
+    },
+    "recall_rechazado_una": {
+      "valor": 0.425,
+      "ic95": [
+        0.2857,
+        0.5795
+      ]
+    },
+    "madurez_exactitud_una": {
+      "valor": 0.7452,
+      "ic95": [
+        0.6786,
+        0.8125
+      ]
+    },
+    "madurez_f1_macro_una": {
+      "valor": 0.7475,
+      "ic95": [
+        0.6791,
+        0.8091
+      ]
+    },
+    "ocde_acierto_dos": {
+      "valor": 0.7115,
+      "ic95": [
+        0.6,
+        0.8144
+      ]
+    },
+    "ocde_f1_macro_dos": {
+      "valor": 0.6132,
+      "ic95": [
+        0.5053,
+        0.7162
+      ]
+    },
+    "recall_rechazado_dos": {
+      "valor": 0.825,
+      "ic95": [
+        0.64,
+        0.9592
+      ]
+    },
+    "madurez_exactitud_dos": {
+      "valor": 0.7308,
+      "ic95": [
+        0.6566,
+        0.8049
+      ]
+    },
+    "madurez_f1_macro_dos": {
+      "valor": 0.7345,
+      "ic95": [
+        0.6564,
+        0.8036
+      ]
+    },
+    "ocde_acierto_una_cara_real": {
+      "valor": 0.6827,
+      "ic95": [
+        0.5686,
+        0.7895
+      ]
+    },
+    "mae_ratio_total": {
+      "valor": 0.1145,
+      "ic95": [
+        0.0714,
+        0.1644
+      ]
+    }
+  },
+  "diferencia_dos_menos_una": {
+    "ocde_acierto": {
+      "dos_menos_una": 0.0817,
+      "ic95": [
+        -0.0381,
+        0.2
+      ],
+      "significativa": false
+    },
+    "ocde_f1_macro": {
+      "dos_menos_una": 0.1209,
+      "ic95": [
+        -0.014,
+        0.2352
+      ],
+      "significativa": false
+    },
+    "recall_rechazado": {
+      "dos_menos_una": 0.4,
+      "ic95": [
+        0.2391,
+        0.5447
+      ],
+      "significativa": true
+    },
+    "madurez_exactitud": {
+      "dos_menos_una": -0.0144,
+      "ic95": [
+        -0.0476,
+        0.0156
+      ],
+      "significativa": false
+    },
+    "madurez_f1_macro": {
+      "dos_menos_una": -0.013,
+      "ic95": [
+        -0.0478,
+        0.018
+      ],
+      "significativa": false
+    }
+  },
+  "distribucion_real": {
+    "una_cara": {
+      "Categoria I": 158,
+      "Rechazado": 32,
+      "Categoria II": 18
+    },
+    "fruto_dos_caras": {
+      "Categoria I": 51,
+      "Rechazado": 40,
+      "Categoria II": 13
+    }
+  },
+  "matriz_confusion_dos_caras": {
+    "etiquetas": [
+      "Categoria I",
+      "Categoria II",
+      "Rechazado"
+    ],
+    "matriz": [
+      [
+        37,
+        7,
+        7
+      ],
+      [
+        0,
+        4,
+        9
+      ],
+      [
+        2,
+        5,
+        33
+      ]
+    ]
+  }
+}

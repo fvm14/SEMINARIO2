@@ -133,6 +133,37 @@
                 android:text="@string/cambiar_lote" />
         </LinearLayout>
 
+        <!-- Fotos por palta: dos (lado A y lado B) o una -->
+        <LinearLayout
+            android:id="@+id/filaCaras"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/caras" />
+
+            <TextView
+                android:id="@+id/textoCaras"
+                style="@style/Valor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/botonCaras"
+                style="@style/BotonTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cambiar_lote" />
+        </LinearLayout>
+
         <!-- Captura -->
         <LinearLayout
             android:layout_width="match_parent"

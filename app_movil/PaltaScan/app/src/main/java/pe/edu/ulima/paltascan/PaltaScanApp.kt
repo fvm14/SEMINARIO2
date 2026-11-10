@@ -30,6 +30,11 @@ class PaltaScanApp : Application() {
         get() = gpuDisponible && prefs.getBoolean("usar_gpu", false)
         set(valor) = prefs.edit().putBoolean("usar_gpu", valor).apply()
 
+    /** Evaluar el fruto completo con dos fotos, lado A y lado B (por defecto, si). */
+    var dosCaras: Boolean
+        get() = prefs.getBoolean("dos_caras", true)
+        set(valor) = prefs.edit().putBoolean("dos_caras", valor).apply()
+
     private var cargado: Analizador? = null
 
     /** null si el modelo no esta en assets. Al cambiar de modelo o de procesador se libera el anterior. */

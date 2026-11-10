@@ -12,6 +12,12 @@
     <string name="elegir_modelo">Modelo para analizar</string>
     <string name="modelo_valor">Modelo: %1$s</string>
     <string name="procesador">Procesador</string>
+    <string name="caras">Fotos por palta</string>
+    <string name="elegir_caras">Fotos por palta</string>
+    <string name="caras_dos">Dos (lado A y lado B)</string>
+    <string name="caras_una">Una</string>
+    <string name="lado_a_listo">Lado A analizado. Gira la palta y toma la foto del lado B.</string>
+    <string name="ratio_dos_caras">%1$s (lado A %2$s + lado B %3$s)</string>
     <string name="elegir_procesador">Ejecutar el modelo en</string>
     <string name="procesador_cpu">CPU (4 hilos)</string>
     <string name="procesador_gpu">GPU</string>

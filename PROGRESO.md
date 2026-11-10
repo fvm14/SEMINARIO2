@@ -458,6 +458,29 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - **Anotaciones de SAM2 a auditar:** en test hay fotos con todo el fruto marcado como defecto (la caja amplia confunde a SAM2). Plan: regla automática contra las cajas originales, revisión visual del test y val y confirmación humana (ver conversación del 2026-09-28).
 - **Criterio de cuantización:** falta medir la pérdida de mAP50 de las variantes TFLite.
 
+## 15. Evaluación del fruto completo con dos caras
+
+**Motivo.** En la sustentación se observó que una foto muestra solo la cara visible del fruto, mientras que la norma OCDE considera la superficie total.
+
+**Datos.** En el dataset cada palta se fotografió por ambos lados el mismo día. El test tiene 104 pares fruto-día de 39 frutos; solo 4 tenían los dos lados anotados. Se anotó el lado faltante de los otros 100 (`scripts/dos_caras_preparar.py` pre-anota solo el contorno de la palta; los defectos se dibujaron a mano en `data/dos_caras/anotador.html`, generado por `scripts/dos_caras_anotador.py`, e importados con `scripts/dos_caras_labelme.py --importar --anotador`). Etiquetas en `data/dos_caras/labels_seg/`.
+
+**Regla.** Defecto total = (ratio A + ratio B) × 42.4 cm², comparado con 4 y 6 cm² (equivale a aplicar 0.094 y 0.141 a la suma de ratios). Madurez = argmax del promedio de probabilidades. Modelo: TFLite de rango dinámico, umbral de defecto 0.05 (`scripts/dos_caras_evaluar.py`, resultados en `resultados/dos_caras/`).
+
+**Resultados (104 pares, bootstrap pareado por fruto).**
+
+| Métrica | Una cara | Dos caras | Dos − una [IC 95%] |
+|---|---|---|---|
+| Acierto OCDE | 63.0% | 71.2% | +8.2 [−3.8, +20.0] |
+| F1 macro OCDE | 0.492 | 0.613 | +0.121 [−0.014, +0.235] |
+| Recall de Rechazado | 42.5% | 82.5% | +40.0 [+23.9, +54.5], significativa |
+| Exactitud de madurez | 74.5% | 73.1% | −1.4 [−4.8, +1.6] |
+
+- Sin anotación: en el 42.3% de los pares el modelo asigna categorías distintas a los dos lados.
+- Con una sola cara anotada (sin error del modelo), la categoría del fruto completo se acierta en el 68.3% de los pares.
+- El fruto se detecta en las 208 fotos (IoU medio 0.99).
+
+**App v0.6.0.** "Fotos por palta: Dos (lado A y lado B) / Una" en la pantalla principal (por defecto, Dos). Con Dos, la primera foto válida queda como lado A y la segunda completa el análisis; se guarda un solo registro con ambas fotos lado a lado, el ratio total y el de cada lado (`ml/DosCaras.kt`, base de datos v4, CSV con `caras`, `ratio_lado_a` y `ratio_lado_b`, 3 pruebas en `DosCarasTest.kt`). Falta compilar y probar en el celular.
+
 ## 14. Historial de actualizaciones
 
 - 2026-09-26: primera version de este archivo. Inventario del estado real:
@@ -505,3 +528,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-02: FPS de la cámara en vivo con GPU: 1.9 el multitarea, 1.4 las dos redes y 1.3 la U-Net (con CPU: 1.0, 0.8 y 0.7).
 - 2026-10-02: mAP de las variantes cuantizadas del multitarea (`scripts/map_movil.py`): mAP50 de máscaras 0.779 (FP32 y FP16), 0.777 (rango dinámico) y 0.734 (INT8). Umbral de la U-Net recalibrado con el barrido extendido a 0.01: 0.03 (antes 0.10, en el borde); U-Net reevaluada en test (OCDE 62.0%, −15.7 puntos frente al propuesto, significativa), en sensibilidad, en TFLite y en el celular. La conclusión de la comparación no cambia.
 - 2026-10-02: corrección: la prueba con fotos en un monitor en la que no se detectó la palta se hizo con la U-Net seleccionada, no con el multitarea; el multitarea sí detecta y segmenta esas fotos (secciones 12 y 13).
+- 2026-11-10: evaluación del fruto completo con dos caras (sección 15): anotación del lado faltante de 100 fotos de test, comparación una cara frente a dos caras y app v0.6.0 con captura de lado A y lado B.

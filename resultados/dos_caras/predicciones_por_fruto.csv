@@ -1,0 +1,105 @@
+fruto,dia,madurez,lado_a,lado_b,ratio_pred_a,ratio_pred_b,ratio_real_a,ratio_real_b,ocde_pred_a,ocde_pred_b,ocde_pred_dos,ocde_real_a,ocde_real_b,ocde_real_fruto,madurez_pred_a,madurez_pred_b,madurez_pred_dos
+T10_275,d02,1,T10_d02_275_a_1.jpg,T10_d02_275_b_1.jpg,0.1495981774477092,0.2004557852426069,0.23525061775156467,0.01301845177255366,Rechazado,Rechazado,Rechazado,Rechazado,Categoria I,Rechazado,1,1,1
+T10_392,d02,1,T10_d02_392_a_1.jpg,T10_d02_392_b_1.jpg,0.0413358001080946,0.1976641375197911,0.02639903435932655,0.1784029373153922,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,1,1,1
+T10_392,d04,1,T10_d04_392_a_1.jpg,T10_d04_392_b_1.jpg,0.1158656870794723,0.0520278969957081,0.11727795622618958,0.030440942853462712,Categoria II,Categoria I,Rechazado,Categoria II,Categoria I,Rechazado,1,1,1
+T10_331,d05,1,T10_d05_331_a_1.jpg,T10_d05_331_b_1.jpg,0.0,0.3155426740185683,0.0,0.06854550734191918,Categoria I,Rechazado,Rechazado,Categoria I,Categoria I,Categoria I,1,1,1
+T10_092,d07,1,T10_d07_092_a_1.jpg,T10_d07_092_b_1.jpg,0.027168742671298,0.1115660184237461,0.0,0.4779676781769562,Categoria I,Categoria II,Categoria II,Categoria I,Rechazado,Rechazado,1,1,1
+T10_162,d07,1,T10_d07_162_a_1.jpg,T10_d07_162_b_1.jpg,0.1467763559917185,0.0093931874577035,0.9962890857074959,0.008128396218763798,Rechazado,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,1,1,1
+T10_395,d07,1,T10_d07_395_a_1.jpg,T10_d07_395_b_1.jpg,0.0314620542456154,0.0153070859880525,0.2556723516403623,0.0,Categoria I,Categoria I,Categoria I,Rechazado,Categoria I,Rechazado,2,2,2
+T10_395,d08,2,T10_d08_395_a_2.jpg,T10_d08_395_b_2.jpg,0.0333267287497523,0.0,0.0,0.014358974358974359,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+T10_471,d08,1,T10_d08_471_a_1.jpg,T10_d08_471_b_1.jpg,0.0,0.1182644667853191,0.0,0.08685958071116945,Categoria I,Categoria II,Categoria II,Categoria I,Categoria I,Categoria I,1,1,1
+T10_015,d09,2,T10_d09_015_a_2.jpg,T10_d09_015_b_2.jpg,0.0445393753898373,0.0119239350463216,0.06227944959313658,0.021142962825966338,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+T10_092,d09,2,T10_d09_092_a_2.jpg,T10_d09_092_b_2.jpg,0.0436149011191169,0.0816499218097298,0.01238990403575654,0.26051396840428737,Categoria I,Categoria I,Categoria II,Categoria I,Rechazado,Rechazado,2,2,2
+T10_100,d09,2,T10_d09_100_a_2.jpg,T10_d09_100_b_2.jpg,0.1698693764760066,0.2327171850467649,0.15002542140873715,0.2199511219728949,Rechazado,Rechazado,Rechazado,Rechazado,Rechazado,Rechazado,2,2,2
+T10_162,d09,2,T10_d09_162_a_2.jpg,T10_d09_162_b_2.jpg,0.1615293554188015,0.127409311060591,0.15129094621208014,0.15461708162622123,Rechazado,Categoria II,Rechazado,Rechazado,Rechazado,Rechazado,2,2,2
+T10_219,d09,2,T10_d09_219_a_2.jpg,T10_d09_219_b_2.jpg,0.2055891659698654,0.0946287803365376,0.02096322843536747,0.34707243485441897,Rechazado,Categoria II,Rechazado,Categoria I,Rechazado,Rechazado,2,2,2
+T10_275,d10,2,T10_d10_275_a_2.jpg,T10_d10_275_b_2.jpg,0.0,0.2656446006377538,0.0,0.6165354936786807,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,2,2,2
+T10_015,d11,3,T10_d11_015_a_3.jpg,T10_d11_015_b_3.jpg,0.0536544499456587,0.0211868607905795,0.053182874312225174,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+T10_092,d11,3,T10_d11_092_a_3.jpg,T10_d11_092_b_3.jpg,0.0285317437351698,0.1104265940549126,0.0,0.03956756509926139,Categoria I,Categoria II,Categoria II,Categoria I,Categoria I,Categoria I,3,3,3
+T10_219,d11,3,T10_d11_219_a_3.jpg,T10_d11_219_b_3.jpg,0.0126420075852045,0.1194639287045508,0.2428511009261417,0.05141242459877666,Categoria I,Categoria II,Categoria II,Rechazado,Categoria I,Rechazado,3,3,3
+T10_275,d11,3,T10_d11_275_a_3.jpg,T10_d11_275_b_3.jpg,0.0,0.361976021445194,0.0,0.10278422955928615,Categoria I,Rechazado,Rechazado,Categoria I,Categoria II,Categoria II,2,2,2
+T10_392,d11,4,T10_d11_392_a_4.jpg,T10_d11_392_b_4.jpg,0.0741433818401599,0.0993403093721565,0.0910932588194202,0.10519797761745157,Categoria I,Categoria II,Rechazado,Categoria I,Categoria II,Rechazado,3,3,3
+T10_275,d12,3,T10_d12_275_a_3.jpg,T10_d12_275_b_3.jpg,0.0,0.5154440528293117,0.0,0.12708599527626127,Categoria I,Rechazado,Rechazado,Categoria I,Categoria II,Categoria II,2,2,2
+T10_471,d12,2,T10_d12_471_a_2.jpg,T10_d12_471_b_2.jpg,0.0,0.0927584651963597,0.0,0.06767010054900993,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+T10_395,d13,3,T10_d13_395_a_3.jpg,T10_d13_395_b_3.jpg,0.0,0.0120638005019836,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+T10_471,d13,3,T10_d13_471_a_3.jpg,T10_d13_471_b_3.jpg,0.0,0.1863355254775509,0.0,0.07794345278915296,Categoria I,Rechazado,Rechazado,Categoria I,Categoria I,Categoria I,3,3,3
+T10_219,d14,3,T10_d14_219_a_3.jpg,T10_d14_219_b_3.jpg,0.0243753028626809,0.1566891258917633,0.0,0.1390492390655254,Categoria I,Rechazado,Rechazado,Categoria I,Categoria II,Categoria II,3,3,3
+T10_395,d15,3,T10_d15_395_a_3.jpg,T10_d15_395_b_3.jpg,0.0,0.0166035235906672,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+T10_275,d16,3,T10_d16_275_a_3.jpg,T10_d16_275_b_3.jpg,0.0,0.8025540667372246,0.0,0.33458028282017854,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,3,3,3
+T10_392,d16,4,T10_d16_392_a_4.jpg,T10_d16_392_b_4.jpg,0.0841656105756374,0.052010091335934,0.09483839509612706,0.04573417232045558,Categoria I,Categoria I,Categoria II,Categoria II,Categoria I,Categoria II,3,4,3
+T10_392,d17,4,T10_d17_392_a_4.jpg,T10_d17_392_b_4.jpg,0.0594768393654233,0.095369994784725,0.037840075703808845,0.06743578377621726,Categoria I,Categoria II,Rechazado,Categoria I,Categoria I,Categoria II,3,4,4
+T10_219,d20,4,T10_d20_219_a_4.jpg,T10_d20_219_b_4.jpg,0.01786121942088,0.1107183727712355,0.45409008876284485,0.06464491858299372,Categoria I,Categoria II,Categoria II,Rechazado,Categoria I,Rechazado,4,4,4
+T10_471,d20,4,T10_d20_471_a_4.jpg,T10_d20_471_b_4.jpg,0.0,0.1634141813456225,0.0,0.1589772278530999,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,4,4,4
+T10_275,d22,4,T10_d22_275_a_4.jpg,T10_d22_275_b_4.jpg,0.0,0.5563758126419676,0.0,0.2983384506027189,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,4,4,4
+T10_395,d23,5,T10_d23_395_a_5.jpg,T10_d23_395_b_5.jpg,0.0,0.0233124601440563,0.0,0.023586640190794383,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,4,4,4
+T10_471,d24,5,T10_d24_471_a_5.jpg,T10_d24_471_b_5.jpg,0.0,0.089589905362776,0.0,0.056688379607095885,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,4,5,5
+T10_015,d25,5,T10_d25_015_a_5.jpg,T10_d25_015_b_5.jpg,0.044025302963598,0.026692594590078,0.04286357217126806,0.02602425384475108,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,5,5,5
+T10_092,d25,5,T10_d25_092_a_5.jpg,T10_d25_092_b_5.jpg,0.0876375952582557,0.0824375704093128,0.035014482876128815,0.058480561225686865,Categoria I,Categoria I,Rechazado,Categoria I,Categoria I,Categoria I,5,5,5
+T10_395,d25,5,T10_d25_395_a_5.jpg,T10_d25_395_b_5.jpg,0.0,0.0172916539222283,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,5,5,5
+T10_015,d26,5,T10_d26_015_a_5.jpg,T10_d26_015_b_5.jpg,0.0544544544544544,0.0179869449593037,0.05625465584774477,0.015788963086325932,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,5,4,5
+T20_161,d01,1,T20_d01_161_a_1.jpg,T20_d01_161_b_1.jpg,0.0087374157199593,0.0658214973300882,0.0,0.06336601277496616,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,1,1,1
+T20_313,d01,1,T20_d01_313_a_1.jpg,T20_d01_313_b_1.jpg,0.0588900557395589,0.0,0.07883783710578825,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,1,1,1
+T20_360,d01,1,T20_d01_360_a_1.jpg,T20_d01_360_b_1.jpg,0.0167326079788987,0.0,0.016929532629141947,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,1,1,1
+T20_279,d02,1,T20_d02_279_a_1.jpg,T20_d02_279_b_1.jpg,0.2019886917527783,0.0738664112100379,0.07718161533362586,0.0,Rechazado,Categoria I,Rechazado,Categoria I,Categoria I,Categoria I,2,1,2
+T20_360,d02,1,T20_d02_360_a_1.jpg,T20_d02_360_b_1.jpg,0.0099357932379713,0.0266187853150329,0.01204708572828717,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,1,1,1
+T20_020,d03,1,T20_d03_020_a_1.jpg,T20_d03_020_b_1.jpg,0.0608296677799491,0.1192488445759983,0.06398205301445073,0.10540785281988808,Categoria I,Categoria II,Rechazado,Categoria I,Categoria II,Rechazado,1,1,1
+T20_190,d03,2,T20_d03_190_a_2.jpg,T20_d03_190_b_2.jpg,0.088814138407756,0.3213618694428309,0.07644737305754255,0.0976581784236462,Categoria I,Rechazado,Rechazado,Categoria I,Categoria II,Rechazado,2,3,3
+T20_360,d03,2,T20_d03_360_a_2.jpg,T20_d03_360_b_2.jpg,0.0,0.0342875823098118,0.0,0.04413324447865141,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+T20_468,d03,2,T20_d03_468_a_2.jpg,T20_d03_468_b_2.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+T20_360,d04,2,T20_d04_360_a_2.jpg,T20_d04_360_b_2.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+T20_462,d04,2,T20_d04_462_a_2.jpg,T20_d04_462_b_2.jpg,0.0337780696256056,0.0,0.010756650697688316,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+T20_085,d05,3,T20_d05_085_a_3.jpg,T20_d05_085_b_3.jpg,0.0988675123596366,0.0,0.10346187892083285,0.0,Categoria II,Categoria I,Categoria II,Categoria II,Categoria I,Categoria II,2,2,2
+T20_161,d05,4,T20_d05_161_a_4.jpg,T20_d05_161_b_4.jpg,0.039142251803026,0.0239021619130304,0.0,0.19010363419175016,Categoria I,Categoria I,Categoria I,Categoria I,Rechazado,Rechazado,3,3,3
+T20_190,d05,4,T20_d05_190_a_4.jpg,T20_d05_190_b_4.jpg,0.093903743315508,0.4328019902331153,0.0800591090618307,0.08925975674830257,Categoria I,Rechazado,Rechazado,Categoria I,Categoria I,Rechazado,4,3,3
+T20_240,d06,4,T20_d06_240_a_4.jpg,T20_d06_240_b_4.jpg,0.0914746732397697,0.1016024989372123,0.08985918068763717,0.09547306849998614,Categoria I,Categoria II,Rechazado,Categoria I,Categoria II,Rechazado,4,4,4
+T20_279,d06,4,T20_d06_279_a_4.jpg,T20_d06_279_b_4.jpg,0.1589596438950815,0.4175289162390597,0.14141497800600003,0.0876760065928891,Rechazado,Rechazado,Rechazado,Rechazado,Categoria I,Rechazado,4,4,4
+T20_468,d06,4,T20_d06_468_a_4.jpg,T20_d06_468_b_4.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+T20_085,d07,3,T20_d07_085_a_3.jpg,T20_d07_085_b_3.jpg,0.0676235792222694,0.0,0.08851173639025359,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+T20_141,d07,3,T20_d07_141_a_3.jpg,T20_d07_141_b_3.jpg,0.0189368879572921,0.1309859340427773,0.0,0.0,Categoria I,Categoria II,Rechazado,Categoria I,Categoria I,Categoria I,3,4,3
+T20_462,d07,3,T20_d07_462_a_3.jpg,T20_d07_462_b_3.jpg,0.0431138478322441,0.0,0.03723752242270761,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+T20_190,d08,4,T20_d08_190_a_4.jpg,T20_d08_190_b_4.jpg,0.0970752778200639,0.1289040583504769,0.07286668503615305,0.12824371478823562,Categoria II,Categoria II,Rechazado,Categoria I,Categoria II,Rechazado,5,4,4
+T20_462,d09,4,T20_d09_462_a_4.jpg,T20_d09_462_b_4.jpg,0.013388330494876,0.0,0.009960513326752221,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,4,3
+T20_468,d09,5,T20_d09_468_a_5.jpg,T20_d09_468_b_5.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,4,4,4
+T20_141,d10,5,T20_d10_141_a_5.jpg,T20_d10_141_b_5.jpg,0.0174689206342809,0.0872671650587012,0.0,0.0,Categoria I,Categoria I,Categoria II,Categoria I,Categoria I,Categoria I,4,5,4
+T20_228,d10,5,T20_d10_228_a_5.jpg,T20_d10_228_b_5.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,4,4,4
+T20_240,d10,5,T20_d10_240_a_5.jpg,T20_d10_240_b_5.jpg,0.0927549695240442,0.3762195355243524,0.08410204874904009,0.38941785724579897,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,5,5,5
+T20_289,d10,5,T20_d10_289_a_5.jpg,T20_d10_289_b_5.jpg,0.0422022325783028,0.0,0.026897755989631348,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,5,5,5
+T20_161,d11,5,T20_d11_161_a_5.jpg,T20_d11_161_b_5.jpg,0.210915035710973,0.0329143405144364,0.051696585832429344,0.05317038692172644,Rechazado,Categoria I,Rechazado,Categoria I,Categoria I,Categoria II,5,5,5
+T20_190,d11,5,T20_d11_190_a_5.jpg,T20_d11_190_b_5.jpg,0.094005902438533,0.126630206142196,0.11167271032959909,0.07605079377766233,Categoria II,Categoria II,Rechazado,Categoria II,Categoria I,Rechazado,5,5,5
+Tam_078,d01,1,Tam_d01_078_a_1.jpg,Tam_d01_078_b_1.jpg,0.2756400487656202,0.4241304331693271,0.22250076663600124,0.0,Rechazado,Rechazado,Rechazado,Rechazado,Categoria I,Rechazado,1,1,1
+Tam_396,d01,1,Tam_d01_396_a_1.jpg,Tam_d01_396_b_1.jpg,0.0117104329311568,0.2852096212790275,0.0,0.32254828191622775,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,1,1,1
+Tam_164,d02,1,Tam_d02_164_a_1.jpg,Tam_d02_164_b_1.jpg,0.0,0.1319832621941627,0.0,0.0,Categoria I,Categoria II,Categoria II,Categoria I,Categoria I,Categoria I,1,1,1
+Tam_209,d02,1,Tam_d02_209_a_1.jpg,Tam_d02_209_b_1.jpg,0.0178254236933943,0.0,0.00889261744966443,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,1,1,1
+Tam_396,d02,1,Tam_d02_396_a_1.jpg,Tam_d02_396_b_1.jpg,0.0096617842876165,0.2550907226419437,0.0,0.11611941551897884,Categoria I,Rechazado,Rechazado,Categoria I,Categoria II,Categoria II,1,1,1
+Tam_281,d03,2,Tam_d03_281_a_2.jpg,Tam_d03_281_b_2.jpg,0.0893827676637148,0.0326176476221485,0.08774031604769239,0.0,Categoria I,Categoria I,Categoria II,Categoria I,Categoria I,Categoria I,1,1,1
+Tam_339,d03,2,Tam_d03_339_a_2.jpg,Tam_d03_339_b_2.jpg,0.1005965141206077,0.0,0.04190131652556596,0.28432711833117963,Categoria II,Categoria I,Categoria II,Categoria I,Rechazado,Rechazado,2,1,1
+Tam_362,d03,1,Tam_d03_362_a_1.jpg,Tam_d03_362_b_1.jpg,0.0419862403438995,0.0707851524268677,0.03621912986084374,0.06524711501649864,Categoria I,Categoria I,Categoria II,Categoria I,Categoria I,Categoria II,1,1,1
+Tam_140,d04,3,Tam_d04_140_a_3.jpg,Tam_d04_140_b_3.jpg,0.155876264949402,0.3860481915277849,0.27529481430129193,0.03736057972296555,Rechazado,Rechazado,Rechazado,Rechazado,Categoria I,Rechazado,2,2,2
+Tam_209,d04,2,Tam_d04_209_a_2.jpg,Tam_d04_209_b_2.jpg,0.0,0.0098812787291925,0.03670319493749035,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+Tam_231,d04,3,Tam_d04_231_a_3.jpg,Tam_d04_231_b_3.jpg,0.3197211247966535,0.0375367805450395,0.033241742940422925,0.05005334608734042,Rechazado,Categoria I,Rechazado,Categoria I,Categoria I,Categoria I,3,3,3
+Tam_238,d04,3,Tam_d04_238_a_3.jpg,Tam_d04_238_b_3.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+Tam_396,d04,2,Tam_d04_396_a_2.jpg,Tam_d04_396_b_2.jpg,0.0130714234130136,0.3124523390712855,0.09167855246582615,0.3304658913701548,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,1,1,1
+Tam_416,d04,2,Tam_d04_416_a_2.jpg,Tam_d04_416_b_2.jpg,0.0769991755976916,0.0332671916661499,0.0770452657807309,0.0,Categoria I,Categoria I,Categoria II,Categoria I,Categoria I,Categoria I,2,2,2
+Tam_281,d05,2,Tam_d05_281_a_2.jpg,Tam_d05_281_b_2.jpg,0.1037643410852713,0.0421626236753553,0.0962737925475851,0.023462477657780128,Categoria II,Categoria I,Rechazado,Categoria II,Categoria I,Categoria II,2,2,2
+Tam_344,d05,4,Tam_d05_344_a_4.jpg,Tam_d05_344_b_4.jpg,0.1546019444189672,0.065721649484536,0.14206246832818906,0.0,Rechazado,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,4,3,3
+Tam_396,d05,2,Tam_d05_396_a_2.jpg,Tam_d05_396_b_2.jpg,0.0130884608385973,0.3160096867036046,0.0,0.15989290563260541,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,2,2,2
+Tam_416,d05,2,Tam_d05_416_a_2.jpg,Tam_d05_416_b_2.jpg,0.0930922065920525,0.0,0.07163290552033401,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,2,2,2
+Tam_078,d06,4,Tam_d06_078_a_4.jpg,Tam_d06_078_b_4.jpg,0.3616814510172825,0.0,0.04471446685699616,0.22949807538397043,Rechazado,Categoria I,Rechazado,Categoria I,Rechazado,Rechazado,4,4,4
+Tam_140,d06,3,Tam_d06_140_a_3.jpg,Tam_d06_140_b_3.jpg,0.3857107801218034,0.2754609273694722,0.10433730801681462,0.04304956816181626,Rechazado,Rechazado,Rechazado,Categoria II,Categoria I,Rechazado,3,3,3
+Tam_238,d06,3,Tam_d06_238_a_3.jpg,Tam_d06_238_b_3.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+Tam_078,d07,4,Tam_d07_078_a_4.jpg,Tam_d07_078_b_4.jpg,0.360574746733684,0.0143751779106177,0.03394626279318113,0.0,Rechazado,Categoria I,Rechazado,Categoria I,Categoria I,Categoria I,4,4,4
+Tam_135,d07,4,Tam_d07_135_a_4.jpg,Tam_d07_135_b_4.jpg,0.8454223215270882,0.4406391902665603,0.3660868842697096,0.0,Rechazado,Rechazado,Rechazado,Rechazado,Categoria I,Rechazado,5,4,5
+Tam_140,d07,4,Tam_d07_140_a_4.jpg,Tam_d07_140_b_4.jpg,0.5402391223587745,0.5268623125431736,0.09401956019924675,0.093645584725537,Rechazado,Rechazado,Rechazado,Categoria II,Categoria I,Rechazado,3,4,4
+Tam_374,d07,3,Tam_d07_374_a_3.jpg,Tam_d07_374_b_3.jpg,0.0601530950515339,0.0105291362337249,0.07539315918251317,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+Tam_396,d07,3,Tam_d07_396_a_3.jpg,Tam_d07_396_b_3.jpg,0.0,0.3821930826810751,0.0,0.3216254257502337,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,3,3,3
+Tam_416,d07,4,Tam_d07_416_a_4.jpg,Tam_d07_416_b_4.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,3,3,3
+Tam_164,d08,4,Tam_d08_164_a_4.jpg,Tam_d08_164_b_4.jpg,0.0,0.2702676597480092,0.0,0.3039002433614025,Categoria I,Rechazado,Rechazado,Categoria I,Rechazado,Rechazado,4,4,4
+Tam_238,d08,4,Tam_d08_238_a_4.jpg,Tam_d08_238_b_4.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,4,4,4
+Tam_472,d08,4,Tam_d08_472_a_4.jpg,Tam_d08_472_b_4.jpg,0.0573118640536191,0.0448644169237143,0.06635290844596944,0.033354521814504476,Categoria I,Categoria I,Categoria II,Categoria I,Categoria I,Categoria II,4,4,4
+Tam_209,d09,4,Tam_d09_209_a_4.jpg,Tam_d09_209_b_4.jpg,0.0,0.0153875304160516,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,4,4,4
+Tam_281,d09,5,Tam_d09_281_a_5.jpg,Tam_d09_281_b_5.jpg,0.1132840724077802,0.0459788075589628,0.11138632946528393,0.016106976108148235,Categoria II,Categoria I,Rechazado,Categoria II,Categoria I,Categoria II,4,4,4
+Tam_344,d10,5,Tam_d10_344_a_5.jpg,Tam_d10_344_b_5.jpg,0.1309943672626532,0.1266682792928283,0.12292677941852741,0.20287230324405045,Categoria II,Categoria II,Rechazado,Categoria II,Rechazado,Rechazado,5,5,5
+Tam_472,d10,5,Tam_d10_472_a_5.jpg,Tam_d10_472_b_5.jpg,0.046928740977571,0.0529317929134238,0.03815214893128017,0.03023425172957883,Categoria I,Categoria I,Categoria II,Categoria I,Categoria I,Categoria I,5,4,5
+Tam_126,d11,5,Tam_d11_126_a_5.jpg,Tam_d11_126_b_5.jpg,0.0,0.0,0.0,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,4,4,4
+Tam_339,d11,5,Tam_d11_339_a_5.jpg,Tam_d11_339_b_5.jpg,0.0589688304619957,0.0,0.04326321061858252,0.0,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,Categoria I,5,5,5
+Tam_362,d11,5,Tam_d11_362_a_5.jpg,Tam_d11_362_b_5.jpg,0.0661899427303089,0.0864668349974331,0.0319064918654241,0.07107894406559846,Categoria I,Categoria I,Rechazado,Categoria I,Categoria I,Categoria II,5,4,4

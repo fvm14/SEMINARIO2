@@ -23,6 +23,10 @@ data class Inspeccion(
     val avisos: String = "",
     /** id del modelo de Configuracion.MODELOS con que se hizo el analisis. */
     val modelo: String = "multitarea",
+    /** Fotos del fruto: 1 (una cara) o 2 (lado A y lado B; ratio = ratioA + ratioB). */
+    val caras: Int = 1,
+    val ratioA: Double? = null,
+    val ratioB: Double? = null,
 ) {
     val msTotal: Double get() = msPreproceso + msInferencia + msPostproceso
 }
@@ -46,7 +50,7 @@ class Resumen(inspecciones: List<Inspeccion>) {
 /** Filtro del historial: por categoria OCDE o por nivel de madurez. */
 data class Filtro(val categoria: Int? = null, val madurez: Int? = null)
 
-class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", null, 3) {
+class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", null, 4) {
 
     override fun onCreate(db: SQLiteDatabase) {
         crearLotes(db)
@@ -82,7 +86,10 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
                 ms_inferencia REAL NOT NULL,
                 ms_postproceso REAL NOT NULL,
                 avisos TEXT NOT NULL DEFAULT '',
-                modelo TEXT NOT NULL DEFAULT 'multitarea'
+                modelo TEXT NOT NULL DEFAULT 'multitarea',
+                caras INTEGER NOT NULL DEFAULT 1,
+                ratio_a REAL,
+                ratio_b REAL
             )
             """.trimIndent()
         )
@@ -95,6 +102,7 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
     /**
      * v1 -> v2: el lote era un texto dentro de cada inspeccion; pasa a su propia tabla.
      * v2 -> v3: se registra el modelo de cada analisis (los anteriores son del multitarea).
+     * v3 -> v4: evaluacion con dos caras (los anteriores son de una cara).
      */
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
@@ -121,6 +129,12 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
         if (oldVersion == 2) {
             db.execSQL("ALTER TABLE inspecciones ADD COLUMN modelo TEXT NOT NULL DEFAULT 'multitarea'")
         }
+        // Desde v1 la tabla nueva ya trae las columnas de dos caras
+        if (oldVersion in 2..3) {
+            db.execSQL("ALTER TABLE inspecciones ADD COLUMN caras INTEGER NOT NULL DEFAULT 1")
+            db.execSQL("ALTER TABLE inspecciones ADD COLUMN ratio_a REAL")
+            db.execSQL("ALTER TABLE inspecciones ADD COLUMN ratio_b REAL")
+        }
     }
 
     override fun onConfigure(db: SQLiteDatabase) {
@@ -143,6 +157,9 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
         put("ms_postproceso", i.msPostproceso)
         put("avisos", i.avisos)
         put("modelo", i.modelo)
+        put("caras", i.caras)
+        put("ratio_a", i.ratioA)
+        put("ratio_b", i.ratioB)
     })
 
     fun obtener(id: Long): Inspeccion? =
@@ -190,6 +207,9 @@ class BaseDatos(context: Context) : SQLiteOpenHelper(context, "paltascan.db", nu
         msPostproceso = c.getDouble(c.getColumnIndexOrThrow("ms_postproceso")),
         avisos = c.getString(c.getColumnIndexOrThrow("avisos")),
         modelo = c.getString(c.getColumnIndexOrThrow("modelo")),
+        caras = c.getInt(c.getColumnIndexOrThrow("caras")),
+        ratioA = c.getColumnIndexOrThrow("ratio_a").let { if (c.isNull(it)) null else c.getDouble(it) },
+        ratioB = c.getColumnIndexOrThrow("ratio_b").let { if (c.isNull(it)) null else c.getDouble(it) },
     )
 
     // ---------------------------------------------------------------- lotes

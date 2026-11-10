@@ -45,3 +45,9 @@ app_movil/**/*.apk
 modelos_movil/
 data/prueba_test/
 
+# evaluacion con dos caras: solo se versionan pares.csv y las etiquetas finales
+data/dos_caras/por_anotar/
+data/dos_caras/por_anotar.zip
+data/dos_caras/_*.jpg
+data/dos_caras/roboflow/
+data/dos_caras/*.html

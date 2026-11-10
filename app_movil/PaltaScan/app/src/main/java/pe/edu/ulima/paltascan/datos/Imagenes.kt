@@ -91,6 +91,22 @@ object Imagenes {
         return BooleanArray(mascara.size) { mascara[it] && exterior[it] }
     }
 
+    /** Lado A y lado B uno junto al otro, con la misma altura y una franja blanca entre ambos. */
+    fun unir(a: Bitmap, b: Bitmap): Bitmap {
+        val alto = minOf(a.height, b.height)
+        fun escalar(x: Bitmap) = if (x.height == alto) x else Bitmap.createScaledBitmap(x, x.width * alto / x.height, alto, true)
+        val ea = escalar(a)
+        val eb = escalar(b)
+        val separacion = 12
+        val salida = Bitmap.createBitmap(ea.width + separacion + eb.width, alto, Bitmap.Config.ARGB_8888)
+        Canvas(salida).apply {
+            drawColor(Color.WHITE)
+            drawBitmap(ea, 0f, 0f, null)
+            drawBitmap(eb, (ea.width + separacion).toFloat(), 0f, null)
+        }
+        return salida
+    }
+
     fun guardar(context: Context, bmp: Bitmap, nombre: String): String {
         val dir = File(context.filesDir, "inspecciones").apply { mkdirs() }
         val archivo = File(dir, nombre)
