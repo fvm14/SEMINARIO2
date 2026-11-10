@@ -11,18 +11,17 @@ con el modelo multitarea final.
 2) Pseudo-etiquetas SOLO para fotos de frutos de TRAIN que no tienen anotacion
    humana valida (las 18 de train con anotacion rota tambien se re-etiquetan).
    Formato YOLO-seg igual al de labels_seg (clase 0 palta, clase 1 defecto).
-3) Clasificacion de cada foto para la revision manual:
-     auto     -> prediccion confiable (una sola palta muy segura, defectos
-                 seguros y area plausible)
-     revisar  -> algo dudoso (motivo en la columna "motivo")
-   Se generan imagenes de revision (anotacion superpuesta) para todas las
-   "revisar" y para una muestra al azar de las "auto" (para medir su error).
+3) Clasificacion de cada foto segun la regla de aceptacion calibrada en
+   validacion (calibrar_regla_pseudo.py):
+     aceptada   -> prediccion confiable (una sola palta muy segura, defectos
+                   seguros y area plausible); entra al dataset ampliado
+     descartada -> no cumple la regla (motivo en la columna "motivo")
 
 La madurez NO se pseudo-etiqueta: viene en el nombre del archivo.
 
 Uso (desde la raiz del proyecto):
     python scripts/generar_pseudoetiquetas.py --weights resultados/yolo_multitarea/yolov8s_mt_peso2/weights/best.pt
-Salida en data/pseudo/: labels/*.txt, pseudoetiquetas.csv, revision/*.jpg
+Salida en data/pseudo/: labels/*.txt y pseudoetiquetas.csv
 """
 
 import argparse
@@ -87,18 +86,16 @@ def main():
     ap.add_argument("--imgsz", type=int, default=800)
     ap.add_argument("--conf-palta", type=float, default=0.35)
     ap.add_argument("--conf-defecto", type=float, default=0.15)
-    ap.add_argument("--auto-palta", type=float, default=0.85, help="confianza minima de la palta para 'auto'")
+    ap.add_argument("--auto-palta", type=float, default=0.85, help="confianza minima de la palta para aceptar la foto")
     ap.add_argument("--auto-defecto", type=float, default=0.50, help="un defecto con confianza menor a esto es 'dudoso'")
     ap.add_argument("--max-dudosa", type=float, default=0.50,
                     help="se acepta la foto si el area de defectos dudosos es <= esta fraccion del area de defecto "
                          "(regla elegida en validacion con calibrar_regla_pseudo.py)")
-    ap.add_argument("--muestra-auto", type=float, default=0.04, help="fraccion de 'auto' que se revisa como control")
     ap.add_argument("--limite", type=int, default=0, help="solo para pruebas")
     ap.add_argument("--device", default="")
     args = ap.parse_args()
 
     os.makedirs(os.path.join(args.out, "labels"), exist_ok=True)
-    os.makedirs(os.path.join(args.out, "revision"), exist_ok=True)
 
     d = construir_manifest_completo(os.path.join("data", "splits", "manifest_completo.csv"))
     print("Manifest completo:", d.split.value_counts().to_dict(),
@@ -167,28 +164,14 @@ def main():
             motivos.append(f"area de defecto dudosa ({frac_dudosa*100:.0f}%)")
         if ratio > 1:
             motivos.append("defecto mayor que la palta")
-        estado = "revisar" if motivos else "auto"
+        estado = "descartada" if motivos else "aceptada"
 
         stem = fila.archivo[:-4]
         with open(os.path.join(args.out, "labels", stem + ".txt"), "w") as f:
             f.write("\n".join(lineas) + ("\n" if lineas else ""))
 
-        revisar_img = estado == "revisar" or rng.random() < args.muestra_auto
-        if revisar_img:
-            o = r.orig_img.astype(np.float32).copy()
-            o[m_palta] = o[m_palta] * 0.8 + np.array([0, 200, 0]) * 0.2
-            o[m_def] = o[m_def] * 0.55 + np.array([0, 0, 255]) * 0.45
-            o = o.astype(np.uint8)
-            for c, color in ((m_palta, (0, 170, 0)), (m_def, (0, 0, 255))):
-                cnts, _ = cv2.findContours(c.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-                cv2.drawContours(o, cnts, -1, color, 2)
-            sep = np.full((alto, 8, 3), 255, np.uint8)
-            lienzo = np.concatenate([r.orig_img, sep, o], axis=1)  # original | pseudo-etiqueta
-            lienzo = cv2.resize(lienzo, (lienzo.shape[1] * 3 // 4, lienzo.shape[0] * 3 // 4), interpolation=cv2.INTER_AREA)
-            cv2.imwrite(os.path.join(args.out, "revision", stem + ".jpg"), lienzo, [cv2.IMWRITE_JPEG_QUALITY, 85])
-
         filas.append({"archivo": fila.archivo, "fruto": fila.fruto, "madurez": fila.madurez,
-                      "estado": estado, "motivo": "; ".join(motivos), "en_revision": revisar_img,
+                      "estado": estado, "motivo": "; ".join(motivos),
                       "conf_palta": round(conf_palta, 3), "n_defectos": len(confs_def),
                       "conf_defecto_min": round(min(confs_def), 3) if confs_def else "",
                       "ratio_defecto": round(float(ratio), 4), "frac_dudosa": round(float(frac_dudosa), 3)})
@@ -199,9 +182,7 @@ def main():
     res.to_csv(os.path.join(args.out, "pseudoetiquetas.csv"), index=False)
     print("\n==== RESUMEN ====")
     print(res.estado.value_counts().to_string())
-    print(f"Imagenes para revisar: {int(res.en_revision.sum())} "
-          f"({int((res.estado == 'revisar').sum())} dudosas + {int(((res.estado == 'auto') & res.en_revision).sum())} muestra de auto)")
-    motivos = res[res.estado == "revisar"].motivo.str.split("; ").explode().str.replace(r"\s*\(.*\)", "", regex=True)
+    motivos = res[res.estado == "descartada"].motivo.str.split("; ").explode().str.replace(r"\s*\(.*\)", "", regex=True)
     print("Motivos:\n" + motivos.str.replace(r"^\d+ ", "", regex=True).value_counts().to_string())
 
 

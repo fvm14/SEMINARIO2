@@ -2,7 +2,7 @@
 calibrar_regla_pseudo.py
 Elige la regla de aceptacion automatica de pseudo-etiquetas usando el split de
 VALIDACION (tiene anotacion humana, asi que se puede medir la calidad de lo
-que se aceptaria), en vez de revisar miles de fotos a mano.
+que se aceptaria).
 
 Regla evaluada (por foto):
   - defectos incluidos: instancias con confianza >= conf_def

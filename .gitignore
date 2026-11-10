@@ -13,9 +13,8 @@ data/splits/val/
 data/splits/test/
 data/yolo/
 data/yolo_ampliado/
-data/pseudo/revision/
-data/pseudo/labels/
-data/pseudo/revision.html
+data/pseudo/*
+!data/pseudo/pseudoetiquetas.csv
 *.zip
 
 # Pesos y modelos (se publican en GitHub Releases, no en el repo)

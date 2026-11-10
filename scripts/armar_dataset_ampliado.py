@@ -7,10 +7,7 @@ Junta las anotaciones humanas (data/yolo) con las pseudo-etiquetas aceptadas
   val   = igual que data/yolo (solo anotacion humana)
   test  = igual que data/yolo (solo anotacion humana)
 
-Aceptadas = estado "auto" segun la regla calibrada en validacion. Si existe
-data/pseudo/revision_decisiones.csv (exportado desde revision.html), se aplica
-encima: "aprobada" agrega la foto aunque fuera dudosa, "rechazada" y "corregir"
-la sacan de esta ronda.
+Aceptadas = estado "aceptada" segun la regla calibrada en validacion.
 
 Uso (despues de generar_pseudoetiquetas.py):
     python scripts/armar_dataset_ampliado.py
@@ -47,21 +44,8 @@ def main():
     os.makedirs(lbl_dir, exist_ok=True)
 
     p = pd.read_csv(os.path.join(args.pseudo, "pseudoetiquetas.csv"))
-    aceptadas = set(p[p.estado == "auto"].archivo)
-    ruta_dec = os.path.join(args.pseudo, "revision_decisiones.csv")
-    n_ap = n_fuera = 0
-    if os.path.exists(ruta_dec):
-        dec = pd.read_csv(ruta_dec)
-        for a, dcs in zip(dec.archivo, dec.decision):
-            if dcs == "aprobada":
-                n_ap += a not in aceptadas
-                aceptadas.add(a)
-            elif a in aceptadas:
-                aceptadas.discard(a)
-                n_fuera += 1
-        print(f"Revision manual aplicada: +{n_ap} aprobadas a mano, -{n_fuera} automaticas rechazadas/para corregir")
-    else:
-        print("Sin revision_decisiones.csv: solo se usan las aceptadas automaticamente")
+    aceptadas = set(p[p.estado == "aceptada"].archivo)
+    print(f"Pseudo-etiquetas aceptadas: {len(aceptadas)}")
 
     listas = {}
     for split in ("train", "val", "test"):

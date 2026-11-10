@@ -87,13 +87,13 @@ Existe además una alternativa con ResNet34 archivada en `scripts/alternativa_re
 
 ## 6. Etapa 1: ampliación del dataset con pseudo-etiquetado
 
-**Objetivo.** Usar las 14,710 fotos y no solo las 1,243 anotadas. Revisar a mano miles de imágenes no era viable, así que se reemplazó la revisión manual por una regla de aceptación automática calibrada en validación.
+**Objetivo.** Usar las 14,710 fotos y no solo las 1,243 anotadas. Las pseudo-etiquetas se filtran con una regla de aceptación automática calibrada en validación.
 
 **Procedimiento.**
 
 1. Con `yolov8s_mt_limpio` se pseudo-etiquetaron las 9,892 fotos de train sin anotación (confianza palta 0.35, defecto 0.15).
 2. Regla de aceptación (`scripts/calibrar_regla_pseudo.py`): se acepta una imagen si la fracción de área de defecto con confianza dudosa es ≤ 50%, no hay defectos rectangulares y la palta se detecta con confianza. En validación, las pseudoetiquetas aceptadas tuvieron precisión 0.85 y recall 0.49: son correctas pero incompletas.
-3. Resultado: 4,623 aceptadas (47%) y 5,269 marcadas para revisar. Se guardó una muestra de control del 4% para estimar el error.
+3. Resultado: 4,623 aceptadas (47%) y 5,269 descartadas.
 4. Dataset ampliado: train 852 + 4,623 = 5,475 imágenes; val y test intactos.
 5. Reentrenamiento (Ronda 1): mismo modelo e hiperparámetros, 77 épocas, unas 2.4 h, mejor época la 57.
 6. Recalibración del umbral de defecto: las pseudoetiquetas incompletas bajan la confianza del modelo en defectos, y el umbral óptimo pasó de 0.15 a 0.05. Este paso es obligatorio después de cada ronda.
@@ -332,7 +332,7 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
 | `overlap_mask=False` y `fruto_completo` | La máscara de palta tenía huecos donde había defectos, y el filtro ROI borraba defectos grandes (el acierto OCDE subió de 65% a 75%) |
 | Peso de madurez 2 | Equilibra ambas tareas; elegido en validación |
 | Umbral por clase calibrado en validación | Los defectos tienen confianzas más bajas que la palta; nunca se ajusta en test |
-| Regla automática de aceptación de pseudoetiquetas | Revisar miles de imágenes a mano no era viable; la regla se calibró en validación |
+| Regla automática de aceptación de pseudoetiquetas | Selecciona solo las pseudoetiquetas confiables; se calibró en validación, que tiene anotación humana |
 | Bootstrap por fruto | Las imágenes de un mismo fruto no son independientes |
 | YOLOv8s-seg multitarea frente a U-Net y a dos redes | No es significativamente inferior al mejor en acierto OCDE ni en madurez, y es el de menor tamaño y latencia (sección 8) |
 | Dynamic range como modelo móvil | Mejor equilibrio entre tamaño, precisión y latencia |
@@ -362,10 +362,7 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
 
 **Cierre de la Etapa 1**
 - Respuesta de Dylann sobre cómo se trataron las lenticelas en Seminario I.
-- Guía de anotación.
-- Corrección dirigida de unas 200 imágenes.
 - Posible Ronda 2.
-- Revisión opcional de la muestra de control para reportar la tasa de error de las pseudoetiquetas.
 
 **Etapa 4: app** (ver sección 12)
 - ~~Portar el post-proceso de `inferencia_movil.py` a Kotlin.~~ Hecho: `app_movil/PaltaScan/`, con 13 pruebas unitarias.
