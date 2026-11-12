@@ -495,6 +495,8 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 
 **App v0.7.0 (2026-11-12): integración con el diseño v0.6.0 de `main`** (rama `dos-caras-diseno`). La fila "Fotos por palta" pasa a la tarjeta del lote; sobre los botones de captura, una guía "Paso 1 de 2: lado A" / "Paso 2 de 2: gira la palta y toma el lado B"; el resultado muestra el % total y, debajo, "Suma de las dos caras: lado A … + lado B …"; "Cómo funciona" explica por qué se piden dos fotos. Disponible en las variantes `completa` y `ligera`. Compila, pasan las 26 pruebas unitarias (23 + 3 de `DosCarasTest`) y se instaló en el Xiaomi 11 Lite 5G NE (migración de la base de datos v3 a v4 sin errores al abrir).
 
+**App v0.7.1 (2026-11-12).** Probada en el Xiaomi 11 Lite 5G NE con una instalación limpia de la ligera: "Tomar foto" pide el permiso de cámara y el flujo de dos fotos (por galería) funciona de principio a fin (ejemplo: lado A 29.0 % + lado B 9.1 % = 38.1 %, Rechazado). Corrección: con dos fotos, el aviso "madurez dudosa" se calculaba en cada foto y no en la madurez combinada que se muestra (en la prueba, cada foto superaba 0.6 y el promedio quedó en 0.5 sin aviso). Ahora `DosCaras.avisosCombinados` usa la confianza combinada; prueba nueva en `DosCarasTest` (27 en total).
+
 ## 14. Historial de actualizaciones
 
 - 2026-09-26: primera version de este archivo. Inventario del estado real:
@@ -547,3 +549,4 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-11-12: app v0.6.0: nuevo diseño (pantalla de inicio con logo, tarjetas, botones con ícono, categoría en etiqueta de color con su explicación, pantalla "Cómo funciona" con la norma OCDE, la madurez y consejos para la foto). La versión ligera oculta las opciones técnicas y usa la CPU (la GPU tarda ~14 s en prepararse al abrir). La lógica de análisis no cambió (sección 12).
 - 2026-11-12: app v0.6.1: "Tomar foto" ya no cierra la app en una instalación nueva; se pide el permiso de cámara antes de abrirla (sección 12).
 - 2026-11-12: app v0.7.0 en la rama `dos-caras-diseno`: dos caras (rama `dos-caras`) integradas con el diseño v0.6.0 de `main` (guía de pasos lado A / lado B, % por lado en el resultado, explicación en "Cómo funciona"); 26 pruebas unitarias (sección 15).
+- 2026-11-12: app v0.7.1 (rama `dos-caras-diseno`): flujo de dos fotos probado en el celular; el aviso de madurez dudosa usa la confianza combinada de las dos fotos (sección 15).

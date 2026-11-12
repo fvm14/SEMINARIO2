@@ -280,7 +280,7 @@ class MainActivity : AppCompatActivity() {
                             msPreproceso = a.ms[0] + r.tiempos.preprocesoMs,
                             msInferencia = a.ms[1] + r.tiempos.inferenciaMs,
                             msPostproceso = a.ms[2] + r.tiempos.postprocesoMs,
-                            avisos = (a.avisos + r.avisos.map { it.name }).distinct().joinToString(","),
+                            avisos = DosCaras.avisosCombinados(a.avisos, r.avisos.map { it.name }, c.probMadurez).joinToString(","),
                             modelo = analizador.modelo.id,
                             caras = 2, ratioA = c.ratioA, ratioB = c.ratioB,
                         )

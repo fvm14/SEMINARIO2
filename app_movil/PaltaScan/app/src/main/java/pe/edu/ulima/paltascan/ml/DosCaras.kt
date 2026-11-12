@@ -19,6 +19,17 @@ object DosCaras {
         val probMadurez: Float get() = probabilidades.max()
     }
 
+    /**
+     * Avisos del fruto completo: los de foto oscura o borrosa de cualquiera de
+     * los dos lados, y "madurez dudosa" segun la confianza de la madurez
+     * combinada (la que se muestra), no la de cada foto por separado.
+     */
+    fun avisosCombinados(avisosA: List<String>, avisosB: List<String>, probMadurez: Float): List<String> {
+        val baja = ValidacionCaptura.Problema.BAJA_CONFIANZA.name
+        val deFoto = (avisosA + avisosB).filter { it != baja }.distinct()
+        return if (probMadurez < ValidacionCaptura.CONFIANZA_MINIMA) deFoto + baja else deFoto
+    }
+
     fun combinar(ratioA: Double, probsA: FloatArray, ratioB: Double, probsB: FloatArray): Combinado {
         require(probsA.size == probsB.size) { "Las dos fotos deben tener las mismas clases de madurez" }
         return Combinado(ratioA, ratioB, FloatArray(probsA.size) { (probsA[it] + probsB[it]) / 2f })

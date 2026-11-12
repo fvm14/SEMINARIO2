@@ -35,4 +35,14 @@ class DosCarasTest {
         assertEquals(0.5f, c.probMadurez, 1e-6f)
         assertEquals(1, DosCaras.combinar(0.0, p1, 0.0, p1).madurez)
     }
+
+    @Test
+    fun elAvisoDeMadurezDudosaUsaLaConfianzaCombinada() {
+        val baja = ValidacionCaptura.Problema.BAJA_CONFIANZA.name
+        // cada foto con buena confianza (0.7 y 0.8), pero el promedio queda en 0.5
+        val c = DosCaras.combinar(0.0, p1, 0.0, p2)
+        assertEquals(listOf(baja), DosCaras.avisosCombinados(emptyList(), emptyList(), c.probMadurez))
+        // una foto dudosa por separado, pero la combinada es segura: sin aviso de madurez
+        assertEquals(listOf("OSCURA"), DosCaras.avisosCombinados(listOf("OSCURA", baja), listOf("OSCURA"), 0.8f))
+    }
 }
