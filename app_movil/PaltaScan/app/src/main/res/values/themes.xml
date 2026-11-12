@@ -1,11 +1,13 @@
 <resources>
-    <!-- Paleta simple: verde, negro y blanco, esquinas rectas. -->
+    <!-- Paleta: verde de la app, fondo gris verdoso claro y tarjetas blancas. -->
     <color name="primario">#1B5E20</color>
     <color name="primario_oscuro">#103D14</color>
+    <color name="primario_claro">#E8F5E9</color>
     <color name="fondo">#FFFFFF</color>
-    <color name="texto">#000000</color>
-    <color name="texto_suave">#555555</color>
-    <color name="linea">#BDBDBD</color>
+    <color name="fondo_pantalla">#F3F6F3</color>
+    <color name="texto">#1C1C1C</color>
+    <color name="texto_suave">#5F6360</color>
+    <color name="linea">#D7DCD7</color>
     <color name="cat_i">#2E7D32</color>
     <color name="cat_ii">#B26A00</color>
     <color name="rechazo">#C62828</color>
@@ -17,15 +19,23 @@
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorSecondary">@color/primario</item>
         <item name="colorOnSecondary">#FFFFFF</item>
-        <item name="android:colorBackground">@color/fondo</item>
+        <item name="android:colorBackground">@color/fondo_pantalla</item>
         <item name="colorSurface">@color/fondo</item>
         <item name="colorOnSurface">@color/texto</item>
-        <item name="shapeAppearanceSmallComponent">@style/Recto</item>
-        <item name="shapeAppearanceMediumComponent">@style/Recto</item>
-        <item name="shapeAppearanceLargeComponent">@style/Recto</item>
+        <item name="shapeAppearanceSmallComponent">@style/Redondeado.Chico</item>
+        <item name="shapeAppearanceMediumComponent">@style/Redondeado</item>
+        <item name="shapeAppearanceLargeComponent">@style/Redondeado</item>
         <item name="android:statusBarColor">@color/primario_oscuro</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">#000000</item>
+    </style>
+
+    <!-- Pantalla de inicio: fondo verde claro -->
+    <style name="Theme.PaltaScan.Inicio">
+        <item name="android:windowBackground">@color/primario_claro</item>
+        <item name="android:statusBarColor">@color/primario_claro</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/primario_claro</item>
     </style>
 
     <!-- Camara en vivo: barras del sistema en negro -->
@@ -34,15 +44,20 @@
         <item name="android:windowBackground">#000000</item>
     </style>
 
-    <style name="Recto">
-        <item name="cornerSize">0dp</item>
+    <style name="Redondeado">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="Redondeado.Chico">
+        <item name="cornerSize">10dp</item>
     </style>
 
     <!-- Barra superior verde con titulo en blanco -->
     <style name="Barra">
         <item name="android:background">@color/primario</item>
         <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingEnd">8dp</item>
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
     </style>
@@ -63,21 +78,69 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="Boton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="cornerRadius">0dp</item>
-        <item name="android:insetTop">2dp</item>
-        <item name="android:insetBottom">2dp</item>
+    <!-- Texto explicativo bajo un resultado -->
+    <style name="Explicacion">
+        <item name="android:textColor">@color/texto_suave</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
-    <style name="BotonBorde" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="cornerRadius">0dp</item>
-        <item name="backgroundTint">#212121</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:insetTop">2dp</item>
-        <item name="android:insetBottom">2dp</item>
+    <!-- Titulo de una seccion dentro de una tarjeta -->
+    <style name="TituloSeccion">
+        <item name="android:textColor">@color/primario</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Tarjeta" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/fondo</item>
+        <item name="cardCornerRadius">14dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/linea</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <style name="Boton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">8dp</item>
+    </style>
+
+    <!-- Boton secundario: borde verde, fondo blanco -->
+    <style name="BotonBorde" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:textColor">@color/primario</item>
+        <item name="iconTint">@color/primario</item>
+        <item name="strokeColor">@color/primario</item>
+        <item name="backgroundTint">@color/fondo</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">8dp</item>
     </style>
 
     <style name="BotonTexto" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/primario</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- Etiqueta de color con la categoria (el color se asigna en el codigo) -->
+    <style name="EtiquetaCategoria">
+        <item name="android:background">@drawable/fondo_etiqueta</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

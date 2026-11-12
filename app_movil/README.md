@@ -26,15 +26,25 @@ PaltaScan/app/src/androidTest/   ConcordanciaTest: analiza las fotos de prueba e
 
 ## Modelos
 
-La app trae el modelo propuesto y, para la comparacion de modelos, puede
-incluir los otros dos. Cada uno va en `PaltaScan/app/src/main/assets/` con
-este nombre (estan en `.gitignore`: no se suben al repo):
+La app se compila en dos variantes (`productFlavors` en `app/build.gradle.kts`):
 
-| Modelo | Archivo(s) en assets | Umbral de defecto |
-|---|---|---|
-| YOLOv8s-seg multitarea (propuesto) | `palta_multitarea.tflite` | 0.05 |
-| U-Net ResNet34 multitarea | `unet_resnet34.tflite` | 0.03 |
-| YOLOv8s-seg + ResNet-34 (dos redes) | `yolov8s_seg.tflite` y `resnet34_madurez.tflite` | 0.10 |
+| Variante | Modelos | ABI | APK debug |
+|---|---|---|---|
+| `completa` | los cuatro archivos de la tabla de abajo | todas | ~108 MB |
+| `ligera` | solo el multitarea | `arm64-v8a` | ~26 MB |
+
+La `ligera` además oculta las opciones técnicas (`BuildConfig.OPCIONES_TECNICAS = false`): fila Procesador, modelo usado y FPS; siempre usa la CPU (el delegado GPU tarda ~14 s en prepararse en cada arranque).
+
+La `ligera` es para instalar la app en celulares de otras personas: no tiene
+el selector de modelo y pesa la cuarta parte.
+
+Los modelos estan en `.gitignore` (no se suben al repo) y van con este nombre:
+
+| Modelo | Archivo(s) | Carpeta | Umbral de defecto |
+|---|---|---|---|
+| YOLOv8s-seg multitarea (propuesto) | `palta_multitarea.tflite` | `app/src/main/assets/` (ambas variantes) | 0.05 |
+| U-Net ResNet34 multitarea | `unet_resnet34.tflite` | `app/src/completa/assets/` | 0.03 |
+| YOLOv8s-seg + ResNet-34 (dos redes) | `yolov8s_seg.tflite` y `resnet34_madurez.tflite` | `app/src/completa/assets/` | 0.10 |
 
 Si hay mas de un modelo, la pantalla principal muestra la fila "Modelo" para
 elegir con cual analizar; cada analisis guarda el modelo usado.
@@ -57,21 +67,22 @@ python scripts/eval_alternativos_movil.py --tipo dos_redes --conf-defecto 0.10 \
     --clasificador modelos_movil/resnet34_madurez_448_dynamic_range_quant.tflite --salida resultados/etapa3_movil/dos_redes_dynamic_range
 ```
 
-Luego copiar los `*_dynamic_range_quant.tflite` a assets con los nombres de la tabla.
+Luego copiar los `*_dynamic_range_quant.tflite` a `app/src/completa/assets/` con los nombres de la tabla.
 
 ## Compilar y probar
 
 ```bash
 cd app_movil/PaltaScan
-./gradlew testDebugUnitTest   # 23 pruebas de la logica
-./gradlew installDebug        # instala en el celular conectado (MIUI pide aceptar)
+./gradlew testCompletaDebugUnitTest   # 23 pruebas de la logica
+./gradlew installCompletaDebug        # instala la variante completa (MIUI pide aceptar)
+./gradlew assembleLigeraDebug         # APK ligero: app/build/outputs/apk/ligera/debug/
 ```
 
 ## Verificar contra Python en el celular
 
 1. Copiar las 108 fotos de prueba a la app:
    `adb push data/prueba_test/. /sdcard/Android/data/pe.edu.ulima.paltascan/files/prueba/`
-2. `./gradlew installDebug installDebugAndroidTest` y luego
+2. `./gradlew installCompletaDebug installCompletaDebugAndroidTest` y luego
    `adb shell am instrument -w [-e modelo unet] [-e procesador gpu] pe.edu.ulima.paltascan.test/androidx.test.runner.AndroidJUnitRunner`
    (sin `-e modelo`, todos los instalados; con GPU, los archivos llevan `_gpu`).
 3. Sacar los resultados: `adb exec-out run-as pe.edu.ulima.paltascan cat files/resultados_app_unet.json`

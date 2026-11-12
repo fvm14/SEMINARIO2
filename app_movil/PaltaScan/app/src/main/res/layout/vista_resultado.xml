@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Resultado de un analisis; se usa en la pantalla principal y en el detalle del historial. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -10,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:drawablePadding="6dp"
         android:textColor="@color/aviso"
         android:textSize="14sp"
         android:visibility="gone" />
@@ -18,7 +20,7 @@
         android:id="@+id/imagen"
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:background="#EEEEEE"
+        android:background="@color/fondo_pantalla"
         android:contentDescription="@null"
         android:scaleType="fitCenter" />
 
@@ -30,63 +32,119 @@
         android:text="@string/mostrar_marcas"
         android:textColor="@color/texto_suave" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="8dp"
+        android:background="@color/linea" />
+
+    <!-- Categoria -->
     <TextView
         style="@style/Etiqueta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/categoria" />
 
     <TextView
         android:id="@+id/textoCategoria"
+        style="@style/EtiquetaCategoria"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="6dp" />
 
     <TextView
-        style="@style/Etiqueta"
-        android:layout_width="wrap_content"
+        android:id="@+id/textoCategoriaExplicacion"
+        style="@style/Explicacion"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/area_defecto" />
+        android:layout_marginTop="6dp" />
 
-    <TextView
-        android:id="@+id/textoRatio"
-        style="@style/Valor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        style="@style/Etiqueta"
-        android:layout_width="wrap_content"
+    <!-- Area con defecto y madurez, lado a lado -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/madurez" />
+        android:layout_marginTop="14dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/area_defecto" />
+
+            <TextView
+                android:id="@+id/textoRatio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/texto"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/madurez" />
+
+            <TextView
+                android:id="@+id/textoNivelMadurez"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/texto"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textoMadurez"
         style="@style/Valor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
 
     <TextView
-        style="@style/Etiqueta"
-        android:layout_width="wrap_content"
+        android:id="@+id/textoMadurezExplicacion"
+        style="@style/Explicacion"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/tiempo" />
+        android:layout_marginTop="2dp" />
 
     <TextView
         android:id="@+id/textoTiempo"
-        style="@style/Valor"
+        style="@style/Etiqueta"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textoModelo"
         style="@style/Etiqueta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp" />
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/botonComoSeClasifica"
+        style="@style/BotonTexto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/como_se_clasifica"
+        app:icon="@drawable/ic_info"
+        app:iconTint="@color/primario" />
 </LinearLayout>

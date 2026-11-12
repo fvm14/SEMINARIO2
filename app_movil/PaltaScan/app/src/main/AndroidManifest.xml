@@ -13,14 +13,17 @@
         android:theme="@style/Theme.PaltaScan">
 
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true">
+            android:name=".ui.InicioActivity"
+            android:exported="true"
+            android:theme="@style/Theme.PaltaScan.Inicio">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.HistorialActivity" />
+        <activity android:name=".ui.InfoActivity" />
         <activity
             android:name=".ui.CamaraVivoActivity"
             android:screenOrientation="portrait"

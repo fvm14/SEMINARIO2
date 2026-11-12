@@ -26,8 +26,9 @@
     <string name="area_defecto">Área con defecto</string>
     <string name="madurez">Madurez</string>
     <string name="tiempo">Tiempo</string>
-    <string name="madurez_valor">%1$d de 5 · %2$s (confianza %3$d %%)</string>
-    <string name="tiempo_valor">%1$.1f s</string>
+    <string name="nivel_madurez">%1$d de 5</string>
+    <string name="madurez_valor">%1$s · confianza %2$d %%</string>
+    <string name="tiempo_valor">Analizado en %1$.1f s</string>
     <string name="error_analisis">No se pudo analizar la imagen: %1$s</string>
     <string name="no_analizable">No se pudo analizar la foto</string>
     <string name="motivo_sin_palta">No se encontró una palta. Centra una sola palta en la foto.</string>
@@ -76,4 +77,36 @@
     <string name="eliminar_titulo">¿Eliminar este análisis?</string>
     <string name="eliminar_texto">Se borrarán la foto y el resultado. No se puede deshacer.</string>
     <string name="compartir">Compartir</string>
+
+    <!-- Inicio -->
+    <string name="inicio_lema">Calidad y madurez de la palta Hass, en tu celular</string>
+    <string name="preparando_modelo">Preparando el modelo…</string>
+
+    <!-- Explicacion del resultado -->
+    <string name="explica_cat_i">Buena calidad. Los defectos de la cáscara ocupan como máximo el 9.4 % de la palta (4 cm² según la norma OCDE).</string>
+    <string name="explica_cat_ii">Calidad aceptable. Tiene más defectos que una Categoría I, pero no pasan del 14.1 % de la palta (6 cm² según la norma OCDE).</string>
+    <string name="explica_rechazo">Los defectos de la cáscara superan el 14.1 % de la palta, el límite que permite la norma OCDE para venderla como Categoría I o II.</string>
+    <string name="explica_madurez_1">Firme: todavía le falta madurar.</string>
+    <string name="explica_madurez_2">Empezando a madurar.</string>
+    <string name="explica_madurez_3">A mitad de su maduración.</string>
+    <string name="explica_madurez_4">Cerca de su punto.</string>
+    <string name="explica_madurez_5">Madura: en su punto o muy cerca de él.</string>
+    <string name="como_se_clasifica">¿Cómo se clasifica?</string>
+
+    <!-- Pantalla de informacion -->
+    <string name="info_titulo">Cómo funciona</string>
+    <string name="info_que_hace_titulo">¿Qué hace PaltaScan?</string>
+    <string name="info_que_hace">Analiza la foto de una palta Hass y te dice su categoría de calidad y su nivel de madurez. Todo el análisis se hace en tu celular: no necesita internet y tus fotos no salen del teléfono.</string>
+    <string name="info_norma_titulo">Categoría de calidad (norma OCDE)</string>
+    <string name="info_norma">La categoría sigue la norma de la OCDE para la comercialización de paltas, que fija cuánta superficie de la cáscara puede tener defectos: hasta 4 cm² en la Categoría I y hasta 6 cm² en la Categoría II.</string>
+    <string name="info_cat_i">Defectos en hasta el 9.4 % de la palta.</string>
+    <string name="info_cat_ii">Defectos entre el 9.4 % y el 14.1 %.</string>
+    <string name="info_rechazo">Defectos en más del 14.1 %.</string>
+    <string name="info_calculo_titulo">¿Cómo se calcula el porcentaje?</string>
+    <string name="info_calculo">La app marca en la foto la palta y sus defectos, y divide el área con defecto entre el área de la palta. Como la foto no indica el tamaño real del fruto, los límites de 4 y 6 cm² se convierten a porcentaje con el tamaño de una palta Hass típica (42.4 cm² de área visible).</string>
+    <string name="info_madurez_titulo">Madurez</string>
+    <string name="info_madurez">Se indica en una escala de 1 a 5:</string>
+    <string name="info_madurez_lista">1 · Poco maduro: firme, todavía le falta madurar.\n2 · Poco-medio: empezando a madurar.\n3 · Medio: a mitad de su maduración.\n4 · Medio-maduro: cerca de su punto.\n5 · Muy maduro: en su punto o muy cerca de él.\n\nLa confianza indica qué tan seguro está el modelo. Si es baja, conviene tomar otra foto.</string>
+    <string name="info_foto_titulo">Para una buena foto</string>
+    <string name="info_foto">• Una sola palta, entera y centrada.\n• Buena luz, sin sombras fuertes.\n• Fondo claro y liso.\n• Celular quieto, para que la foto no salga borrosa.</string>
 </resources>

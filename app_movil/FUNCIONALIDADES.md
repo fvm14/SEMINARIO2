@@ -1,4 +1,4 @@
-# PaltaScan: funcionalidades (v0.5.0)
+# PaltaScan: funcionalidades (v0.6.0)
 
 App Android que analiza fotos de palta Hass **en el celular, sin conexión**. Usa
 el modelo multitarea YOLOv8s-seg exportado a TFLite (rango dinámico, 12.3 MB)
@@ -6,15 +6,30 @@ y corre con LiteRT 1.4.2, en la CPU o en la GPU del celular.
 
 ## Estilo
 
-Barra superior verde con el título en blanco, fondo blanco, texto negro y botones planos con esquinas rectas (verde para la acción principal y negro para las demás).
+Barra superior verde con el logo y el título en blanco, fondo gris verdoso claro y tarjetas blancas con borde fino. Botones con ícono y esquinas redondeadas: verde relleno para la acción principal (Tomar foto) y borde verde para las demás. La categoría se muestra como una etiqueta de color (verde, ámbar o rojo).
+
+## Variantes
+
+| | `completa` | `ligera` |
+|---|---|---|
+| Modelos | los cuatro de la comparación | solo el multitarea |
+| Fila Modelo | sí (hay más de uno) | no |
+| Fila Procesador | sí, CPU por defecto | no: siempre CPU |
+| Modelo y FPS en resultados y cámara en vivo | sí | no |
+
+## Pantalla de inicio
+
+Al abrir la app aparece el logo, el nombre y el lema sobre fondo verde claro
+con una animación de carga y el texto "Preparando el modelo…" mientras se carga
+el modelo (mínimo 1.6 s); luego pasa a la pantalla principal.
 
 ## Pantallas
 
 ### 1. Pantalla principal
 
-**Cabecera:** el nombre de la app y un subtítulo. Mientras carga el modelo se
-lee "Cargando modelo…". Si falta el modelo, aparece un aviso y los botones
-quedan deshabilitados.
+**Cabecera:** el logo, el nombre de la app, un subtítulo y el botón de ayuda
+(ícono "i"), que abre "Cómo funciona". Si falta el modelo, aparece un aviso y
+los botones quedan deshabilitados.
 
 **Lote actual:** se ve el lote donde se guardarán los análisis. El botón
 **Cambiar** abre una lista con:
@@ -36,17 +51,30 @@ Cada análisis guarda el modelo con que se hizo, y el resultado lo indica.
 **Botones:**
 - **Tomar foto:** abre la cámara del sistema.
 - **Galería:** abre el selector de fotos de Android.
-- **Historial:** abre la segunda pantalla.
+- **Cámara en vivo:** abre el análisis continuo.
+- **Historial:** abre la lista de análisis.
 
-**Resultado:** después de analizar una foto, en la misma pantalla se ve:
+**Resultado:** después de analizar una foto, la pantalla baja sola hasta una
+tarjeta con:
 - la foto, con un interruptor para alternar entre la original y la versión con
   las **marcas de defectos** (máscaras superpuestas);
-- la **categoría OCDE** (Cat. I, Cat. II o Rechazado), con su color;
-- el **% del área con defecto**;
-- la **madurez**: nivel del 1 al 5, su nombre y la confianza;
-- el **tiempo de análisis**;
+- la **categoría OCDE** (Cat. I, Cat. II o Rechazado) en una etiqueta de color
+  y, debajo, qué significa (por ejemplo, Cat. I: defectos en hasta el 9.4 % de
+  la palta, 4 cm² según la norma);
+- el **% del área con defecto** y la **madurez** (nivel del 1 al 5), lado a lado;
+- el nombre del nivel de madurez, la confianza y qué significa ("Cerca de su punto");
+- el **tiempo de análisis** (y el modelo, solo en la versión completa);
 - los **avisos**, si los hay;
-- el mensaje "Guardado en <lote>".
+- el enlace **¿Cómo se clasifica?**, que abre "Cómo funciona".
+
+Encima de la tarjeta se lee "Guardado en <lote>".
+
+### Cómo funciona
+
+Pantalla de ayuda con tarjetas: qué hace la app (y que todo se analiza en el
+celular, sin internet), la norma OCDE con los límites de cada categoría, cómo se
+calcula el porcentaje (área de 42.4 cm² de referencia), la escala de madurez y
+consejos para tomar una buena foto.
 
 ### 2. Cámara en vivo
 
@@ -59,7 +87,7 @@ primera vez). Muestra la cámara y la analiza de forma continua:
   roja), % de defecto, madurez (1–5 y nombre), confianza (con "dudosa" si es
   menor de 60%), avisos de foto oscura o borrosa, y FPS con los ms del cuadro.
   Si no hay palta, hay varias o sale cortada, la franja lo dice.
-- Abajo, la indicación de encuadre, el modelo y si corre en CPU o GPU.
+- Abajo, la indicación de encuadre (y, en la versión completa, el modelo y si corre en CPU o GPU; el FPS también solo en la completa).
 - Se analiza siempre el cuadro más reciente; los que llegan mientras el modelo
   trabaja se descartan. Las marcas van ~1 cuadro detrás de la imagen.
 - No guarda nada en el historial (para guardar, usar "Tomar foto").
@@ -140,8 +168,10 @@ En el Xiaomi 11 Lite 5G NE, cada foto tarda ~0.9 s en total.
 
 ## Procesador
 
-Fila **Procesador** en la pantalla principal (solo si el celular admite la
-GPU): **CPU (4 hilos)** o **GPU** (delegado GPU de LiteRT, media precisión).
+Fila **Procesador** en la pantalla principal (solo en la versión completa y si
+el celular admite la GPU): **CPU (4 hilos)** o **GPU** (delegado GPU de LiteRT,
+media precisión). La versión ligera siempre usa la CPU: el delegado GPU tarda
+~14 s en prepararse en cada arranque (compilación OpenCL), y la CPU, menos de 1 s.
 Si la GPU no puede cargar el modelo, se usa la CPU y aparece un aviso. Con GPU,
 el multitarea tarda ~0.45 s por foto en vez de ~0.9 s.
 

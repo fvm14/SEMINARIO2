@@ -25,9 +25,13 @@ class PaltaScanApp : Application() {
     /** Si el telefono admite el delegado GPU (si no, no se ofrece la opcion). */
     val gpuDisponible: Boolean by lazy { Analizador.gpuDisponible() }
 
-    /** Ejecutar el modelo en la GPU en vez de la CPU (por defecto, CPU). */
+    /**
+     * Ejecutar el modelo en la GPU en vez de la CPU (por defecto, CPU). En la version
+     * ligera no se ofrece la opcion: preparar el delegado GPU tarda ~14 s en cada
+     * arranque (compilacion OpenCL en el Xiaomi 11 Lite 5G NE), y la CPU arranca al instante.
+     */
     var usarGpu: Boolean
-        get() = gpuDisponible && prefs.getBoolean("usar_gpu", false)
+        get() = gpuDisponible && BuildConfig.OPCIONES_TECNICAS && prefs.getBoolean("usar_gpu", false)
         set(valor) = prefs.edit().putBoolean("usar_gpu", valor).apply()
 
     private var cargado: Analizador? = null

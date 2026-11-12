@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primario_oscuro"
@@ -35,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/fondo"
+        android:background="@color/fondo_pantalla"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -71,7 +72,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:text="@string/exportar_csv" />
+            android:text="@string/exportar_csv"
+            app:icon="@drawable/ic_exportar" />
 
         <Button
             android:id="@+id/botonPdf"
@@ -80,7 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_weight="1"
-            android:text="@string/exportar_pdf" />
+            android:text="@string/exportar_pdf"
+            app:icon="@drawable/ic_exportar" />
     </LinearLayout>
 
     <TextView
