@@ -1,4 +1,4 @@
-# PaltaScan: funcionalidades (v0.6.0)
+# PaltaScan: funcionalidades (v0.6.1)
 
 App Android que analiza fotos de palta Hass **en el celular, sin conexión**. Usa
 el modelo multitarea YOLOv8s-seg exportado a TFLite (rango dinámico, 12.3 MB)
@@ -49,7 +49,7 @@ elegir entre:
 Cada análisis guarda el modelo con que se hizo, y el resultado lo indica.
 
 **Botones:**
-- **Tomar foto:** abre la cámara del sistema.
+- **Tomar foto:** abre la cámara del sistema (la primera vez pide el permiso de cámara; si se rechaza, avisa y se puede usar la galería).
 - **Galería:** abre el selector de fotos de Android.
 - **Cámara en vivo:** abre el análisis continuo.
 - **Historial:** abre la lista de análisis.

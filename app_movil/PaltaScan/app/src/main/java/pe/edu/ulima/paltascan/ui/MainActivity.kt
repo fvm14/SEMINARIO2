@@ -1,6 +1,8 @@
 package pe.edu.ulima.paltascan.ui
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -40,6 +42,10 @@ class MainActivity : AppCompatActivity() {
 
     private val elegirFoto = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         uri?.let(::analizar)
+    }
+
+    private val pedirPermisoCamara = registerForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
+        if (ok) lanzarCamara() else Toast.makeText(this, R.string.foto_permiso, Toast.LENGTH_LONG).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,7 +139,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * La app declara el permiso CAMERA (lo usa la camara en vivo); en ese caso
+     * Android exige tenerlo concedido tambien para abrir la camara del sistema,
+     * o lanza SecurityException. Por eso se pide antes de tomar la foto.
+     */
     private fun abrirCamara() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            lanzarCamara()
+        } else {
+            pedirPermisoCamara.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun lanzarCamara() {
         val dir = File(cacheDir, "capturas").apply { mkdirs() }
         val archivo = File(dir, "captura_${System.currentTimeMillis()}.jpg")
         dir.listFiles()?.filter { it != archivo }?.forEach { it.delete() }
