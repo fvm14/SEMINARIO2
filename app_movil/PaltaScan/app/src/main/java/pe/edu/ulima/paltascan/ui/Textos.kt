@@ -20,6 +20,18 @@ object Textos {
         else -> R.color.rechazo
     }
 
+    /** Que significa la categoria, en palabras simples (con los limites de Ocde). */
+    fun explicacionCategoria(categoria: Int) = when (categoria) {
+        0 -> R.string.explica_cat_i
+        1 -> R.string.explica_cat_ii
+        else -> R.string.explica_rechazo
+    }
+
+    fun explicacionMadurez(nivel: Int) = listOf(
+        R.string.explica_madurez_1, R.string.explica_madurez_2, R.string.explica_madurez_3,
+        R.string.explica_madurez_4, R.string.explica_madurez_5,
+    )[nivel - 1]
+
     /** 0.032 -> "3.2 %" */
     fun porcentaje(ratio: Double): String = "%.1f %%".format(Locale.US, ratio * 100)
 

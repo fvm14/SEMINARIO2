@@ -1,0 +1,15 @@
+<resources>
+    <!--
+    Android 12+ muestra su propia pantalla de inicio antes de la app. Se deja del
+    mismo color y sin icono, para que pase directo a la pantalla de inicio de PaltaScan
+    (logo y nombre) sin mostrar dos logos seguidos.
+    -->
+    <style name="Theme.PaltaScan.Inicio">
+        <item name="android:windowBackground">@color/primario_claro</item>
+        <item name="android:statusBarColor">@color/primario_claro</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/primario_claro</item>
+        <item name="android:windowSplashScreenBackground">@color/primario_claro</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+    </style>
+</resources>

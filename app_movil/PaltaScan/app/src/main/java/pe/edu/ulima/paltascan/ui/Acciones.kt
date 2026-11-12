@@ -2,6 +2,7 @@ package pe.edu.ulima.paltascan.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.EditText
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import pe.edu.ulima.paltascan.BuildConfig
 import pe.edu.ulima.paltascan.R
 import pe.edu.ulima.paltascan.app
 import pe.edu.ulima.paltascan.databinding.VistaResultadoBinding
@@ -100,17 +102,19 @@ fun VistaResultadoBinding.mostrar(i: Inspeccion) {
     pintar()
 
     textoCategoria.text = Textos.CATEGORIAS[i.categoria]
-    textoCategoria.setTextColor(ContextCompat.getColor(ctx, Textos.colorCategoria(i.categoria)))
-    textoRatio.text = if (i.caras == 2 && i.ratioA != null && i.ratioB != null) {
-        ctx.getString(R.string.ratio_dos_caras, Textos.porcentaje(i.ratio), Textos.porcentaje(i.ratioA), Textos.porcentaje(i.ratioB))
-    } else {
-        Textos.porcentaje(i.ratio)
-    }
-    textoMadurez.text = ctx.getString(
-        R.string.madurez_valor, i.madurez, Textos.nombreMadurez(i.madurez), Math.round(i.probMadurez * 100)
-    )
+    textoCategoria.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(ctx, Textos.colorCategoria(i.categoria)))
+    textoCategoriaExplicacion.setText(Textos.explicacionCategoria(i.categoria))
+    textoRatio.text = Textos.porcentaje(i.ratio)
+    val dosCaras = i.caras == 2 && i.ratioA != null && i.ratioB != null
+    textoRatioLados.visibility = if (dosCaras) View.VISIBLE else View.GONE
+    if (dosCaras) textoRatioLados.text = ctx.getString(R.string.ratio_dos_caras, Textos.porcentaje(i.ratioA!!), Textos.porcentaje(i.ratioB!!))
+    textoNivelMadurez.text = ctx.getString(R.string.nivel_madurez, i.madurez)
+    textoMadurez.text = ctx.getString(R.string.madurez_valor, Textos.nombreMadurez(i.madurez), Math.round(i.probMadurez * 100))
+    textoMadurezExplicacion.setText(Textos.explicacionMadurez(i.madurez))
     textoTiempo.text = ctx.getString(R.string.tiempo_valor, i.msTotal / 1000)
     textoModelo.text = ctx.getString(R.string.modelo_valor, Configuracion.modelo(i.modelo).nombre)
+    textoModelo.visibility = if (BuildConfig.OPCIONES_TECNICAS) View.VISIBLE else View.GONE
+    botonComoSeClasifica.setOnClickListener { ctx.startActivity(Intent(ctx, InfoActivity::class.java)) }
 
     val avisos = i.avisos.split(",").filter { it.isNotBlank() }.mapNotNull { runCatching { Problema.valueOf(it) }.getOrNull() }
     textoAviso.visibility = if (avisos.isEmpty()) View.GONE else View.VISIBLE

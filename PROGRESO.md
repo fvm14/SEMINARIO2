@@ -443,6 +443,17 @@ Objetivo: medir en el teléfono, y no solo en la PC, cuánto tardan los tres mod
 
   - En vivo, la U-Net marca como palta zonas del fondo; los dos YOLO no. La U-Net clasifica cada píxel sin umbral por objeto, mientras que YOLO solo genera máscaras de instancias con confianza ≥ 0.35. En el análisis por foto no afecta el ratio, porque se toma la región más grande, pero explica su menor acierto OCDE.
   - Prueba con fotos de paltas en un monitor: los dos YOLO (multitarea y dos redes) las detectan y segmentan; la U-Net no detectó la palta en la primera prueba. (Corrección: en una versión anterior de esta nota se atribuyó ese fallo al multitarea, pero en esa prueba la app tenía seleccionada la U-Net.)
+- **Variantes completa y ligera (2026-11-11).** `productFlavors` en `app/build.gradle.kts`:
+  - `completa`: los cuatro modelos y todas las ABI (~108 MB). Es la app de las mediciones anteriores, sin cambios.
+  - `ligera`: solo el multitarea y solo `arm64-v8a`, para instalar en celulares de terceros (**~26 MB**, frente a 107 MB). Sin el selector de modelo, porque la app ya lo oculta si hay un solo modelo.
+  - Los modelos alternativos pasaron de `src/main/assets/` a `src/completa/assets/`. El código no cambió; las 23 pruebas unitarias pasan en ambas variantes.
+- **Diseño v0.6.0 (2026-11-12), en ambas variantes; la lógica de análisis no cambió:**
+  - Pantalla de inicio (`InicioActivity`) con logo, nombre, lema, animación de carga y "Preparando el modelo…" sobre verde claro; carga el modelo mientras se muestra (mínimo 1.6 s). En Android 12+ la pantalla de inicio del sistema queda del mismo color y sin ícono, para no mostrar dos logos.
+  - Tarjetas blancas sobre fondo gris verdoso, botones redondeados con ícono y sin mayúsculas, logo en la barra.
+  - Resultado: categoría en etiqueta de color con su explicación (límites 9.4 % y 14.1 %, 4 y 6 cm²), % de defecto y nivel de madurez lado a lado, y qué significa el nivel. Tras analizar, la pantalla baja sola hasta el resultado.
+  - Pantalla "Cómo funciona" (`InfoActivity`, botón "i" de la barra y enlace "¿Cómo se clasifica?" del resultado): qué hace la app, norma OCDE y límites, cálculo del porcentaje con el área de referencia de 42.4 cm², escala de madurez y consejos para la foto.
+  - `BuildConfig.OPCIONES_TECNICAS` (verdadero solo en `completa`): la `ligera` oculta la fila Procesador, el modelo usado y el FPS de la cámara en vivo, y siempre usa la CPU: en el Xiaomi 11 Lite 5G NE el delegado GPU tarda ~14 s en prepararse en cada arranque (compilación OpenCL), mientras que con CPU la app arranca en ~1 s.
+  - Compilan las dos variantes y pasan las 23 pruebas unitarias. Instalada la ligera en el Xiaomi 11 Lite 5G NE: pantalla de inicio y principal revisadas.
 - Falta: optimizar el pre y el posprocesamiento (~200 ms por cuadro); ver las mejoras futuras en la sección 13.
 
 **Etapa 5: integración.** El modelo cuantizado y el motor OCDE corren completos en el celular. Validación funcional hecha: 23 pruebas unitarias y `ConcordanciaTest` frente a Python (108/108 en madurez, 107/108 en OCDE, ~0.9 s por foto en CPU y ~0.45 s en GPU).
@@ -479,7 +490,9 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - Con una sola cara anotada (sin error del modelo), la categoría del fruto completo se acierta en el 68.3% de los pares.
 - El fruto se detecta en las 208 fotos (IoU medio 0.99).
 
-**App v0.6.0.** "Fotos por palta: Dos (lado A y lado B) / Una" en la pantalla principal (por defecto, Dos). Con Dos, la primera foto válida queda como lado A y la segunda completa el análisis; se guarda un solo registro con ambas fotos lado a lado, el ratio total y el de cada lado (`ml/DosCaras.kt`, base de datos v4, CSV con `caras`, `ratio_lado_a` y `ratio_lado_b`, 3 pruebas en `DosCarasTest.kt`). Falta compilar y probar en el celular.
+**App v0.6.0.** "Fotos por palta: Dos (lado A y lado B) / Una" en la pantalla principal (por defecto, Dos). Con Dos, la primera foto válida queda como lado A y la segunda completa el análisis; se guarda un solo registro con ambas fotos lado a lado, el ratio total y el de cada lado (`ml/DosCaras.kt`, base de datos v4, CSV con `caras`, `ratio_lado_a` y `ratio_lado_b`, 3 pruebas en `DosCarasTest.kt`).
+
+**App v0.7.0 (2026-11-12): integración con el diseño v0.6.0 de `main`** (rama `dos-caras-diseno`). La fila "Fotos por palta" pasa a la tarjeta del lote; sobre los botones de captura, una guía "Paso 1 de 2: lado A" / "Paso 2 de 2: gira la palta y toma el lado B"; el resultado muestra el % total y, debajo, "Suma de las dos caras: lado A … + lado B …"; "Cómo funciona" explica por qué se piden dos fotos. Disponible en las variantes `completa` y `ligera`. Compila, pasan las 26 pruebas unitarias (23 + 3 de `DosCarasTest`) y se instaló en el Xiaomi 11 Lite 5G NE (migración de la base de datos v3 a v4 sin errores al abrir).
 
 ## 14. Historial de actualizaciones
 
@@ -529,3 +542,6 @@ La antigua etapa de validación del prototipo (estrés, iluminación, SUS) se re
 - 2026-10-02: mAP de las variantes cuantizadas del multitarea (`scripts/map_movil.py`): mAP50 de máscaras 0.779 (FP32 y FP16), 0.777 (rango dinámico) y 0.734 (INT8). Umbral de la U-Net recalibrado con el barrido extendido a 0.01: 0.03 (antes 0.10, en el borde); U-Net reevaluada en test (OCDE 62.0%, −15.7 puntos frente al propuesto, significativa), en sensibilidad, en TFLite y en el celular. La conclusión de la comparación no cambia.
 - 2026-10-02: corrección: la prueba con fotos en un monitor en la que no se detectó la palta se hizo con la U-Net seleccionada, no con el multitarea; el multitarea sí detecta y segmenta esas fotos (secciones 12 y 13).
 - 2026-11-10: evaluación del fruto completo con dos caras (sección 15): anotación del lado faltante de 100 fotos de test, comparación una cara frente a dos caras y app v0.6.0 con captura de lado A y lado B.
+- 2026-11-11: app en dos variantes de compilación: `completa` (los cuatro modelos, ~108 MB) y `ligera` (solo el multitarea y `arm64-v8a`, ~26 MB) para instalarla en otros celulares; los modelos alternativos pasan a `app/src/completa/assets/` (sección 12, `app_movil/README.md`).
+- 2026-11-12: app v0.6.0: nuevo diseño (pantalla de inicio con logo, tarjetas, botones con ícono, categoría en etiqueta de color con su explicación, pantalla "Cómo funciona" con la norma OCDE, la madurez y consejos para la foto). La versión ligera oculta las opciones técnicas y usa la CPU (la GPU tarda ~14 s en prepararse al abrir). La lógica de análisis no cambió (sección 12).
+- 2026-11-12: app v0.7.0 en la rama `dos-caras-diseno`: dos caras (rama `dos-caras`) integradas con el diseño v0.6.0 de `main` (guía de pasos lado A / lado B, % por lado en el resultado, explicación en "Cómo funciona"); 26 pruebas unitarias (sección 15).

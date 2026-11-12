@@ -11,14 +11,34 @@ android {
         applicationId = "pe.edu.ulima.paltascan"
         minSdk = 26
         targetSdk = 36
-        versionCode = 6
-        versionName = "0.6.0"
+        versionCode = 7
+        versionName = "0.7.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+        }
+    }
+
+    // completa: los cuatro modelos de la comparacion (src/main/assets + src/completa/assets).
+    // ligera: solo el modelo multitarea (src/main/assets) y solo arm64-v8a, para
+    // distribuirla a los participantes de la prueba de usabilidad.
+    flavorDimensions += "version"
+    productFlavors {
+        // OPCIONES_TECNICAS: selector CPU/GPU, modelo usado y FPS (solo para las mediciones).
+        create("completa") {
+            dimension = "version"
+            buildConfigField("boolean", "OPCIONES_TECNICAS", "true")
+        }
+        create("ligera") {
+            dimension = "version"
+            versionNameSuffix = "-ligera"
+            buildConfigField("boolean", "OPCIONES_TECNICAS", "false")
+            ndk {
+                abiFilters += "arm64-v8a"
+            }
         }
     }
 

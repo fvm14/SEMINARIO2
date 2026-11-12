@@ -22,6 +22,7 @@ import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import pe.edu.ulima.paltascan.BuildConfig
 import pe.edu.ulima.paltascan.R
 import pe.edu.ulima.paltascan.app
 import pe.edu.ulima.paltascan.databinding.ActivityCamaraVivoBinding
@@ -124,7 +125,11 @@ class CamaraVivoActivity : AppCompatActivity() {
     }
 
     private fun mostrarIndicacion(procesador: String) {
-        b.textoIndicacion.text = getString(R.string.vivo_indicacion) + "\n" + app.modeloActual.nombre + " · " + procesador
+        b.textoIndicacion.text = if (BuildConfig.OPCIONES_TECNICAS) {
+            getString(R.string.vivo_indicacion) + "\n" + app.modeloActual.nombre + " · " + procesador
+        } else {
+            getString(R.string.vivo_indicacion)
+        }
     }
 
     private fun mostrar(r: ResultadoAnalisis, ahora: Long) {
@@ -132,6 +137,7 @@ class CamaraVivoActivity : AppCompatActivity() {
         while (marcas.size > 6) marcas.removeFirst()
         val fps = if (marcas.size > 1) (marcas.size - 1) * 1000.0 / (marcas.last() - marcas.first()) else 0.0
         b.textoFps.text = getString(R.string.vivo_fps, fps, r.tiempos.totalMs.roundToInt())
+        b.textoFps.visibility = if (BuildConfig.OPCIONES_TECNICAS) View.VISIBLE else View.GONE
 
         val bloqueante = r.bloqueante
         if (bloqueante != null) {

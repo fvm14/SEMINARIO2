@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primario_oscuro"
     android:orientation="vertical">
 
+    <!-- Barra: nombre, estado y ayuda -->
     <LinearLayout
         style="@style/Barra"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center_vertical">
 
-        <TextView
-            style="@style/TituloBarra"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name" />
+        <ImageView
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/fondo_circulo"
+            android:contentDescription="@null"
+            android:padding="5dp"
+            android:src="@drawable/ic_palta" />
 
-        <TextView
-            android:id="@+id/textoEstado"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/subtitulo"
-            android:textColor="#E0E0E0"
-            android:textSize="13sp" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name" />
+
+            <TextView
+                android:id="@+id/textoEstado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subtitulo"
+                android:textColor="#E0E0E0"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/botonAyuda"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/info_titulo"
+            android:src="@drawable/ic_info"
+            app:tint="#FFFFFF" />
     </LinearLayout>
 
 <ScrollView
+    android:id="@+id/desplazamiento"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:background="@color/fondo">
+    android:background="@color/fondo_pantalla">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,182 +66,213 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Lote actual -->
-        <LinearLayout
+        <!-- Lote, modelo y procesador -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Tarjeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            app:contentPaddingBottom="6dp"
+            app:contentPaddingTop="6dp">
 
-            <TextView
-                style="@style/Etiqueta"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/lote" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textoLote"
-                style="@style/Valor"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:singleLine="true" />
+                <!-- Lote actual -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
 
-            <Button
-                android:id="@+id/botonLote"
-                style="@style/BotonTexto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cambiar_lote" />
-        </LinearLayout>
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lote" />
 
-        <!-- Modelo (solo si hay mas de uno instalado) -->
-        <LinearLayout
-            android:id="@+id/filaModelo"
+                    <TextView
+                        android:id="@+id/textoLote"
+                        style="@style/Valor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/botonLote"
+                        style="@style/BotonTexto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cambiar_lote" />
+                </LinearLayout>
+
+                <!-- Modelo (solo si hay mas de uno instalado) -->
+                <LinearLayout
+                    android:id="@+id/filaModelo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/modelo" />
+
+                    <TextView
+                        android:id="@+id/textoModeloActual"
+                        style="@style/Valor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/botonModelo"
+                        style="@style/BotonTexto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cambiar_lote" />
+                </LinearLayout>
+
+                <!-- Procesador (solo version completa y si el telefono admite la GPU) -->
+                <LinearLayout
+                    android:id="@+id/filaProcesador"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/procesador" />
+
+                    <TextView
+                        android:id="@+id/textoProcesador"
+                        style="@style/Valor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/botonProcesador"
+                        style="@style/BotonTexto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cambiar_lote" />
+                </LinearLayout>
+
+                <!-- Fotos por palta: dos (lado A y lado B) o una -->
+                <LinearLayout
+                    android:id="@+id/filaCaras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Etiqueta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/caras" />
+
+                    <TextView
+                        android:id="@+id/textoCaras"
+                        style="@style/Valor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/botonCaras"
+                        style="@style/BotonTexto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cambiar_lote" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Guia de pasos para dos fotos (lado A y lado B) -->
+        <TextView
+            android:id="@+id/textoPaso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/fondo_paso"
+            android:drawablePadding="10dp"
             android:gravity="center_vertical"
-            android:visibility="gone">
-
-            <TextView
-                style="@style/Etiqueta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/modelo" />
-
-            <TextView
-                android:id="@+id/textoModeloActual"
-                style="@style/Valor"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/botonModelo"
-                style="@style/BotonTexto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cambiar_lote" />
-        </LinearLayout>
-
-        <!-- Procesador (solo si el telefono admite la GPU) -->
-        <LinearLayout
-            android:id="@+id/filaProcesador"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:visibility="gone">
-
-            <TextView
-                style="@style/Etiqueta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/procesador" />
-
-            <TextView
-                android:id="@+id/textoProcesador"
-                style="@style/Valor"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/botonProcesador"
-                style="@style/BotonTexto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cambiar_lote" />
-        </LinearLayout>
-
-        <!-- Fotos por palta: dos (lado A y lado B) o una -->
-        <LinearLayout
-            android:id="@+id/filaCaras"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-
-            <TextView
-                style="@style/Etiqueta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/caras" />
-
-            <TextView
-                android:id="@+id/textoCaras"
-                style="@style/Valor"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/botonCaras"
-                style="@style/BotonTexto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cambiar_lote" />
-        </LinearLayout>
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
+            android:textColor="@color/primario"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
         <!-- Captura -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp">
+            android:layout_marginTop="14dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonCamara"
                 style="@style/Boton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
-                android:text="@string/tomar_foto" />
+                android:text="@string/tomar_foto"
+                app:icon="@drawable/ic_camara" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonGaleria"
                 style="@style/BotonBorde"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:text="@string/galeria" />
+                android:text="@string/galeria"
+                app:icon="@drawable/ic_galeria" />
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/botonVivo"
-            style="@style/Boton"
+            style="@style/BotonBorde"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/camara_vivo" />
+            android:layout_marginTop="4dp"
+            android:text="@string/camara_vivo"
+            app:icon="@drawable/ic_encuadre" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/botonHistorial"
             style="@style/BotonBorde"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ver_historial" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="12dp"
-            android:background="@color/linea" />
+            android:text="@string/ver_historial"
+            app:icon="@drawable/ic_historial" />
 
         <!-- Progreso -->
         <LinearLayout
             android:id="@+id/panelProgreso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:visibility="gone">
 
@@ -234,13 +293,23 @@
             style="@style/Etiqueta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
             android:text="@string/sin_resultado" />
 
         <!-- Resultado -->
-        <include
-            android:id="@+id/resultado"
-            layout="@layout/vista_resultado"
-            android:visibility="gone" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/tarjetaResultado"
+            style="@style/Tarjeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/resultado"
+                layout="@layout/vista_resultado" />
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 </ScrollView>
 </LinearLayout>

@@ -16,6 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import pe.edu.ulima.paltascan.BuildConfig
 import pe.edu.ulima.paltascan.R
 import pe.edu.ulima.paltascan.app
 import pe.edu.ulima.paltascan.databinding.ActivityMainBinding
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
         b.botonVivo.setOnClickListener { startActivity(Intent(this, CamaraVivoActivity::class.java)) }
         b.botonHistorial.setOnClickListener { startActivity(Intent(this, HistorialActivity::class.java)) }
+        b.botonAyuda.setOnClickListener { startActivity(Intent(this, InfoActivity::class.java)) }
         b.botonLote.setOnClickListener {
             Acciones.elegirLote(this) { id -> app.loteActualId = id; mostrarLote() }
         }
@@ -123,6 +125,17 @@ class MainActivity : AppCompatActivity() {
     private fun descartarLadoA() {
         ladoA?.let { File(it.foto).delete(); File(it.overlay).delete() }
         ladoA = null
+        mostrarPaso()
+    }
+
+    /** Guia "Paso 1 de 2 / Paso 2 de 2" sobre los botones de captura (solo con dos fotos). */
+    private fun mostrarPaso() {
+        b.textoPaso.visibility = if (app.dosCaras) View.VISIBLE else View.GONE
+        b.textoPaso.setText(if (ladoA == null) R.string.paso_lado_a else R.string.paso_lado_b)
+        b.textoPaso.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            if (ladoA == null) R.drawable.ic_camara else R.drawable.ic_continuo, 0, 0, 0
+        )
+        b.textoPaso.compoundDrawablesRelative[0]?.setTint(ContextCompat.getColor(this, R.color.primario))
     }
 
     private fun mostrarLote() {
@@ -132,9 +145,10 @@ class MainActivity : AppCompatActivity() {
     private fun mostrarModelo() {
         b.filaModelo.visibility = if (app.modelosDisponibles.size > 1) View.VISIBLE else View.GONE
         b.textoModeloActual.text = app.modeloActual.nombre
-        b.filaProcesador.visibility = if (app.gpuDisponible) View.VISIBLE else View.GONE
+        b.filaProcesador.visibility = if (app.gpuDisponible && BuildConfig.OPCIONES_TECNICAS) View.VISIBLE else View.GONE
         b.textoProcesador.setText(if (app.usarGpu) R.string.procesador_gpu else R.string.procesador_cpu)
         b.textoCaras.setText(if (app.dosCaras) R.string.caras_dos else R.string.caras_una)
+        mostrarPaso()
     }
 
     /** CPU o GPU (delegado de LiteRT), para comparar la latencia. */
@@ -164,7 +178,7 @@ class MainActivity : AppCompatActivity() {
                     app.modeloActual = modelos[i]
                     descartarLadoA()
                     mostrarModelo()
-                    b.resultado.root.visibility = View.GONE
+                    b.tarjetaResultado.visibility = View.GONE
                     b.textoMensaje.visibility = View.GONE
                     cargarModelo()
                 }
@@ -178,7 +192,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val analizador = withContext(Dispatchers.Default) { app.analizador }
             b.textoEstado.setText(if (analizador != null) R.string.subtitulo else R.string.modelo_faltante)
-            if (analizador != null && analizador.pidioGpu && !analizador.gpu) {
+            if (analizador != null && analizador.pidioGpu && !analizador.gpu && BuildConfig.OPCIONES_TECNICAS) {
                 Toast.makeText(this@MainActivity, R.string.gpu_fallo, Toast.LENGTH_LONG).show()
             }
             habilitar(analizador != null)
@@ -199,7 +213,7 @@ class MainActivity : AppCompatActivity() {
         habilitar(false)
         b.panelProgreso.visibility = View.VISIBLE
         b.textoMensaje.visibility = View.GONE
-        b.resultado.root.visibility = View.GONE
+        b.tarjetaResultado.visibility = View.GONE
         lifecycleScope.launch {
             try {
                 val foto = withContext(Dispatchers.IO) { Imagenes.cargar(this@MainActivity, uri) }
@@ -211,6 +225,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 if (app.dosCaras && ladoA == null) {
                     ladoA = withContext(Dispatchers.IO) { guardarLadoA(foto, r) }
+                    mostrarPaso()
                     mostrarMensaje(getString(R.string.lado_a_listo), error = false)
                     return@launch
                 }
@@ -256,7 +271,7 @@ class MainActivity : AppCompatActivity() {
                 if (a != null) descartarLadoA()
                 app.baseDatos.obtener(id)?.let {
                     b.resultado.mostrar(it)
-                    b.resultado.root.visibility = View.VISIBLE
+                    b.tarjetaResultado.visibility = View.VISIBLE
                     mostrarMensaje(getString(R.string.guardado_en, Acciones.nombreLote(this@MainActivity, loteId)), error = false)
                 }
             } catch (e: Exception) {
@@ -289,10 +304,15 @@ class MainActivity : AppCompatActivity() {
         else -> R.string.motivo_sin_palta
     }
 
+    /** Muestra el mensaje (y el resultado, si lo hay) y baja la pantalla hasta ellos. */
     private fun mostrarMensaje(texto: String, error: Boolean) {
         b.textoMensaje.text = texto
         b.textoMensaje.setTextColor(ContextCompat.getColor(this, if (error) R.color.rechazo else R.color.texto_suave))
         b.textoMensaje.visibility = View.VISIBLE
+        b.desplazamiento.post {
+            val margen = (8 * resources.displayMetrics.density).toInt()
+            b.desplazamiento.smoothScrollTo(0, maxOf(0, b.textoMensaje.top - margen))
+        }
     }
 
     private fun habilitar(si: Boolean) {
