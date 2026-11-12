@@ -49,6 +49,7 @@ lado A %1$s + lado B %2$s</string>
     <string name="aviso_confianza">madurez dudosa</string>
     <string name="guardado_en">Guardado en %1$s</string>
     <string name="camara_vivo">Cámara en vivo</string>
+    <string name="foto_permiso">Para tomar la foto se necesita el permiso de cámara. También puedes elegir una foto de la galería.</string>
 
     <!-- Camara en vivo -->
     <string name="vivo_indicacion">Apunta a una sola palta, entera y con buena luz.</string>
